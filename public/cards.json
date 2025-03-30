@@ -6,61 +6,276 @@
       "发布订阅",
       "设计模式"
     ],
-    "createdAt": "2025-03-30T10:24:24.173Z",
-    "summary": "发布订阅模式（Pub-Sub）通过消息中心解耦发布者和订阅者，适用于组件通信、异步任务等场景。核心方法：on（订阅）、emit（发布）、off（取消）。与观察者模式的区别在于间接通信，避免内存泄漏需及时取消订阅。面试常考设计模式理解、解耦能力及实际应用（如Vue EventBus）",
+    "createdAt": "2025-02-22T21:49:40.000Z",
+    "summary": "\r\n### 1. 发布订阅模式是啥？\r\n\r\n简单来说，发布订阅模式就是一种**消息通信机制**。\r\n\r\n- **发布者（Publisher）**\r\n  ：负责发消息。\r\n- **订阅者（Subscriber）**\r\n  ：负责收消息。\r\n- **消息中心（Event Bus）**\r\n  ：负责管理消...",
     "url": "/doc/01.html"
   },
   {
-    "id": "coding-examples",
-    "title": "编程语言代码示例",
+    "id": "02",
+    "title": "JavaScript 最实用的 10 种设计模式和应用场景",
     "tags": [
-      "编程",
-      "代码",
-      "JavaScript",
-      "Python",
-      "CSS",
-      "示例"
+      "设计模式"
     ],
-    "createdAt": "2023-12-01T09:00:00.000Z",
-    "summary": "多种编程语言的代码示例，用于展示山水卡片系统的代码高亮功能。",
-    "url": "/doc/coding-examples.html"
+    "createdAt": "2025-03-08T17:49:49.000Z",
+    "summary": "\r\n## 1. 单例模式（Singleton Pattern）\r\n\r\n单例模式确保一个类只有一个实例，并提供一个全局访问点，一般应用场景表现在：\r\n\r\n- 全局状态管理（如 Redux 中的 Store）。\r\n- 数据库连接池。\r\n- 日志记录器。\r\n\r\n```js\r\nclass Singleton...",
+    "url": "/doc/02.html"
   },
   {
-    "id": "css-flexbox",
-    "title": "中国人",
+    "id": "03",
+    "title": "前端文件大小单位转换的最佳实践",
     "tags": [
-      "css",
-      "web-design",
-      "layout",
-      "flexbox"
+      "单位转换"
     ],
-    "createdAt": "2023-05-21T14:45:00.000Z",
-    "summary": "A practical guide to CSS Flexbox layout system with examples and common use cases for responsive web design.",
-    "url": "/doc/css-flexbox.html"
+    "createdAt": "2025-03-08T17:54:15.000Z",
+    "summary": "\r\n## 提高代码优雅度：文件大小单位转换的最佳实践\r\n\r\n在日常开发中，我们经常需要将文件大小从 KB 转换为 MB、GB 甚至 TB，以提供更直观的信息展示。\r\n\r\n今天，我们就来看看如何优雅地实现这一功能，并推荐一种更简洁高效的代码写法。\r\n\r\n## 传统写法：繁琐的 if-else\r\n\r\n`...",
+    "url": "/doc/03.html"
   },
   {
-    "id": "git-workflow",
-    "title": "Effective Git Workflow for Teams",
+    "id": "04",
+    "title": "一起聊聊 Symbols 在前端的几个妙用",
     "tags": [
-      "git",
-      "version-control",
-      "development",
-      "collaboration"
+      "Symbols"
     ],
-    "createdAt": "2023-06-10T10:15:00.000Z",
-    "summary": "A practical guide to Git workflow strategies for effective team collaboration, including branching models, commit practices, and conflict resolution.",
-    "url": "/doc/git-workflow.html"
+    "createdAt": "2025-03-08T18:09:52.000Z",
+    "summary": "\r\n## 1. JavaScript 的 Symbols 有什么用\r\n\r\nSymbols 与其他 JavaScript 原语不同，其保证唯一性。\r\n\r\n当开发者使用 `Symbol('description')` 创建 Symbols 时，其值永远不会与任何其他 Symbols 相同，即使是使用相同...",
+    "url": "/doc/04.html"
   },
   {
-    "id": "javascript-basics",
-    "title": "JavaScript Basics - Essential Concepts",
+    "id": "05",
+    "title": "为何说 AbortController 是前端一把利剑",
     "tags": [
-      "javascript",
-      "programming",
-      "basics"
+      "AbortController"
     ],
-    "createdAt": "2023-04-15T09:30:00.000Z",
-    "summary": "A comprehensive overview of JavaScript fundamentals including variables, data types, functions, and control flow.",
-    "url": "/doc/javascript-basics.html"
+    "createdAt": "2025-03-08T18:12:26.000Z",
+    "summary": "\r\n## 1\\. 通过 AbortController 提前终止 fetch\r\n\r\n首先看一个例子，其使用 AbortController 来实现可以提前中止的 fetch：\r\n\r\n```js\r\nfetchButton.onclick = async () => {\r\n  const control...",
+    "url": "/doc/05.html"
+  },
+  {
+    "id": "06",
+    "title": "Map最佳实践",
+    "tags": [
+      "Map"
+    ],
+    "createdAt": "2025-03-08T20:31:37.000Z",
+    "summary": "\r\n<img src=\"/images/02.webp\" />\r\n\r\n**「Map」** 映射是一种经典的数据结构类型，其中数据以  **「key/value」**  的键值对形式存在\r\n\r\n|        |                 Map                  |     ...",
+    "url": "/doc/06.html"
+  },
+  {
+    "id": "07",
+    "title": "性能优化-你的瀑布流还不够懒",
+    "tags": [
+      "性能优化"
+    ],
+    "createdAt": "2025-03-08T21:41:27.000Z",
+    "summary": "\r\n无限加载的商品瀑布流是电商最场景的最常用、最重要的组件，因此有一个高性能的瀑布流组件就变得无比重要\r\n\r\n## 使用 Grid 布局，赢在起跑线\r\n\r\nGrid 布局实现响应式非常简单，纯 CSS 实现，不依赖 JavaScript，性能优化赢在起点上\r\n\r\n<img src=\"/images/...",
+    "url": "/doc/07.html"
+  },
+  {
+    "id": "08",
+    "title": "VSCode 调试 Vue",
+    "tags": [
+      "调试"
+    ],
+    "createdAt": "2025-03-08T22:34:31.000Z",
+    "summary": "\r\n## 如何用 VSCode 调试 Vue 项目\r\n\r\n### 开启 sourcemap\r\n\r\n如果你的项目构建工具使用的是  **webpack**, 一定要在  `vue.config.js`  文件中，添加如下配置：\r\n\r\n```js\r\nmodule.exports = {\r\n  confi...",
+    "url": "/doc/08.html"
+  },
+  {
+    "id": "09",
+    "title": "Promise.allSettled",
+    "tags": [
+      "Promise"
+    ],
+    "createdAt": "2025-03-09T09:50:25.000Z",
+    "summary": "\r\n处理异步操作已经成为了 JavaScript 日常编码的核心部分。随着应用复杂度的增加，我们经常需要并发执行多个异步任务并合理处理它们的结果。长期以来，`Promise.all()`  一直是我们处理并发 Promise 的首选方法，但它存在一个致命缺陷：一旦任何一个 Promise 被拒绝（r...",
+    "url": "/doc/09.html"
+  },
+  {
+    "id": "10",
+    "title": "如果一个NPM包部分功能不满足需求，如何修改器部分功能",
+    "tags": [
+      "前端工程化"
+    ],
+    "createdAt": "2025-03-09T10:40:04.000Z",
+    "summary": "\r\n对第三方包进行修改以适应特定需求是一个常见的场景。尽管直接修改 node_modules 中的代码是可能的，但这种做法并不推荐，因为这些改动在下次运行 `npm install` 或更新包时会丢失。\r\n\r\n接下来的内容中，我们将来讲解一下处理这种情况的几种推荐方法。\r\n\r\n## 使用 Fork\r...",
+    "url": "/doc/10.html"
+  },
+  {
+    "id": "11",
+    "title": "前端包管理工具 npm、yarn 与 pnpm",
+    "tags": [
+      "前端工程化"
+    ],
+    "createdAt": "2025-03-09T10:42:49.000Z",
+    "summary": "\r\n## npm install 发生了什么\r\n\r\n### 1\\. 读取 package.json\r\n\r\n- **解析项目的依赖**：`npm` 首先会读取当前目录下的  `package.json`  文件，以了解项目的基本信息和所需的依赖包列表。这个文件包含了项目的名称、版本、描述、脚本和依赖项...",
+    "url": "/doc/11.html"
+  },
+  {
+    "id": "12",
+    "title": "一次搞懂 CSS 各种混合模式",
+    "tags": [
+      "mix-blend-mode",
+      "background-blend-mode"
+    ],
+    "createdAt": "2025-03-10T20:23:43.000Z",
+    "summary": "\r\n## 一. mix-blend-mode\r\n\r\n`mix-blend-mode` 用于设定一个元素如何与其父元素或背景中的其他元素进行混合。常见的应用包括图片和文字在背景上的混合，让内容与背景色彩产生有趣的视觉效果。\r\n\r\n```css\r\ndiv {\r\n  mix-blend-mode: dif...",
+    "url": "/doc/12.html"
+  },
+  {
+    "id": "13",
+    "title": "CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果",
+    "tags": [
+      "filter / backdrop-filter"
+    ],
+    "createdAt": "2025-03-10T21:28:06.000Z",
+    "summary": "\r\n## 一. 滤镜 filter\r\n\r\n`filter`属性能让你对 HTML 元素本身做一系列的图像处理效果，让我们能在不使用绘图软体的情况下实现各种特效，例如：模糊、明度、对比度等。\r\n\r\n```css\r\ndiv {\r\n  filter: 方法(数值);\r\n}\r\n```\r\n\r\n### 特效效果...",
+    "url": "/doc/13.html"
+  },
+  {
+    "id": "14",
+    "title": "无限动画CSS工具库",
+    "tags": [
+      "动画库"
+    ],
+    "createdAt": "2025-03-13T19:48:06.000Z",
+    "summary": "\r\n今天，我们为大家介绍一款强大的 CSS 动画库——**AnimXYZ**，它能够帮助开发者轻松创建、定制和组合动画效果，而无需编写任何关键帧代码。\r\n\r\n<img src=\"/images/03.gif\">\r\n\r\n## 什么是 AnimXYZ？\r\n\r\n**AnimXYZ** 是一个基于 CSS ...",
+    "url": "/doc/14.html"
+  },
+  {
+    "id": "15",
+    "title": "3个非常好用的图标网站",
+    "tags": [
+      "Icon"
+    ],
+    "createdAt": "2025-03-13T19:55:06.000Z",
+    "summary": "\r\n## 一. iconfont\r\n\r\n最常用的图标站，阿里巴巴出品。\r\n\r\n提供了成千上万的矢量图标，涵盖 UI 设计、APP、网页等多个领域。\r\n\r\n用户可以创建自己的项目，批量管理所需图标，方便在不同项目中复用。\r\n\r\n支持多种使用方式。\r\n\r\n支持多人协作。\r\n\r\nhttps://www.i...",
+    "url": "/doc/15.html"
+  },
+  {
+    "id": "16",
+    "title": "10 个鲜为人知但必备的 NPM 包",
+    "tags": [
+      "NPM 包"
+    ],
+    "createdAt": "2025-03-14T22:25:00.000Z",
+    "summary": "\r\n## 1. date-fns-tz：时区处理的终极解决方案\r\n\r\n时区处理一直是开发者的噩梦，尤其是当应用需要支持全球用户时。虽然 Moment.js 曾经是时区处理的首选工具，但  `date-fns-tz`  提供了一个更现代化、轻量级的替代方案。它基于  `date-fns`  库，提供了...",
+    "url": "/doc/16.html"
+  },
+  {
+    "id": "17",
+    "title": "你必须知道的前端性能指标",
+    "tags": [
+      "性能优化"
+    ],
+    "createdAt": "2025-03-14T22:46:05.000Z",
+    "summary": "\r\n## 前言\r\n\r\n在当今快速发展的互联网时代，用户体验已成为衡量网站成功的关键因素之一。对于前端开发者来说，了解和优化前端性能指标是提升用户体验的必经之路。\r\n\r\n今天，我们就来聊聊那些影响用户体验的前端性能指标：FCP、LCP、TTFB、FID、TTI、CLS 和 TBT。\r\n\r\n## FCP...",
+    "url": "/doc/17.html"
+  },
+  {
+    "id": "18",
+    "title": "前端项目优化-让网站飞起来的秘籍",
+    "tags": [
+      "性能优化"
+    ],
+    "createdAt": "2025-03-14T22:51:35.000Z",
+    "summary": "\r\n在如今这个信息爆炸的时代，前端性能优化已经成为提升用户体验和网站竞争力的关键因素。一个加载迅速、响应灵敏的网站，不仅能吸引更多的用户，还能提高用户留存率和转化率。今天，就让我们一起深入探讨前端项目优化的方方面面，掌握那些能让网站“飞起来”的秘籍。\r\n\r\n## 一、加载时性能优化\r\n\r\n### 按...",
+    "url": "/doc/18.html"
+  },
+  {
+    "id": "19",
+    "title": "如何用 Docker 部署前端项目",
+    "tags": [
+      "Docker"
+    ],
+    "createdAt": "2025-03-14T23:10:34.000Z",
+    "summary": "\r\n## 前言\r\n\r\n在前端开发中，部署项目往往是一个令人头疼的环节。传统的部署方式不仅复杂，还容易因为环境差异导致各种问题。而 Docker 的出现，为前端项目的部署带来了全新的解决方案。今天，就让我们一起探索如何使用 Docker 部署前端项目，让你的部署过程变得轻松又高效！\r\n\r\n### 一....",
+    "url": "/doc/19.html"
+  },
+  {
+    "id": "20",
+    "title": "前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)",
+    "tags": [
+      "前端国际化"
+    ],
+    "createdAt": "2025-03-15T08:41:07.000Z",
+    "summary": "\r\n## 🚀 前言\r\n\r\n大家好呀！之前给大家介绍过一个关于国际化的 Vite 插件 `vite-plugin-auto-i18n`，这是一个自动翻译的 i18n Vite 插件。但当时这个插件还不够完美。所以，时隔一年，我们带来了前端国际化插件的升级版——更兼容、更适配、更稳定。🎉\r\n\r\n国际...",
+    "url": "/doc/20.html"
+  },
+  {
+    "id": "21",
+    "title": "七行代码搞定无限滚动",
+    "tags": [
+      "性能优化",
+      "滚动优化"
+    ],
+    "createdAt": "2025-03-15T09:28:38.000Z",
+    "summary": "\r\n无限滚动，又称瀑布流，已成为现代网站的标配。它能提升用户体验，让浏览更加流畅。分享下只需七行 JavaScript 代码，就能轻松实现高性能的无限滚动效果，并深入剖析其背后的性能优化原理。\r\n\r\n## 传统实现的痛点\r\n\r\n在谈论优化方案前，我们先来看看传统无限滚动实现中存在的问题：\r\n\r\n1....",
+    "url": "/doc/21.html"
+  },
+  {
+    "id": "22",
+    "title": "告别 React 性能瓶颈",
+    "tags": [
+      "React",
+      "性能优化"
+    ],
+    "createdAt": "2025-03-15T18:11:08.000Z",
+    "summary": "\r\n## 1\\. 分析和监控性能\r\n\r\n使用工具找出瓶颈：\r\n\r\n- React DevTools：检查组件层次结构，识别重新渲染问题。\r\n\r\n```sh\r\nnpm install --save-dev @react-devtools/extension\r\n```\r\n\r\n在浏览器中使用它来检查不必要...",
+    "url": "/doc/22.html"
+  },
+  {
+    "id": "23",
+    "title": "HTML 中的 JavaScript",
+    "tags": [
+      "高级程序设计",
+      "script 元素"
+    ],
+    "createdAt": "2025-03-15T20:37:45.000Z",
+    "summary": "\r\n## script 元素\r\n\r\n**script 元素有下列 8 个属性：**\r\n\r\n### 1. async:\r\n\r\n可选，表示应该立即下载脚本，但不能妨碍页面上的其他操作，比如下载资源或等待其他脚本加载，这个属性只对外部脚本文件有效。\r\n\r\n### 2. charset:\r\n\r\n可选，使用 ...",
+    "url": "/doc/23.html"
+  },
+  {
+    "id": "24",
+    "title": "语言基础",
+    "tags": [
+      "高级程序设计"
+    ],
+    "createdAt": "2025-03-16T21:38:09.000Z",
+    "summary": "\r\n## 变量\r\n\r\n### let 声明\r\n\r\n**for 循环中的 let 声明**\r\n\r\n在 let 出现之前，for 循环定义的迭代变量会泄露到循环体外部。\r\n\r\n```js\r\nfor (var i = 0; i < 5; i++) {\r\n  // 循环逻辑\r\n}\r\nconsole.log(...",
+    "url": "/doc/24.html"
+  },
+  {
+    "id": "25",
+    "title": "原生 Observable API 来了",
+    "tags": [
+      "Observable API",
+      "实验属性"
+    ],
+    "createdAt": "2025-03-18T20:32:01.000Z",
+    "summary": "\r\n在 Web 开发中，异步事件处理始终是构建响应式、可扩展应用的核心挑战。传统方案依赖`addEventListener`进行事件监听，但在处理复杂事件流时，其命令式编程模型常导致代码臃肿、难以维护且缺乏组合性。尽管开发者通常通过 RxJS 等响应式编程库解决此类问题，但这些第三方方案需要额外学习...",
+    "url": "/doc/25.html"
+  },
+  {
+    "id": "26",
+    "title": "Grid布局详解-掌握网页布局的终极武器",
+    "tags": [
+      "Grid"
+    ],
+    "createdAt": "2025-03-18T20:57:14.000Z",
+    "summary": "\r\n## 一. Grid 布局基础概念\r\n\r\n**Grid 布局（网格布局）** 是 CSS 中一种二维布局模型，允许开发者通过行（Row）和列（Column）的组合，将页面划分为多个区域，并精准控制元素的位置和尺寸。它的核心特点是同时管理行和列，适合构建复杂且结构化的布局。\r\n\r\n<img src...",
+    "url": "/doc/26.html"
+  },
+  {
+    "id": "27",
+    "title": "前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比",
+    "tags": [
+      "前端异常处理",
+      "Proxy",
+      "Web Workers",
+      "iframe"
+    ],
+    "createdAt": "2025-03-20T19:36:42.000Z",
+    "summary": "\r\n在插件化架构中，**异常隔离**是保障系统稳定性的核心机制。通过隔离插件与宿主环境，即使单个插件崩溃，也不会影响整体系统运行。\r\n\r\n在前端开发中，异常隔离是保障应用稳定性的核心需求，尤其是在处理第三方脚本、插件或不可信代码时。本文将从 **实现原理**、**隔离级别**、**性能开销** 和 ...",
+    "url": "/doc/27.html"
   }
 ]

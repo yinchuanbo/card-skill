@@ -1,0 +1,319 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Map最佳实践</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>Map最佳实践</h1>
+                        <div class="meta">
+                            <time datetime="Sun Mar 09 2025 04:31:37 GMT+0800 (中国标准时间)">2025/3/9</time>
+                            <div class="tags">
+                                <span class="tag">Map</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <img src="/images/02.webp" />
+
+<p><strong>「Map」</strong> 映射是一种经典的数据结构类型，其中数据以  <strong>「key/value」</strong>  的键值对形式存在</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">Map</th>
+<th align="center">Object</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">默认值</td>
+<td align="center">默认不包含任何值，只包含显式插入的键</td>
+<td align="center">一个 Object 有一个原型，原型上的键名有可能和自己对象上设置的键名冲突</td>
+</tr>
+<tr>
+<td align="center">类型</td>
+<td align="center">任意</td>
+<td align="center">String 或 Symbol</td>
+</tr>
+<tr>
+<td align="center">长度</td>
+<td align="center">键值对个数通过 size 属性获取</td>
+<td align="center">键值对个数只能手动计算</td>
+</tr>
+<tr>
+<td align="center">性能</td>
+<td align="center">频繁增删键值对的场景下表现更好</td>
+<td align="center">频繁添加和删除键值对的场景下未作出优化</td>
+</tr>
+</tbody></table>
+<h2 id="map-基本用法">Map 基本用法</h2>
+<blockquote>
+<p>接受任何类型的键 划重点，是任何 any!!!</p>
+</blockquote>
+<pre><code class="language-js">const testMap = newMap();
+
+let str = &quot;今天不学习&quot;,
+  num = 666,
+  keyFunction = function () {},
+  keySymbol = Symbol(&quot;Web&quot;),
+  keyNull = null,
+  keyUndefined = undefined,
+  keyNaN = NaN;
+//添加键值对
+//基本用法
+testMap.set(&quot;key&quot;, &quot;value&quot;); // Map(1) {&quot;key&quot; =&gt; &quot;value&quot;}
+
+testMap.set(str, &quot;明天变辣鸡&quot;);
+testMap.set(num, &quot;前端Sneaker&quot;);
+testMap.set(keyFunction, &quot;你的函数写的好棒棒哦&quot;);
+testMap.set(keySymbol, &quot;大前端&quot;);
+testMap.set(keyNull, &quot;我是个Null&quot;);
+testMap.set(keyUndefined, &quot;我是个Undifined&quot;);
+testMap.set(keyNaN, &quot;我是个NaN&quot;);
+
+testMap.get(function () {}); //undefined
+testMap.get(Symbol(&quot;Web&quot;)); //undefined
+
+//虽然NaN !== NaN 但是作为Map键名并无区别
+testMap.get(NaN); //&quot;我是个NaN&quot;
+testMap.get(Number(&quot;NaN&quot;)); //&quot;我是个NaN&quot;
+</code></pre>
+<blockquote>
+<p>除了 NaN 比较特殊外，其他 <strong>「Map」</strong> 的 get 方法都是通过对比键名是否相等（===）来获取，不相等则返回 undefined</p>
+</blockquote>
+<h2 id="比较-map-和-object">比较 Map 和 Object</h2>
+<h3 id="定义">定义</h3>
+<pre><code class="language-js">//Map
+const map = new Map();
+map.set(&quot;key&quot;, &quot;value&quot;); // Map(1) {&quot;key&quot; =&gt; &quot;value&quot;}
+map.get(&quot;key&quot;); // &#39;value&#39;
+
+//Object
+const someObject = {};
+someObject.key = &quot;value&quot;;
+someObject.key; // &#39;value&#39;
+</code></pre>
+<p>这里可以明显看出其实其定义行为是十分相似的，想必看到这里大家还没看出 <strong>「Map」</strong> 到底在何时使用才是最佳实践，别急接着来。</p>
+<h3 id="键名类型">键名类型</h3>
+<p>JavaScript <strong>「Object」</strong> 只接收两种类型的键名  String 和 Symbol，你可以使用其他类型的键名，但是最终 JavaScript 都会隐式转换为字符串</p>
+<pre><code class="language-js">const obj = {};
+//直接看几种比较特殊的键名
+obj[true] = &quot;Boolean&quot;;
+obj[1] = &quot;Number&quot;;
+obj[{ 前端: &quot;Sneaker&quot; }] = &quot;666&quot;;
+
+Object.keys(obj); // [&quot;1&quot;, &quot;true&quot;, &quot;[object Object]&quot;]
+</code></pre>
+<p>再来看看  <strong>「Map」</strong>  的，其接收任何类型的键名并保留其键名类型 (此处简单举例，详细可看文章开头<strong>「Map」</strong>基本使用)</p>
+<pre><code class="language-js">const map = new Map();
+map.set(1, &quot;value&quot;);
+map.set(true, &quot;value&quot;);
+map.set({ key: &quot;value&quot; }, &quot;value&quot;);
+for (const key of map.keys()) {
+  console.log(key);
+}
+// 1
+// true
+// {key: &quot;value&quot;}
+
+//除此之外，Map还支持正则作为键名
+map.set(/^1[3456789]\d{9}$/, &quot;手机号正则&quot;);
+//Map(1) {/^1[3456789]\d{9}$/ =&gt; &quot;手机号正则&quot;}
+</code></pre>
+<blockquote>
+<p><strong>「Map」</strong> 支持正则表达式作为键名，这在 Object 是不被允许的直接报错</p>
+</blockquote>
+<h3 id="原型-prototype">原型 Prototype</h3>
+<p><strong>「Object」</strong> 不同于 <strong>「Map」</strong>，它不仅仅是表面所看到的。<strong>「Map」</strong> 只包含你所定义的键值对，但是 <strong>「Object」</strong> 对象具有其原型中的一些内置属性</p>
+<pre><code class="language-js">const newObject = {};
+newObject.constructor; // ƒ Object() { [native code] }
+</code></pre>
+<p>如果操作不当没有正确遍历对象属性，可能会导致出现问题，产生你意料之外的 bug</p>
+<pre><code class="language-js">const countWords = (words) =&gt; {
+  const counts = {};
+  for (const word of words) {
+    counts[word] = (counts[word] || 0) + 1;
+  }
+  return counts;
+};
+const counts = countWords([&quot;constructor&quot;, &quot;creates&quot;, &quot;a&quot;, &quot;bug&quot;]);
+// {constructor: &quot;function Object() { [native code] }1&quot;, creates: 1, a: 1, bug: 1}
+</code></pre>
+<h3 id="迭代器">迭代器</h3>
+<p><strong>「Map」</strong>  是可迭代的，可以直接进行迭代，例如 forEach 循环或者 <code>for...of...</code> 循环</p>
+<pre><code class="language-js">//forEach
+const map = new Map();
+map.set(&quot;key1&quot;, &quot;value1&quot;);
+map.set(&quot;key2&quot;, &quot;value2&quot;);
+map.set(&quot;key3&quot;, &quot;value3&quot;);
+map.forEach((value, key) =&gt; {
+  console.log(key, value);
+});
+// key1 value1
+// key2 value2
+// key3 value3
+
+//for...of...
+for (const entry of map) {
+  console.log(entry);
+}
+// [&quot;key1&quot;, &quot;value1&quot;]
+// [&quot;key2&quot;, &quot;value2&quot;]
+// [&quot;key3&quot;, &quot;value3&quot;]
+</code></pre>
+<p>但是对于 <strong>「Object」</strong> 是不能直接迭代的，当你尝试迭代将导致报错</p>
+<pre><code class="language-js">const object = {
+  key1: &quot;value1&quot;,
+  key2: &quot;value2&quot;,
+  key3: &quot;value3&quot;,
+};
+for (const entry of object) {
+  console.log(entry);
+}
+// Uncaught TypeError: object is not iterable
+</code></pre>
+<p>这时候你就需要一个额外的步骤来检索其键名、键值或者键值对</p>
+<pre><code class="language-js">for (const key of Object.keys(object)) {
+  console.log(key);
+}
+// key1
+// key2
+// key3
+
+for (const value of Object.values(object)) {
+  console.log(value);
+}
+// value1
+// value2
+// value3
+
+for (const entry of Object.entries(object)) {
+  console.log(entry);
+}
+// [&quot;key1&quot;, &quot;value1&quot;]
+// [&quot;key2&quot;, &quot;value2&quot;]
+// [&quot;key3&quot;, &quot;value3&quot;]
+
+for (const [key, value] of Object.entries(object)) {
+  console.log(key, value);
+}
+//&quot;key1&quot;, &quot;value1&quot;
+//&quot;key2&quot;, &quot;value2&quot;
+//&quot;key3&quot;, &quot;value3&quot;
+</code></pre>
+<p>当然也可以使用 <code>for...in...</code> 进行遍历循环键名</p>
+<pre><code class="language-js">for (const key in object) {
+  console.log(key);
+}
+// key1
+// key2
+// key3
+</code></pre>
+<h3 id="元素顺序和长度">元素顺序和长度</h3>
+<p>Map 保持对长度的跟踪，使其能够在 <code>O(1)</code> 复杂度中进行访问</p>
+<pre><code class="language-js">const map = new Map();
+map.set(&quot;key1&quot;, &quot;value1&quot;);
+map.set(&quot;key2&quot;, &quot;value2&quot;);
+map.set(&quot;key3&quot;, &quot;value3&quot;);
+map.size; // 3
+</code></pre>
+<p>而另一方面，对于 <strong>「Object」</strong> 而言，想要获得对象的属性长度，需要手动对其进行迭代，使其为 <code>O(n)</code> 复杂度，属性长度为 n</p>
+<p>在上文提及的示例中，我们可以看到 <strong>「Map」</strong> 始终保持按插入顺序返回键名。但 <strong>「Object」</strong> 却不是。从 ES6 开始，String 和 Symbol 键是按顺序保存起来的，但是通过隐式转换保存成 String 的键就是乱序的</p>
+<pre><code class="language-js">const object = {};
+object[&quot;key1&quot;] = &quot;value1&quot;;
+object[&quot;key0&quot;] = &quot;value0&quot;;
+object; // {key1: &quot;value1&quot;, key0: &quot;value0&quot;}
+object[20] = &quot;value20&quot;;
+object; // {20: &quot;value20&quot;, key1: &quot;value1&quot;, key0: &quot;value0&quot;}
+
+Object.keys(object).length; //3
+</code></pre>
+<h2 id="objectmap-何为最佳实践">Object/Map 何为最佳实践</h2>
+<p>如上就是  <strong>「Map」</strong>  和  <strong>「Object」</strong>  的基本区别，在解决问题考虑两者的时候就需要考虑两者的区别。</p>
+<ul>
+<li><p>当插入顺序是你解决问题时需要考虑的，并且当前需要使用除  String  和  Symbol  以外的键名时，那么  <strong>「Map」</strong>  就是个最佳解决方案</p>
+</li>
+<li><p>如果需要遍历键值对（并且需要考虑顺序）,那我觉得还是需要优先考虑  <strong>「Map」</strong>。</p>
+</li>
+<li><p><strong>Map</strong>是一个纯哈希结构，而<strong>Object</strong>不是（它拥有自己的内部逻辑）。<strong>Map</strong>  在频繁增删键值对的场景下表现更好，性能更高。因此当你需要频繁操作数据的时候也可以优先考虑  <strong>Map</strong></p>
+</li>
+<li><p>再举一个实际的例子，比如有一个自定义字段的用户操作功能，用户可以通过表单自定义字段，那么这时候最好是使用 Map，因为很有可能会破坏原有的对象</p>
+</li>
+</ul>
+<pre><code class="language-js">const userCustomFields = {
+  color: &quot;blue&quot;,
+  size: &quot;medium&quot;,
+  toString: &quot;A blue box&quot;,
+};
+</code></pre>
+<p>此时用户自定义的  toString  就会破坏到原有的对象 而  <strong>「Map」</strong>  键名接受任何类型，没有影响</p>
+<pre><code class="language-js">function isMap(value) {
+  return value.toString() === &quot;[object Map]&quot;;
+}
+
+const actorMap = new Map();
+
+actorMap.set(&quot;name&quot;, &quot;Harrison Ford&quot;);
+actorMap.set(&quot;toString&quot;, &quot;Actor: Harrison Ford&quot;);
+
+// Works!
+isMap(actorMap); // =&gt; true
+</code></pre>
+<ul>
+<li>当你需要处理一些属性，那么  <strong>「Object」</strong>  是完全受用的，尤其是需要处理 JSON 数据的时候。由于  <strong>「Map」</strong>  可以是任意类型，因此没有可以将其转化为 JSON 的原生方法。</li>
+</ul>
+<pre><code class="language-js">var map = new Map();
+map.set(&quot;key&quot;, &quot;value&quot;);
+JSON.stringify(map); //&quot;{}&quot;
+</code></pre>
+<ul>
+<li>当你需要通正则表达式判断去处理一些业务逻辑时，<strong>「Map」</strong> 将是你的最佳解决方案</li>
+</ul>
+<pre><code class="language-js">const actions = () =&gt; {
+  const functionA = () =&gt; {
+    /*do sth*/
+  };
+  const functionB = () =&gt; {
+    /*do sth*/
+  };
+  const functionC = () =&gt; {
+    /*send log*/
+  };
+  returnnewMap([
+    [/^guest_[1-4]$/, functionA],
+    [/^guest_5$/, functionB],
+    [/^guest_.*$/, functionC],
+    //...
+  ]);
+};
+
+const onButtonClick = (identity, status) =&gt; {
+  let action = [...actions()].filter(([key, value]) =&gt;
+    key.test(`${identity}_${status}`)
+  );
+  action.forEach(([key, value]) =&gt; value.call(this));
+};
+</code></pre>
+<p>利用数组循环的特性，符合正则条件的逻辑都会被执行，那就可以同时执行公共逻辑和单独逻辑，因为正则的存在，你可以打开想象力解锁更多的玩法,更多相关 Map 用法样例可以查看<a href="https://mp.weixin.qq.com/s?__biz=MzAwNzQ2ODEyMQ==&mid=2247484997&idx=1&sn=e03a05eb82fb1f8a191e58ae307a5113&scene=21#wechat_redirect">JavaScript 复杂判断的更优雅写法</a></p>
+<h2 id="总结：">总结：</h2>
+<p><strong>「Object」</strong> 对象通常可以很好的保存结构化数据，但是也有相应的局限性：</p>
+<ol>
+<li>键名接受类型只能用  String  或者  Symbol</li>
+<li>自定义的键名容易与原型继承的属性键名冲突（例如  toString，constructor  等）</li>
+<li>对象/正则无法用作键名 而这些问题通过  <strong>「Map」</strong>  都可以解决，并且提供了诸如迭代器和易于进行大小查找之类的好处</li>
+</ol>
+<blockquote>
+<p>不要将 <strong>「Map」</strong> 作为普通 <strong>「Object」</strong> 的替代品，而应该是普通对象的补充</p>
+</blockquote>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

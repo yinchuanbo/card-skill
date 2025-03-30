@@ -1,0 +1,80 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>前端文件大小单位转换的最佳实践</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>前端文件大小单位转换的最佳实践</h1>
+                        <div class="meta">
+                            <time datetime="Sun Mar 09 2025 01:54:15 GMT+0800 (中国标准时间)">2025/3/9</time>
+                            <div class="tags">
+                                <span class="tag">单位转换</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <h2 id="提高代码优雅度：文件大小单位转换的最佳实践">提高代码优雅度：文件大小单位转换的最佳实践</h2>
+<p>在日常开发中，我们经常需要将文件大小从 KB 转换为 MB、GB 甚至 TB，以提供更直观的信息展示。</p>
+<p>今天，我们就来看看如何优雅地实现这一功能，并推荐一种更简洁高效的代码写法。</p>
+<h2 id="传统写法：繁琐的-if-else">传统写法：繁琐的 if-else</h2>
+<pre><code class="language-js">function formatSizeUnits(kb) {
+  var result = &quot;&quot;;
+  if (kb &lt; 1024) {
+    result = kb + &quot; KB&quot;;
+  } else if (kb &lt; 1024 * 1024) {
+    result = (kb / 1024).toFixed(2) + &quot; MB&quot;;
+  } else if (kb &lt; 1024 * 1024 * 1024) {
+    result = (kb / 1024 / 1024).toFixed(2) + &quot; GB&quot;;
+  } else {
+    result = (kb / 1024 / 1024 / 1024).toFixed(2) + &quot; TB&quot;;
+  }
+  return result;
+}
+</code></pre>
+<p>这段代码能够正确地完成任务，但存在明显的问题：</p>
+<ol>
+<li><p><strong>冗余的 if-else 判断</strong></p>
+<p>每种单位都需要写一遍，代码不够简洁。</p>
+</li>
+<li><p><strong>可拓展性差</strong></p>
+<p>如果以后需要支持 PB（Petabyte）或者更大的单位，还需要继续添加 if-else。</p>
+</li>
+<li><p><strong>重复计算</strong></p>
+<p>1024 操作重复出现，影响可读性。</p>
+</li>
+</ol>
+<h2 id="推荐写法：更优雅的-while-循环">推荐写法：更优雅的 while 循环</h2>
+<pre><code class="language-js">function formatSizeUnits(kb) {
+  let units = [&quot;KB&quot;, &quot;MB&quot;, &quot;GB&quot;, &quot;TB&quot;, &quot;PB&quot;];
+  let unitIndex = 0;
+
+  while (kb &gt;= 1024 &amp;&amp; unitIndex &lt; units.length - 1) {
+    kb /= 1024;
+    unitIndex++;
+  }
+
+  return `${kb.toFixed(2)} ${units[unitIndex]}`;
+}
+</code></pre>
+<h2 id="这段代码的优势：">这段代码的优势：</h2>
+<p>✅ <strong>结构更清晰</strong> —— while 循环逐级转换单位，逻辑更加直观。</p>
+<p>✅ <strong>更易拓展</strong> —— 只需在 units 数组中添加新的单位，无需修改核心逻辑。</p>
+<p>✅ <strong>减少冗余计算</strong> —— 避免了多次 if-else 判断，提高可读性。</p>
+<h2 id="代码示例：">代码示例：</h2>
+<pre><code class="language-js">console.log(formatSizeUnits(500)); // &quot;500.00 KB&quot;
+console.log(formatSizeUnits(2048)); // &quot;2.00 MB&quot;
+console.log(formatSizeUnits(5 * 1024 ** 3)); // &quot;5.00 TB&quot;
+</code></pre>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

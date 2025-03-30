@@ -1,0 +1,301 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</h1>
+                        <div class="meta">
+                            <time datetime="Sat Mar 15 2025 16:41:07 GMT+0800 (中国标准时间)">2025/3/15</time>
+                            <div class="tags">
+                                <span class="tag">前端国际化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <h2 id="🚀-前言">🚀 前言</h2>
+<p>大家好呀！之前给大家介绍过一个关于国际化的 Vite 插件 <code>vite-plugin-auto-i18n</code>，这是一个自动翻译的 i18n Vite 插件。但当时这个插件还不够完美。所以，时隔一年，我们带来了前端国际化插件的升级版——更兼容、更适配、更稳定。🎉</p>
+<p>国际化对于大型项目来说一直是一个令人头痛的问题。通常需要手动在项目中替换对应的文字，并维护一个配置（map）。这不仅低效，还需要耗费大量人力。一个大型项目的国际化工作可能需要测试和产品团队一起工作几个星期。那么，有没有一种方法可以无需改动业务代码，自动生成翻译呢？</p>
+<p>答案是肯定的！这就是我们基于 Babel 开发的自动翻译插件 —— <code>auto-i18n-translation-plugins</code>！</p>
+<p><strong>「注：该插件基于 Babel 解析页面中的目标字符，统一翻译，最终生成一个 JSON 配置文件。如果觉得谷歌翻译不准确，可以直接修改 JSON 文件内容。插件的翻译键（key）是基于哈希算法生成的，类似对称加密。相同的字符会生成相同的键，不会重复翻译。此外，翻译是统一收集后再组装文本，并分割写入配置文件，不用担心发出大量翻译请求。」</strong></p>
+<p>我们希望大家可以尝试一下这个插件，它一定能够提高你们的工作效率和项目的国际化能力。💪🌍</p>
+<p>代码仓库: auto-i18n-translation-plugins</p>
+<h3 id="🏆-核心特点">🏆 核心特点</h3>
+<ul>
+<li>🛠️ <strong>「无需改动业务代码」</strong>，一键快速翻译多语言；</li>
+<li>🌐 支持 <strong>「多种翻译服务」</strong>（包括 Google 和有道，也支持自定义翻译器）；</li>
+<li>🥵 <strong>「支持所有编译成 js 的前端框架」</strong>（vue2/3，react）</li>
+<li>🉑️ <strong>「支持主流构建工具」</strong>（vite，webpack，rollup）</li>
+<li>🔍 <strong>「智能检测」</strong> 需要翻译的文本；</li>
+<li>🔧 提供 <strong>「灵活的配置选项」</strong>，满足不同项目需求；</li>
+<li>🆕 <strong>「支持新增语言」</strong>，自动补全配置；</li>
+<li>🌍 支持 <strong>「多国语言」</strong>。</li>
+</ul>
+<h3 id="📖-插件概述">📖 插件概述</h3>
+<p><code>auto-i18n-translation-plugins</code> 是一个强大的全自动国际化插件，涵盖了 Vite 和 Webpack 的子插件 <code>vite-auto-i18n-plugin</code> 和 <code>webpack-auto-i18n-plugin</code>，提供了一键翻译和自动补全的功能。🌟</p>
+<h2 id="🌟-快速开始">🌟 快速开始</h2>
+<h3 id="1️⃣-安装插件">1️⃣ 安装插件</h3>
+<p><strong>「Vite 项目」</strong></p>
+<pre><code class="language-sh">npm install vite-auto-i18n-plugin --save-dev
+# 或
+yarn add vite-auto-i18n-plugin --dev
+</code></pre>
+<p><strong>「Webpack 项目」</strong></p>
+<pre><code class="language-sh">npm install webpack-auto-i18n-plugin --save-dev
+# 或
+yarn add webpack-auto-i18n-plugin --dev
+</code></pre>
+<h3 id="2️⃣-配置示例">2️⃣ 配置示例</h3>
+<p><strong>「Vite 配置示例」</strong> (vite.config.js)</p>
+<pre><code class="language-js">import { defineConfig } from &quot;vite&quot;;
+import vitePluginAutoI18n from &quot;vite-auto-i18n-plugin&quot;;
+import vue from &quot;@vitejs/plugin-vue&quot;;
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          hoistStatic: false,
+          cacheHandlers: false,
+        },
+      },
+    }),
+    vitePluginAutoI18n({
+      targetLangList: [&quot;en&quot;, &quot;ko&quot;, &quot;ja&quot;],
+      translator: new YoudaoTranslator({
+        appId: &quot;4cdb9baea8066fef&quot;,
+        appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
+      }),
+    }),
+  ],
+});
+</code></pre>
+<p><strong>「Webpack 配置示例」</strong> (webpack.config.js)</p>
+<pre><code class="language-js">const webpackPluginsAutoI18n = require(&quot;webpack-auto-i18n-plugin&quot;);
+const { YoudaoTranslator } = require(&quot;webpack-auto-i18n-plugin&quot;);
+
+const i18nPlugin = new webpackPluginsAutoI18n.default({
+  targetLangList: [&quot;en&quot;, &quot;ko&quot;, &quot;ja&quot;, &quot;ru&quot;],
+  translator: new YoudaoTranslator({
+    appId: &quot;4cdb9baea8066fef&quot;,
+    appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
+  }),
+});
+
+module.exports = {
+  plugins: [
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      template: &quot;./public/index.html&quot;,
+    }),
+    i18nPlugin,
+  ],
+};
+</code></pre>
+<h3 id="3️⃣-翻译器配置示例">3️⃣ 翻译器配置示例</h3>
+<p>插件默认使用谷歌翻译。如果需要配置代理，可以优先使用有道翻译，翻译效果更佳。插件内置了谷歌翻译和有道翻译功能，您也可以自定义翻译器。✨</p>
+<p><strong>「使用谷歌翻译（默认）」</strong></p>
+<pre><code class="language-js">translator: new GoogleTranslator({
+  proxyOption: {
+    host: &quot;127.0.0.1&quot;,
+    port: 8899,
+    headers: {
+      &quot;User-Agent&quot;: &quot;Node&quot;,
+    },
+  },
+});
+</code></pre>
+<p><strong>「使用有道翻译」</strong></p>
+<pre><code class="language-js">translator: new YoudaoTranslator({
+  appId: &quot;4cdb9baea8066fef&quot;,
+  appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
+});
+</code></pre>
+<h3 id="4️⃣-项目入口配置">4️⃣ 项目入口配置</h3>
+<p>请在项目入口文件（如 <code>main.js</code>）的顶部引入语言配置文件：</p>
+<pre><code class="language-js">import &quot;../lang/index&quot;; 
+// 📍 必须在入口文件中第一行引入，这个文件会在运行插件时自动生成，默认在打包配置目录的同一层的lang文件夹中，其中的index.js 就是配置文件了
+</code></pre>
+<h3 id="5️⃣-用例动图：">5️⃣ 用例动图：</h3>
+<p><strong>vite + vue3：</strong></p>
+<img src="/images/04.gif" />
+
+<p><strong>vite + vue2：</strong></p>
+<img src="/images/05.gif" />
+
+<p>在 Vite 中，文件被一个一个地读取。如果某个文件之前没有被翻译过，<strong>「翻译插件在读取该文件时会执行自动翻译，这个过程可能导致短暂的白屏现象。」</strong> 为了避免此问题，我们建议大型项目先进行一次构建（build），统一生成完整的翻译文件。这样，后续加载时就不会出现白屏了。</p>
+<p><strong>webpack + react：</strong></p>
+<img src="/images/06.gif" />
+
+<p><strong>webpack + vue3</strong></p>
+<img src="/images/07.gif" />
+
+<h3 id="⚙️-配置参数说明">⚙️ 配置参数说明</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>必选</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>translateKey</td>
+<td>string</td>
+<td>✅</td>
+<td><code>$t</code></td>
+<td>翻译调用函数名称，用于在代码中进行语言切换，例如 <code>$t</code></td>
+</tr>
+<tr>
+<td>excludedCall</td>
+<td>string[]</td>
+<td>❌</td>
+<td><code>[&#39;$i8n&#39;, &#39;require&#39;, …]</code></td>
+<td>标记不会被翻译的函数调用列表</td>
+</tr>
+<tr>
+<td>excludedPattern</td>
+<td>RegExp[]</td>
+<td>❌</td>
+<td><code>[/\.\w+$/]</code></td>
+<td>标记排除不需要翻译的字符串模式，例如文件扩展名</td>
+</tr>
+<tr>
+<td>excludedPath</td>
+<td>string[]</td>
+<td>❌</td>
+<td><code>[&#39;node_modules&#39;]</code></td>
+<td>排除不需要翻译的目录，例如 <code>node_modules</code></td>
+</tr>
+<tr>
+<td>includePath</td>
+<td>RegExp[]</td>
+<td>❌</td>
+<td><code>[/src\//]</code></td>
+<td>指定需要翻译的目录路径（白名单），默认为 <code>src</code></td>
+</tr>
+<tr>
+<td>globalPath</td>
+<td>string</td>
+<td>❌</td>
+<td><code>&#39;./lang&#39;</code></td>
+<td>翻译配置文件生成位置</td>
+</tr>
+<tr>
+<td>distPath</td>
+<td>string</td>
+<td>✅</td>
+<td><code>&#39;&#39;</code></td>
+<td>打包后生成文件的位置</td>
+</tr>
+<tr>
+<td>distKey</td>
+<td>string</td>
+<td>✅</td>
+<td><code>&#39;index&#39;</code></td>
+<td>打包后生成文件的主文件名</td>
+</tr>
+<tr>
+<td>namespace</td>
+<td>string</td>
+<td>✅</td>
+<td><code>&#39;lang&#39;</code></td>
+<td>项目命名空间，用于区分不同项目的翻译配置</td>
+</tr>
+<tr>
+<td>originLang</td>
+<td>string</td>
+<td>✅</td>
+<td><code>&#39;zh-cn&#39;</code></td>
+<td>源语言，对其他语言的翻译基于此语言</td>
+</tr>
+<tr>
+<td>targetLangList</td>
+<td>string[]</td>
+<td>✅</td>
+<td><code>[&#39;en&#39;]</code></td>
+<td>目标语言列表，支持配置多个语言</td>
+</tr>
+<tr>
+<td>buildToDist</td>
+<td>boolean</td>
+<td>❌</td>
+<td><code>false</code></td>
+<td>是否在构建结束后将最新的翻译文件打包到主包中，默认不打包</td>
+</tr>
+<tr>
+<td>translator</td>
+<td>Translator</td>
+<td>❌</td>
+<td><code>GoogleTranslator</code></td>
+<td>翻译器实例，例如 <code>GoogleTranslator</code> 或 <code>YoudaoTranslator</code></td>
+</tr>
+<tr>
+<td>translatorOption</td>
+<td>object</td>
+<td>❌</td>
+<td><code>{}</code></td>
+<td>翻译器配置选项，优先级低于 <code>translator</code></td>
+</tr>
+</tbody></table>
+<h3 id="❓-为什么需要-buildtodist？">❓ 为什么需要 <code>buildToDist</code>？</h3>
+<p>在 Vite 环境中，插件执行后仅会生成翻译配置文件。如果直接构建，虽然翻译配置文件已生成，但不会立即将其打包到主包中。因此，提供了 <code>buildToDist</code> 选项，可以在构建时主动将翻译文件打包到主包中。但需要注意，这可能在项目中生成两份翻译配置文件。⚠️</p>
+<h3 id="🔄-如何更新翻译？">🔄 如何更新翻译？</h3>
+<p>完成插件运行后，<code>globalPath</code> 目录会生成两个文件：<code>index.js</code> 和 <code>index.json</code>。</p>
+<ul>
+<li><strong>「index.js」</strong>：存储翻译相关的函数逻辑。</li>
+<li><strong>「index.json」</strong>：存储翻译文本内容。</li>
+</ul>
+<p>如果需要手动更新翻译内容，可以直接修改 <code>index.json</code> 文件内容。🔄</p>
+<h3 id="⚠️-使用注意事项">⚠️ 使用注意事项</h3>
+<ol>
+<li><strong>「代理要求」</strong></li>
+</ol>
+<ul>
+<li>对于国内用户，强烈推荐使用 <strong>「有道翻译」</strong>，无需代理直接使用。</li>
+<li>使用谷歌翻译时，需要配置代理环境。</li>
+<li>默认代理端口为 <strong>「7890」</strong>，可以通过 <code>proxyOption</code> 参数自定义代理端口。</li>
+</ul>
+<ol start="3">
+<li><strong>「翻译频率」</strong></li>
+</ol>
+<ul>
+<li>谷歌翻译是免费服务，但频繁请求可能触发使用限制。</li>
+<li>建议设置适当的时间间隔再发起新的翻译请求。⏱️</li>
+</ul>
+<ol start="5">
+<li><strong>「翻译更新机制」</strong></li>
+</ol>
+<ul>
+<li><code>globalPath</code> 目录中的 <code>index.json</code> 是核心翻译文件。</li>
+<li>直接修改并保存此文件，您的翻译内容将立即更新。</li>
+</ul>
+<ol start="7">
+<li><strong>「vue3 静态节点缓存机制」</strong></li>
+</ol>
+<ul>
+<li><strong>「vue3 对于静态节点不会编译，所以应用翻译插件可能会有，因此需要强制让 vue3 对静态节点进行编译。」</strong></li>
+</ul>
+<h3 id="⚙️-机制介绍">⚙️ 机制介绍</h3>
+<ul>
+<li><strong>「通过解析 JavaScript 文件提取需要翻译的文本。使用 <code>vite-plugin-auto-i18n</code> 之前，需要先调用相关插件（如 vue 插件）将特殊格式的文件转换为 JavaScript 文件。」</strong></li>
+<li><strong>「插件运行后会创建一个文件夹，里面包含一个 JSON 文件。格式化 JSON 文件之后，可以看到不同语言的翻译内容。如果某个语言的翻译不正确，可以直接修改该 JSON 文件。插件的翻译均以 JSON 文件为主。」</strong></li>
+<li><strong>「JSON 文件中包含 hash 值，hash 是基于翻译文本自动生成，类似对称加密。只要翻译文本没变，hash 就不会变化。」</strong></li>
+<li><strong>「有翻译补全机制，如果目标语言中出现缺失，会以源语言的翻译配置为准将缺失的部分补齐。可以放心在配置中增加新语言类型。」</strong></li>
+</ul>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -95,7 +95,7 @@ async function convertMarkdownToHtml() {
             // Default values if front matter is missing
             const title = data.title || path.basename(file, '.md');
             const tags = data.tags || [];
-            const createdAt = data.createdAt || new Date().toISOString();
+            const createdAt = data.time || data.createdAt || new Date().toISOString();
             const summary = data.summary || markdownContent.slice(0, 150) + '...';
             
             // Convert markdown to HTML
@@ -204,7 +204,7 @@ function createSampleMarkdown() {
     return `---
 title: 山水卡片系统入门指南
 tags: [教程, markdown, 入门]
-createdAt: ${new Date().toISOString()}
+time: ${new Date().toISOString()}
 summary: 关于如何使用山水卡片学习系统进行有效学习和知识管理的快速介绍。
 ---
 

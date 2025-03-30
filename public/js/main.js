@@ -85,11 +85,17 @@ function createCardElement(card, index) {
     
     // Format date
     const date = new Date(card.createdAt);
-    const formattedDate = date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
+    
+    // Format as YYYY-MM-DD HH:MM:SS
+    const formatDigit = (num) => num.toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const month = formatDigit(date.getMonth() + 1); // getMonth() is 0-indexed
+    const day = formatDigit(date.getDate());
+    const hours = formatDigit(date.getHours());
+    const minutes = formatDigit(date.getMinutes());
+    const seconds = formatDigit(date.getSeconds());
+    
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     
     // Create card HTML
     cardElement.innerHTML = `
@@ -101,9 +107,6 @@ function createCardElement(card, index) {
             <div class="card-tags">
                 ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
             </div>
-        </div>
-        <div class="card-body">
-            <p class="card-summary">${card.summary}</p>
         </div>
     `;
     
@@ -242,6 +245,7 @@ window.addEventListener('popstate', () => {
 // Add entry animation when content is loaded
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
+    document.body.classList.add('scroll-fade');
 });
 
 /**

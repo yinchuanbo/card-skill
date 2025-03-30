@@ -40,7 +40,7 @@ const convertMarkdownToHtml = async () => {
             // Default values if front matter is missing
             const title = data.title || path.basename(file, '.md');
             const tags = data.tags || [];
-            const createdAt = data.createdAt || new Date().toISOString();
+            const createdAt = data.time || data.createdAt || new Date().toISOString();
             const summary = data.summary || markdownContent.slice(0, 150) + '...';
             
             // Convert markdown to HTML
