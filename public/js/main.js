@@ -333,4 +333,133 @@ function addScrollIndicators() {
             behavior: 'smooth'
         });
     });
-} 
+}
+
+/**
+ * Image Lightbox Functionality
+ */
+function initImageLightbox() {
+    // Create lightbox elements
+    const lightbox = document.createElement('div');
+    lightbox.className = 'image-lightbox';
+    lightbox.innerHTML = `
+        <button class="lightbox-close">&times;</button>
+        <button class="lightbox-nav lightbox-prev">&larr;</button>
+        <button class="lightbox-nav lightbox-next">&rarr;</button>
+        <div class="lightbox-content">
+            <img src="" alt="Lightbox Image">
+        </div>
+        <div class="lightbox-counter">1 / 1</div>
+    `;
+    document.body.appendChild(lightbox);
+
+    const lightboxImg = lightbox.querySelector('.lightbox-content img');
+    const lightboxClose = lightbox.querySelector('.lightbox-close');
+    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+    const lightboxNext = lightbox.querySelector('.lightbox-next');
+    const lightboxCounter = lightbox.querySelector('.lightbox-counter');
+
+    let images = [];
+    let currentIndex = 0;
+
+    // Collect all images when a modal is opened
+    function collectImagesInModal() {
+        if (!modalContent) return;
+        images = Array.from(modalContent.querySelectorAll('img'));
+        
+        // Hide navigation if there's only one image
+        if (images.length <= 1) {
+            lightboxPrev.style.display = 'none';
+            lightboxNext.style.display = 'none';
+            lightboxCounter.style.display = 'none';
+        } else {
+            lightboxPrev.style.display = 'flex';
+            lightboxNext.style.display = 'flex';
+            lightboxCounter.style.display = 'block';
+        }
+    }
+
+    // Observer to watch for changes in the modal content
+    if (modalContent) {
+        const observer = new MutationObserver(collectImagesInModal);
+        observer.observe(modalContent, { childList: true, subtree: true });
+    }
+
+    // Add click event to images in modal content
+    document.addEventListener('click', function(event) {
+        const clickedImage = event.target.closest('#modalContent img');
+        if (!clickedImage) return;
+
+        collectImagesInModal();
+        currentIndex = images.indexOf(clickedImage);
+        openLightbox(clickedImage.src);
+        event.preventDefault();
+    });
+
+    // Open lightbox with specified image
+    function openLightbox(src) {
+        lightboxImg.src = src;
+        updateCounter();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Close lightbox
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Navigate to previous image
+    function prevImage() {
+        if (images.length <= 1) return;
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        lightboxImg.src = images[currentIndex].src;
+        updateCounter();
+    }
+
+    // Navigate to next image
+    function nextImage() {
+        if (images.length <= 1) return;
+        currentIndex = (currentIndex + 1) % images.length;
+        lightboxImg.src = images[currentIndex].src;
+        updateCounter();
+    }
+
+    // Update the counter display
+    function updateCounter() {
+        if (images.length > 1) {
+            lightboxCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+        }
+    }
+
+    // Event listeners
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', prevImage);
+    lightboxNext.addEventListener('click', nextImage);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!lightbox.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            prevImage();
+        } else if (e.key === 'ArrowRight') {
+            nextImage();
+        }
+    });
+
+    // Close when clicking outside the image
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+}
+
+// Initialize image lightbox when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initImageLightbox();
+}); 
