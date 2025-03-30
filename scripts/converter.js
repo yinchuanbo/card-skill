@@ -8,12 +8,44 @@ const path = require('path');
 const marked = require('marked');
 const matter = require('gray-matter');
 
+// 尝试导入Prism，处理Node.js环境下可能的问题
+let Prism;
+try {
+    Prism = require('prismjs');
+    
+    // 加载额外的语言组件
+    require('prismjs/components/prism-javascript');
+    require('prismjs/components/prism-css');
+    require('prismjs/components/prism-python');
+    require('prismjs/components/prism-java');
+    require('prismjs/components/prism-bash');
+    require('prismjs/components/prism-yaml');
+    require('prismjs/components/prism-json');
+    require('prismjs/components/prism-markdown');
+} catch (error) {
+    console.warn('Prism.js 加载失败，将使用基本代码格式化: ', error.message);
+    Prism = null;
+}
+
 // Configure marked for GitHub-flavored markdown
 marked.setOptions({
     gfm: true,
     breaks: true,
     headerIds: true,
-    mangle: false
+    mangle: false,
+    highlight: function(code, lang) {
+        // 如果Prism不可用或语言不支持，使用基本格式
+        if (!Prism || !lang || !Prism.languages[lang]) {
+            const language = lang || 'text';
+            const dataAttr = lang ? `data-language="${lang}"` : '';
+            return `<pre ${dataAttr}><code class="language-${language}">${code}</code></pre>`;
+        }
+        
+        // 使用Prism进行高亮处理
+        const highlighted = Prism.highlight(code, Prism.languages[lang], lang);
+        const dataAttr = `data-language="${lang}"`;
+        return `<pre ${dataAttr}><code class="language-${lang}">${highlighted}</code></pre>`;
+    }
 });
 
 // Main conversion function
@@ -84,7 +116,9 @@ async function convertMarkdownToHtml() {
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
 </head>
 <body class="card-detail">
     <div class="container">
@@ -118,6 +152,24 @@ async function convertMarkdownToHtml() {
     
     <script src="/js/main.js"></script>
     <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
 </body>
 </html>`;
             

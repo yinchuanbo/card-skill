@@ -1,7 +1,33 @@
 [
   {
+    "id": "01",
+    "title": "发布订阅模式",
+    "tags": [
+      "发布订阅",
+      "设计模式"
+    ],
+    "createdAt": "2025-03-30T10:24:24.173Z",
+    "summary": "发布订阅模式（Pub-Sub）通过消息中心解耦发布者和订阅者，适用于组件通信、异步任务等场景。核心方法：on（订阅）、emit（发布）、off（取消）。与观察者模式的区别在于间接通信，避免内存泄漏需及时取消订阅。面试常考设计模式理解、解耦能力及实际应用（如Vue EventBus）",
+    "url": "/doc/01.html"
+  },
+  {
+    "id": "coding-examples",
+    "title": "编程语言代码示例",
+    "tags": [
+      "编程",
+      "代码",
+      "JavaScript",
+      "Python",
+      "CSS",
+      "示例"
+    ],
+    "createdAt": "2023-12-01T09:00:00.000Z",
+    "summary": "多种编程语言的代码示例，用于展示山水卡片系统的代码高亮功能。",
+    "url": "/doc/coding-examples.html"
+  },
+  {
     "id": "css-flexbox",
-    "title": "CSS Flexbox Layout Guide",
+    "title": "中国人",
     "tags": [
       "css",
       "web-design",

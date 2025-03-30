@@ -30,6 +30,12 @@ async function initializeApp() {
         renderCards();
         setupTagFilters();
     }
+    
+    // 添加阅读进度指示器
+    addReadingProgressIndicator();
+    
+    // 添加滚动箭头和指示器
+    addScrollIndicators();
 }
 
 // Fetch Cards Data
@@ -197,6 +203,11 @@ async function openModal(card) {
             <div class="content">${content}</div>
         `;
         
+        // 应用代码高亮
+        if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+        }
+        
         // Show modal with animation
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden'; // Prevent scrolling
@@ -231,4 +242,91 @@ window.addEventListener('popstate', () => {
 // Add entry animation when content is loaded
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
-}); 
+});
+
+/**
+ * 添加阅读进度指示器
+ */
+function addReadingProgressIndicator() {
+    // 创建容器
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'progress-container';
+    
+    // 创建进度条
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+    
+    // 组合元素
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+    
+    // 监听滚动事件更新进度条
+    window.addEventListener('scroll', function() {
+        // 计算滚动百分比
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        
+        // 更新进度条宽度
+        if (progressBar) {
+            progressBar.style.width = scrolled + '%';
+            
+            // 在接近顶部时隐藏进度条
+            if (scrolled < 2) {
+                progressBar.style.opacity = '0';
+            } else {
+                progressBar.style.opacity = '1';
+            }
+        }
+    });
+}
+
+/**
+ * 添加滚动指示器和滚动箭头
+ */
+function addScrollIndicators() {
+    // 创建滚动指示器
+    const scrollIndicator = document.createElement('div');
+    scrollIndicator.className = 'scroll-indicator';
+    document.body.appendChild(scrollIndicator);
+    
+    // 为长页面添加滚动箭头
+    const mainContainer = document.querySelector('.container');
+    if (mainContainer && document.body.scrollHeight > window.innerHeight * 1.5) {
+        const scrollArrow = document.createElement('div');
+        scrollArrow.className = 'scroll-arrow';
+        mainContainer.appendChild(scrollArrow);
+        
+        // 箭头点击事件 - 平滑滚动到内容
+        scrollArrow.addEventListener('click', function() {
+            window.scrollBy({
+                top: window.innerHeight / 2,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // 监听滚动事件显示/隐藏滚动指示器
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // 向下滚动超过300px显示回到顶部按钮
+        if (scrollTop > 300) {
+            scrollIndicator.classList.add('visible');
+        } else {
+            scrollIndicator.classList.remove('visible');
+        }
+        
+        // 记录上次滚动位置
+        lastScrollTop = scrollTop;
+    });
+    
+    // 点击滚动指示器回到顶部
+    scrollIndicator.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+} 

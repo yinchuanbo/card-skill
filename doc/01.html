@@ -1,0 +1,109 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>发布订阅模式</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>发布订阅模式</h1>
+                        <div class="meta">
+                            <time datetime="2025-03-30T10:24:24.173Z">2025/3/30</time>
+                            <div class="tags">
+                                <span class="tag">发布订阅</span><span class="tag">设计模式</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <h3 id="1-发布订阅模式是啥？">1. 发布订阅模式是啥？</h3>
+<p>简单来说，发布订阅模式就是一种<strong>消息通信机制</strong>。</p>
+<ul>
+<li><strong>发布者（Publisher）</strong>
+：负责发消息。</li>
+<li><strong>订阅者（Subscriber）</strong>
+：负责收消息。</li>
+<li><strong>消息中心（Event Bus）</strong>
+：负责管理消息的发布和订阅。</li>
+</ul>
+<p>举个例子：</p>
+<ul>
+<li>你去奶茶店点了一杯奶茶，店员告诉你：“等好了叫你。”</li>
+<li>这时候，你就是<strong>订阅者</strong>，店员是<strong>发布者</strong>，而“叫号系统”就是<strong>消息中心</strong>。</li>
+</ul>
+<h3 id="2-面试官为啥爱问这玩意儿？">2. 面试官为啥爱问这玩意儿？</h3>
+<p><strong>原因一：考察设计模式的理解</strong>  <br>发布订阅模式是<strong>设计模式</strong>中的经典之一，面试官通过这个问题，可以快速判断你对设计模式的掌握程度。</p>
+<p><strong>原因二：考察代码解耦能力</strong>  <br>发布订阅模式的核心是<strong>解耦</strong>，面试官想看看你是否能用它解决复杂的业务场景。</p>
+<p><strong>原因三：考察实际应用经验</strong>  <br>很多前端框架（比如 Vue、React）都用到了发布订阅模式，面试官想看看你是否真的理解它的应用场景。</p>
+<h3 id="3-发布订阅模式的代码实现">3. 发布订阅模式的代码实现</h3>
+<p>下面是一个简单的发布订阅模式实现：</p>
+<pre><code class="language-js">class EventBus {
+  constructor() {
+    this.events = {};
+  }
+
+  // 订阅事件
+  on(event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  }
+
+  // 发布事件
+  emit(event, ...args) {
+    if (this.events[event]) {
+      this.events[event].forEach((callback) =&gt; {
+        callback(...args);
+      });
+    }
+  }
+
+  // 取消订阅
+  off(event, callback) {
+    if (this.events[event]) {
+      this.events[event] = this.events[event].filter((cb) =&gt; cb !== callback);
+    }
+  }
+}
+
+// 使用示例
+const eventBus = new EventBus();
+
+// 订阅事件
+eventBus.on(&quot;order&quot;, (name) =&gt; {
+  console.log(`${name}的奶茶好了！`);
+});
+
+// 发布事件
+eventBus.emit(&quot;order&quot;, &quot;张三&quot;);
+</code></pre>
+<h3 id="4-发布订阅模式的应用场景">4. 发布订阅模式的应用场景</h3>
+<p><strong>场景一：组件通信</strong>  <br>比如 Vue 中的  <code>EventBus</code>，就是用来实现非父子组件之间的通信。</p>
+<p><strong>场景二：异步任务管理</strong>  <br>比如处理多个异步任务，通过发布订阅模式通知任务完成状态。</p>
+<p><strong>场景三：插件系统</strong>  <br>很多插件系统都用到发布订阅模式，比如 Webpack 的插件机制。</p>
+<h3 id="5-面试官可能会问的进阶问题">5. 面试官可能会问的进阶问题</h3>
+<p><strong>问题一：发布订阅模式和观察者模式有啥区别？</strong></p>
+<ul>
+<li>发布订阅模式：通过消息中心解耦，发布者和订阅者不直接通信。</li>
+<li>观察者模式：观察者和目标直接关联，目标发生变化时直接通知观察者。</li>
+</ul>
+<p><strong>问题二：如何避免内存泄漏？</strong></p>
+<ul>
+<li>及时取消订阅：比如在 Vue 组件销毁时，调用  <code>off</code>  方法取消订阅。</li>
+<li>使用弱引用：比如用  <code>WeakMap</code>  存储订阅关系。</li>
+</ul>
+<p><strong>问题三：如何实现一个支持优先级的发布订阅模式？</strong></p>
+<ul>
+<li>在订阅时传入优先级参数，发布时按优先级顺序执行回调。</li>
+</ul>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
