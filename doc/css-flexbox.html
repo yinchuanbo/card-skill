@@ -1,0 +1,150 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>CSS Flexbox Layout Guide</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>CSS Flexbox Layout Guide</h1>
+                        <div class="meta">
+                            <time datetime="Sun May 21 2023 22:45:00 GMT+0800 (中国标准时间)">2023/5/21</time>
+                            <div class="tags">
+                                <span class="tag">css</span><span class="tag">web-design</span><span class="tag">layout</span><span class="tag">flexbox</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <h1 id="css-flexbox-layout">CSS Flexbox Layout</h1>
+<p>Flexbox is a powerful CSS layout model that makes designing flexible responsive layouts without using float or positioning much easier.</p>
+<h2 id="basic-concepts">Basic Concepts</h2>
+<p>Flexbox works with a <strong>flex container</strong> (parent) and <strong>flex items</strong> (children):</p>
+<pre><code class="language-css">/* Create a flex container */
+.container {
+  display: flex;
+  /* or display: inline-flex; */
+}
+</code></pre>
+<h2 id="container-properties">Container Properties</h2>
+<h3 id="direction">Direction</h3>
+<p>Control the direction of flex items:</p>
+<pre><code class="language-css">.container {
+  flex-direction: row; /* default: left to right */
+  /* Other options: row-reverse, column, column-reverse */
+}
+</code></pre>
+<h3 id="wrapping">Wrapping</h3>
+<p>Control whether items must stay in a single line or can wrap:</p>
+<pre><code class="language-css">.container {
+  flex-wrap: nowrap; /* default: no wrapping */
+  /* Other options: wrap, wrap-reverse */
+}
+</code></pre>
+<h3 id="justify-content">Justify Content</h3>
+<p>Align items horizontally:</p>
+<pre><code class="language-css">.container {
+  justify-content: flex-start; /* default: items at start */
+  /* Other options: flex-end, center, space-between, space-around, space-evenly */
+}
+</code></pre>
+<h3 id="align-items">Align Items</h3>
+<p>Align items vertically:</p>
+<pre><code class="language-css">.container {
+  align-items: stretch; /* default: stretch to fill container */
+  /* Other options: flex-start, flex-end, center, baseline */
+}
+</code></pre>
+<h3 id="align-content">Align Content</h3>
+<p>Align wrapped lines:</p>
+<pre><code class="language-css">.container {
+  align-content: flex-start;
+  /* Other options: flex-end, center, space-between, space-around, stretch (default) */
+}
+</code></pre>
+<h2 id="item-properties">Item Properties</h2>
+<h3 id="order">Order</h3>
+<p>Change the order of specific flex items:</p>
+<pre><code class="language-css">.item {
+  order: 0; /* default */
+  /* Can be negative or positive */
+}
+</code></pre>
+<h3 id="flex-grow">Flex Grow</h3>
+<p>Control how much an item can grow:</p>
+<pre><code class="language-css">.item {
+  flex-grow: 0; /* default: don&#39;t grow */
+  /* Higher values grow more */
+}
+</code></pre>
+<h3 id="flex-shrink">Flex Shrink</h3>
+<p>Control how much an item can shrink:</p>
+<pre><code class="language-css">.item {
+  flex-shrink: 1; /* default: can shrink */
+  /* Higher values shrink more */
+}
+</code></pre>
+<h3 id="flex-basis">Flex Basis</h3>
+<p>Set the initial size of an item:</p>
+<pre><code class="language-css">.item {
+  flex-basis: auto; /* default */
+  /* Can be a length (e.g., 300px) or auto */
+}
+</code></pre>
+<h3 id="shorthand">Shorthand</h3>
+<p>The <code>flex</code> property combines grow, shrink, and basis:</p>
+<pre><code class="language-css">.item {
+  flex: 0 1 auto; /* default (grow shrink basis) */
+  /* Common values: flex: 1; (grow fully) */
+}
+</code></pre>
+<h3 id="align-self">Align Self</h3>
+<p>Override alignment for specific items:</p>
+<pre><code class="language-css">.item {
+  align-self: auto; /* default: use container&#39;s align-items */
+  /* Other options: flex-start, flex-end, center, baseline, stretch */
+}
+</code></pre>
+<h2 id="common-flexbox-patterns">Common Flexbox Patterns</h2>
+<h3 id="centering-content">Centering Content</h3>
+<pre><code class="language-css">.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* For full-screen centering */
+}
+</code></pre>
+<h3 id="navigation-bar">Navigation Bar</h3>
+<pre><code class="language-css">.navbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px; /* Modern way to add spacing between items */
+}
+</code></pre>
+<h3 id="card-layout">Card Layout</h3>
+<pre><code class="language-css">.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  flex: 0 1 300px; /* Don&#39;t grow, can shrink, basis 300px */
+}
+</code></pre>
+<h2 id="browser-support">Browser Support</h2>
+<p>Flexbox is supported in all modern browsers. For older browsers, consider using a CSS preprocessor with appropriate polyfills. </p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

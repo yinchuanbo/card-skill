@@ -1,0 +1,40 @@
+[
+  {
+    "id": "css-flexbox",
+    "title": "CSS Flexbox Layout Guide",
+    "tags": [
+      "css",
+      "web-design",
+      "layout",
+      "flexbox"
+    ],
+    "createdAt": "2023-05-21T14:45:00.000Z",
+    "summary": "A practical guide to CSS Flexbox layout system with examples and common use cases for responsive web design.",
+    "url": "/doc/css-flexbox.html"
+  },
+  {
+    "id": "git-workflow",
+    "title": "Effective Git Workflow for Teams",
+    "tags": [
+      "git",
+      "version-control",
+      "development",
+      "collaboration"
+    ],
+    "createdAt": "2023-06-10T10:15:00.000Z",
+    "summary": "A practical guide to Git workflow strategies for effective team collaboration, including branching models, commit practices, and conflict resolution.",
+    "url": "/doc/git-workflow.html"
+  },
+  {
+    "id": "javascript-basics",
+    "title": "JavaScript Basics - Essential Concepts",
+    "tags": [
+      "javascript",
+      "programming",
+      "basics"
+    ],
+    "createdAt": "2023-04-15T09:30:00.000Z",
+    "summary": "A comprehensive overview of JavaScript fundamentals including variables, data types, functions, and control flow.",
+    "url": "/doc/javascript-basics.html"
+  }
+]
