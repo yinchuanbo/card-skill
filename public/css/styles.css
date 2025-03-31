@@ -1,7 +1,7 @@
 /* Global Styles and Variables - 中国山水画风格 */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Playfair+Display:wght@400;500;600;700&family=Long+Cang&family=Zhi+Mang+Xing&family=Liu+Jian+Mao+Cao&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&family=ZCOOL+Addict+Daddy&family=Sun+Yat+Sen&family=Droid+Sans+Fallback&family=Source+Han+Serif+SC:wght@300;400;500;700&family=ZCOOL+XiaoWei&family=Kaiti&family=ZCOOL+Addict+Daddy&family=Indie+Flower&family=Stick+No+Bills&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 :root {
   /* 水墨色彩 - 优化对比度和饱和度 */
@@ -40,7 +40,7 @@
   --font-display: "Ma Shan Zheng", cursive; /* 书法风格标题字体 */
   --font-heading: "Playfair Display", serif; /* 次级标题字体 */
   --font-body: "Noto Serif SC", serif; /* 正文字体 */
-  --font-accent: "ZCOOL QingKe HuangYou", sans-serif; /* 强调文本字体 */
+  --font-accent: "ZCOOL KuaiLe", cursive; /* 强调文本字体 */
   --font-code: "JetBrains Mono", monospace; /* 代码字体 */
 
   /* 已有书法风格字体 */
@@ -426,14 +426,21 @@ body.loaded {
 } */
 
 .card-header h2 {
-  /* font-family: var(--font-heading); */
   font-family: var(--font-accent);
-  font-size: 1.5rem;
+  font-size: 1.3rem; /* 从1.5rem缩小到1.3rem */
   margin-bottom: 0.75rem;
   font-weight: 500;
   color: var(--ink-dark);
   line-height: 1.4;
   transition: var(--transition-fast);
+
+  /* 添加多行文本截断 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3.64rem; /* 1.4(行高) × 1.3(字体大小) × 2(行数) = 3.64rem */
 }
 
 .card:hover .card-header h2 {
@@ -1424,7 +1431,7 @@ pre[class*="language-"] *::selection {
   .container {
     padding: 1.5rem;
   }
-  
+
   .card-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.2rem;
@@ -2026,4 +2033,27 @@ pre[class*="language-"] .ink-decoration {
   background: rgba(0, 0, 0, 0.5);
   padding: 5px 15px;
   border-radius: 20px;
+}
+
+/* 添加一个新的类用于在模态窗口打开时禁用body滚动 */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* 确保模态内容有正确的滚动行为 */
+#modalContent {
+  background-color: white;
+  border-radius: 0;
+  width: 100%;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  box-shadow: none;
+  position: relative;
+  transform: translateY(30px) scale(0.97);
+  opacity: 0;
+  transition: var(--transition-medium);
+  border: none;
+  /* 其他现有样式保持不变 */
 }
