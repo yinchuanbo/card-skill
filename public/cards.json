@@ -305,5 +305,17 @@
     "summary": "\r\n观自在菩萨，行深般若波罗蜜多时，照见五蕴皆空，度一切苦厄。舍利子！色不异空、空不异色、色即是空、空即是色。受想行识、亦复如是。舍利子！是诸法空相。不生不灭、不垢不净、不增不减。是故空中无色、无受想行识。无眼耳鼻舌身意。无色声香味触法。无眼界、乃至无意识界。\r\n\r\n无无明、亦无无明尽。乃至无老死、...",
     "type": "fojing",
     "url": "/doc/28.html"
+  },
+  {
+    "id": "29",
+    "title": "为何要强烈推荐这款 node_modules 可视化神器？",
+    "tags": [
+      "node_modules",
+      "工具集"
+    ],
+    "createdAt": "2025-03-31T19:58:42.000Z",
+    "summary": "\r\n## 什么是 Node Modules Inspector\r\n\r\n`node-modules-inspector` 工具可用于可视化 `node_modules`、项目依赖项检查等等。\r\n\r\n开发者可以通过在 `pnpm/npm` 项目下运行以下命令来快速尝鲜：\r\n\r\n```sh\r\npnpx n...",
+    "type": "default",
+    "url": "/doc/29.html"
   }
 ]

@@ -1,0 +1,70 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>为何要强烈推荐这款 node_modules 可视化神器？</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>为何要强烈推荐这款 node_modules 可视化神器？</h1>
+                        <div class="meta">
+                            <time datetime="Tue Apr 01 2025 03:58:42 GMT+0800 (中国标准时间)">2025/4/1</time>
+                            <div class="tags">
+                                <span class="tag">node_modules</span><span class="tag">工具集</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="什么是-node-modules-inspector">什么是 Node Modules Inspector</h2>
+<p><code>node-modules-inspector</code> 工具可用于可视化 <code>node_modules</code>、项目依赖项检查等等。</p>
+<p>开发者可以通过在 <code>pnpm/npm</code> 项目下运行以下命令来快速尝鲜：</p>
+<pre><code class="language-sh">pnpx node-modules-inspector
+npx node-modules-inspector
+</code></pre>
+<blockquote>
+<p>值得一提的是，目前该工具仅支持 pnpm 和 npm 项目，其他类型项目则强依赖于社区。</p>
+</blockquote>
+<img src="/images/47.webp">
+
+<img src="/images/48.webp">
+
+<img src="/images/49.webp">
+
+<p>下面是 pnpx 和 npx 的不同：</p>
+<ul>
+<li><strong>NPX(Node Package eXecute) ：是一个 NPM 包运行器，允许开发人员执行 NPM 注册表上可用的任何 Javascript 包，甚至无需安装，NPX 随 NPM 版本 5.2 自动安装</strong></li>
+<li><strong>pnpx(pnpm dlx)：用于从注册表中获取包而不将其安装为依赖项同时支持热加载，并运行其公开的任何默认命令二进制文件。</strong></li>
+</ul>
+<p>对于 <code>node-modules-inspector</code> 来说，开发者还可以尝试 <code>https://node-modules.dev/</code> 上的在线版本，由 WebContainer 提供支持。后者允许在浏览器中创建和运行完整的、类似于操作系统的环境，使开发者能够在浏览器中开发、构建和测试应用程序，从而避免在本机上安装额外的软件或依赖项。</p>
+<p>目前 node-modules-inspector 在 Github 通过 MIT 协议开源，有超过 1.3k 的 star，是一个值得尝试的前端开源项目。</p>
+<h2 id="如何使用-node-modules-inspector">如何使用 Node Modules Inspector</h2>
+<p>开发者可以在项目根目录中创建一个 <code>node-modules-inspector.config.ts</code> 文件来配置检查器的默认行为。</p>
+<pre><code class="language-js">import { defineConfig } from &quot;node-modules-inspector&quot;;
+exportdefaultdefineConfig({
+  defaultFilters: {
+    excludes: [&quot;eslint&quot;],
+  },
+  defaultSettings: {
+    moduleTypeSimple: true,
+  },
+  //实验性的publint.dev功能集成，默认为false
+  publint: true,
+  //其他配置
+});
+</code></pre>
+<p>开发者还可以构建当前 <code>node_modules</code> 状态的静态 <code>SPA</code>：</p>
+<pre><code class="language-sh">pnpx node-modules-inspector build
+npx node-modules-inspector build
+</code></pre>
+<p>接着可以使用任何静态文件服务器托管 <code>.node-modules-inspector</code> 文件夹。</p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
