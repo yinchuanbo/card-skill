@@ -2244,7 +2244,7 @@ body.modal-open {
 [data-theme="dark"] h2 code,
 [data-theme="dark"] h3 code {
   background-color: rgba(25, 35, 45, 0.7);
-  color: #fff;
+  color: #000;
   border: 1px solid rgba(255, 255, 255, 0.08);
   text-shadow: none;
 }
@@ -2321,4 +2321,62 @@ body.modal-open {
   background-color: rgba(25, 35, 45, 0.5);
   border-left-color: var(--mountain-green);
   color: var(--text-medium);
+}
+
+/* 调整模态窗口内容的字号和行高 */
+#modalContent .content {
+  font-size: 1.1rem; /* 从1.05rem增加到1.1rem */
+  line-height: 1.9;
+  color: var(--text-dark);
+}
+
+/* 调整模态窗口内段落的间距 */
+#modalContent .content p {
+  margin-bottom: 1.5rem;
+}
+
+/* 调整模态窗口内标题的大小 */
+#modalContent h1 {
+  font-size: 2.8rem; /* 从2.6rem增加到2.8rem */
+}
+
+#modalContent h2 {
+  font-size: 2.2rem; /* 从2rem增加到2.2rem */
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#modalContent h3 {
+  font-size: 1.8rem; /* 从1.6rem增加到1.8rem */
+  margin-top: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+#modalContent h4 {
+  font-size: 1.5rem; /* 从1.3rem增加到1.5rem */
+  margin-top: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+/* 调整模态窗口内列表项的字号和间距 */
+#modalContent ul,
+#modalContent ol {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+#modalContent li {
+  margin-bottom: 0.8rem;
+}
+
+/* 调整模态窗口内代码块的字号 */
+#modalContent pre[class*="language-"] {
+  font-size: 1rem; /* 保持代码块字体稍小一点，便于阅读 */
+  margin: 2rem 0;
+}
+
+/* 调整模态窗口内内联代码的字号 */
+#modalContent code:not([class*="language-"]) {
+  font-size: 0.95em; /* 相对于父元素的字号 */
 }
