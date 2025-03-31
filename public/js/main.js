@@ -38,6 +38,9 @@ async function initializeApp() {
   // 添加滚动箭头和指示器
   addScrollIndicators();
 
+  // 初始化主题切换功能
+  initThemeToggle();
+
   const cardTitles = document.querySelectorAll(".card-header h2");
 
   // 为每个标题添加title属性，值为标题的文本内容
@@ -484,4 +487,68 @@ function initImageLightbox() {
 // Initialize image lightbox when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
   initImageLightbox();
+});
+
+/**
+ * 初始化主题切换功能
+ */
+function initThemeToggle() {
+  // 创建主题切换按钮
+  const themeToggle = document.createElement("button");
+  themeToggle.className = "theme-toggle";
+  themeToggle.innerHTML = "🌓";
+  themeToggle.setAttribute("aria-label", "Toggle dark mode");
+  themeToggle.setAttribute("title", "Toggle dark mode");
+  document.body.appendChild(themeToggle);
+
+  // 检查本地存储中的主题偏好
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  } else if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    // 如果用户系统偏好暗色主题，则自动应用
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+
+  // 更新按钮图标
+  updateThemeIcon();
+
+  // 添加点击事件
+  themeToggle.addEventListener("click", toggleTheme);
+}
+
+/**
+ * 切换主题
+ */
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+  // 设置新主题
+  document.documentElement.setAttribute("data-theme", newTheme);
+
+  // 保存到本地存储
+  localStorage.setItem("theme", newTheme);
+
+  // 更新按钮图标
+  updateThemeIcon();
+}
+
+/**
+ * 更新主题切换按钮图标
+ */
+function updateThemeIcon() {
+  const themeToggle = document.querySelector(".theme-toggle");
+  if (!themeToggle) return;
+
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  themeToggle.innerHTML = currentTheme === "dark" ? "☀️" : "🌙";
+}
+
+// 在DOM加载完成后初始化主题切换
+document.addEventListener("DOMContentLoaded", function () {
+  initThemeToggle();
 });
