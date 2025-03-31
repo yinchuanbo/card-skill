@@ -1,96 +1,79 @@
-# Card Learning System
+# 山水卡片学习系统
 
-A high-quality card learning website system built with Node.js, HTML, CSS, and JavaScript. This application allows you to create and manage learning cards from Markdown files with beautiful presentation and advanced animations.
+一个基于 Node.js 开发的卡片学习系统，支持 Markdown 格式的知识卡片，具有中国传统文化风格的界面设计。
 
-## Features
+## 功能特点
 
-- **Markdown to HTML Conversion**: Automatically converts Markdown files to HTML cards
-- **Beautiful Card Layout**: Displays cards with a modern, responsive design
-- **Advanced Animations**: Smooth transitions and effects for a polished user experience
-- **Search & Filter**: Easily find cards by title, content, or tags
-- **Full-Screen Card View**: View complete card content in an elegant modal overlay
-- **Mobile-Friendly**: Fully responsive design that works on all devices
+- 简洁优雅的中国传统山水风格界面
+- 支持 Markdown 格式的知识卡片
+- 标签过滤和搜索功能
+- 响应式设计，适配各种设备
+- 暗色/亮色主题切换
+- 佛道儒文化元素装饰
 
-## Getting Started
+## Vercel 一键部署
 
-### Prerequisites
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fshanshui-card-system)
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
+## 本地开发
 
-### Installation
+### 环境要求
 
-1. Clone the repository:
+- Node.js 14+
+- npm 或 yarn
+
+### 安装步骤
+
+1. 克隆仓库
+
    ```bash
-   git clone https://github.com/yourusername/card-learning-system.git
-   cd card-learning-system
+   git clone https://github.com/yourusername/shanshui-card-system.git
+   cd shanshui-card-system
    ```
 
-2. Install dependencies:
+2. 安装依赖
+
    ```bash
    npm install
    ```
 
-3. Add your Markdown files to the `src` directory. Each file should have front matter metadata:
-   ```md
-   ---
-   title: Your Card Title
-   tags: [tag1, tag2, tag3]
-   createdAt: 2023-01-01T12:00:00Z
-   summary: A brief summary of what this card contains.
-   ---
+3. 启动开发服务器
 
-   # Your content goes here
-   ```
-
-4. Convert Markdown files to HTML:
    ```bash
-   npm run convert
+   npm run dev
    ```
 
-5. Start the server:
-   ```bash
-   npm start
-   ```
+4. 访问 `http://localhost:3000` 查看效果
 
-6. Open your browser and navigate to `http://localhost:3000`
+## 添加卡片
 
-### Development Mode
+在 `src` 目录下创建 `.md` 文件，添加以下格式的前置信息:
 
-For development with automatic restarts:
-```bash
-npm run dev
+```markdown
+---
+title: 卡片标题
+tags: [标签1, 标签2]
+createdAt: 2023-04-19T12:00:00Z
+summary: 卡片摘要，如果不提供将自动截取正文前150个字符
+---
+
+这里是卡片正文内容，支持完整的 Markdown 语法。
 ```
 
-## Folder Structure
+## 部署到 Vercel
 
-- `src/`: Source Markdown files
-- `doc/`: Generated HTML files
-- `public/`: Static assets (CSS, JS, images)
-- `scripts/`: Utility scripts
-- `server.js`: Express server for serving the application
+1. Fork 或克隆此仓库到您的 GitHub 账户
+2. 在 Vercel dashboard 中，点击"New Project"
+3. 导入您的 GitHub 仓库
+4. 无需更改任何配置，直接点击"Deploy"
+5. 部署完成后，您将获得一个`your-project.vercel.app`的域名
 
-## Customization
+## 自定义域名
 
-### Styling
+1. 在 Vercel 项目设置中，找到"Domains"选项卡
+2. 添加您的自定义域名
+3. 按照 Vercel 的指示配置 DNS 记录
 
-Modify the CSS in `public/css/styles.css` to customize the appearance.
+## 许可证
 
-### Card Layout
-
-Edit the HTML generation in `scripts/converter.js` to change the card structure.
-
-### Adding Features
-
-The application is built on Express.js, making it easy to add new routes and functionality.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [Express.js](https://expressjs.com/)
-- [Marked](https://marked.js.org/)
-- [Gray Matter](https://github.com/jonschlinkert/gray-matter)
-- [fs-extra](https://github.com/jprichardson/node-fs-extra)
+MIT
