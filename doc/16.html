@@ -1,25 +1,31 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>10 个鲜为人知但必备的 NPM 包</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>10 个鲜为人知但必备的 NPM 包</h1>
-                        <div class="meta">
-                            <time datetime="Sat Mar 15 2025 06:25:00 GMT+0800 (中国标准时间)">2025/3/15</time>
-                            <div class="tags">
-                                <span class="tag">NPM 包</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="1-date-fns-tz：时区处理的终极解决方案">1. date-fns-tz：时区处理的终极解决方案</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 个鲜为人知但必备的 NPM 包</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>10 个鲜为人知但必备的 NPM 包</h1>
+                <div class="meta">
+                    <time datetime="Sat Mar 15 2025 06:25:00 GMT+0800 (中国标准时间)">2025/3/15</time>
+                    <div class="tags">
+                        <span class="tag">NPM 包</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="1-date-fns-tz：时区处理的终极解决方案">1. date-fns-tz：时区处理的终极解决方案</h2>
 <p>时区处理一直是开发者的噩梦，尤其是当应用需要支持全球用户时。虽然 Moment.js 曾经是时区处理的首选工具，但  <code>date-fns-tz</code>  提供了一个更现代化、轻量级的替代方案。它基于  <code>date-fns</code>  库，提供了强大的时区支持，且无需额外的依赖。</p>
 <p><strong>🔹 关键特性：</strong></p>
 <ul>
@@ -109,9 +115,41 @@
 <li><strong>提升用户体验</strong>：构建更可靠、更吸引人的应用程序。</li>
 </ul>
 
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

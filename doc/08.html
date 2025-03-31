@@ -1,63 +1,69 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>VSCode 调试 Vue</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>VSCode 调试 Vue</h1>
-                        <div class="meta">
-                            <time datetime="Sun Mar 09 2025 06:34:31 GMT+0800 (中国标准时间)">2025/3/9</time>
-                            <div class="tags">
-                                <span class="tag">调试</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="如何用-vscode-调试-vue-项目">如何用 VSCode 调试 Vue 项目</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSCode 调试 Vue</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>VSCode 调试 Vue</h1>
+                <div class="meta">
+                    <time datetime="Sun Mar 09 2025 06:34:31 GMT+0800 (中国标准时间)">2025/3/9</time>
+                    <div class="tags">
+                        <span class="tag">调试</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="如何用-vscode-调试-vue-项目">如何用 VSCode 调试 Vue 项目</h2>
 <h3 id="开启-sourcemap">开启 sourcemap</h3>
 <p>如果你的项目构建工具使用的是  <strong>webpack</strong>, 一定要在  <code>vue.config.js</code>  文件中，添加如下配置：</p>
-<pre><code class="language-js">module.exports = {
-  configureWebpack: {
-    devtool: &quot;source-map&quot;,
-  },
-};
+<pre><code class="language-js"><pre data-language="js"><code class="language-js">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">configureWebpack</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">devtool</span><span class="token operator">:</span> <span class="token string">"source-map"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
 </code></pre>
 <p>如果是  <strong>Vue3</strong> + <strong>Vite</strong> , 可以跳过这个步骤</p>
 <h3 id="2-启动项目并记录端口">2. 启动项目并记录端口</h3>
 <p>在项目根目录下，运行以下命令：</p>
-<pre><code class="language-sh">npm run dev
+<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> run dev</code></pre>
 </code></pre>
 <p>启动项目后，会看到类似如下的输出，记录下访问端口（<strong>vue3</strong>  目前默认是  <strong>5173</strong>，可以自己修改）：</p>
-<pre><code class="language-sh">App running at:
+<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh">App running at:
 - Local:   http://localhost:5173/
-- Network: http://192.168.1.214:5173/
+- Network: http://192.168.1.214:5173/</code></pre>
 </code></pre>
 <h3 id="3-新建-debug-配置">3. 新建 debug 配置</h3>
 <p>点击在 Activity Bar 里的 Debugger 图标来到 Debug 视图，然后点击运行和调试来配置一个  <code>launch.json</code>  的文件，</p>
 <img src="/images/10.webp" />
 
 <p>选择  <strong>Chrome/Edge：Launch</strong>  环境。然后将生成的  <code>launch.json</code>  的内容替换成为相应的配置：</p>
-<pre><code class="language-json">{
-  &quot;version&quot;: &quot;0.2.0&quot;,
-  &quot;configurations&quot;: [
-    {
-      &quot;type&quot;: &quot;chrome&quot;,
-      &quot;request&quot;: &quot;launch&quot;,
-      &quot;name&quot;: &quot;vuejs: chrome&quot;,
-      &quot;url&quot;: &quot;http://localhost:5173&quot;,
-      &quot;webRoot&quot;: &quot;${workspaceFolder}/src&quot;,
-      &quot;sourceMapPathOverrides&quot;: {
-        &quot;webpack:///src/*&quot;: &quot;${workspaceFolder}/src/*&quot;
-      }
-    }
-  ]
-}
+<pre><code class="language-json"><pre data-language="json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"version"</span><span class="token operator">:</span> <span class="token string">"0.2.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"configurations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"chrome"</span><span class="token punctuation">,</span>
+      <span class="token property">"request"</span><span class="token operator">:</span> <span class="token string">"launch"</span><span class="token punctuation">,</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"vuejs: chrome"</span><span class="token punctuation">,</span>
+      <span class="token property">"url"</span><span class="token operator">:</span> <span class="token string">"http://localhost:5173"</span><span class="token punctuation">,</span>
+      <span class="token property">"webRoot"</span><span class="token operator">:</span> <span class="token string">"${workspaceFolder}/src"</span><span class="token punctuation">,</span>
+      <span class="token property">"sourceMapPathOverrides"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"webpack:///src/*"</span><span class="token operator">:</span> <span class="token string">"${workspaceFolder}/src/*"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
 </code></pre>
 <p>注意：<code>url</code>  地址修改成你项目本地启动的地址，我这个直接默认使用的  <code>http://localhost:5173</code></p>
 <img src="/images/11.webp" />
@@ -65,7 +71,7 @@
 <h3 id="4-设置断点并启动调试">4. 设置断点并启动调试</h3>
 <p>在  <code>src/App.vue</code>  的  <code>line7</code>  和  <code>line11</code>  的地方设置一个断点，我们来观察下  <code>count</code>  的变化。</p>
 <p>在根目录打开你惯用的终端并使用  <strong>Vue CLI</strong>  开启这个应用：</p>
-<pre><code class="language-sh">npm run dev
+<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> run dev</code></pre>
 </code></pre>
 <img src="/images/12.webp" />
 
@@ -86,9 +92,41 @@
 <p>还可以从当前断点跳到下一个断点，一行一行往下执行，或者进入或退出方法。</p>
 <img src="/images/17.webp" />
 
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

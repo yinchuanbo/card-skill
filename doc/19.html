@@ -1,25 +1,31 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>如何用 Docker 部署前端项目</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>如何用 Docker 部署前端项目</h1>
-                        <div class="meta">
-                            <time datetime="Sat Mar 15 2025 07:10:34 GMT+0800 (中国标准时间)">2025/3/15</time>
-                            <div class="tags">
-                                <span class="tag">Docker</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="前言">前言</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如何用 Docker 部署前端项目</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>如何用 Docker 部署前端项目</h1>
+                <div class="meta">
+                    <time datetime="Sat Mar 15 2025 07:10:34 GMT+0800 (中国标准时间)">2025/3/15</time>
+                    <div class="tags">
+                        <span class="tag">Docker</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="前言">前言</h2>
 <p>在前端开发中，部署项目往往是一个令人头疼的环节。传统的部署方式不仅复杂，还容易因为环境差异导致各种问题。而 Docker 的出现，为前端项目的部署带来了全新的解决方案。今天，就让我们一起探索如何使用 Docker 部署前端项目，让你的部署过程变得轻松又高效！</p>
 <h3 id="一-docker-的优势">一. Docker 的优势</h3>
 <p>Docker 是一个开源的应用容器引擎，它通过容器化的方式，将应用及其依赖打包在一起，确保应用在不同环境中都能稳定运行。与传统的虚拟机相比，Docker 的启动速度更快、资源占用更少、性能更接近原生。使用 Docker，你可以轻松实现开发、测试和生产环境的一致性，避免“在我的电脑上能运行，但别人的电脑不行”的尴尬局面。</p>
@@ -33,7 +39,7 @@
 <h3 id="三-将前端项目容器化">三. 将前端项目容器化</h3>
 <p>1. <strong>编写 Dockerfile</strong></p>
 <p>在项目根目录下创建一个  <code>Dockerfile</code>，用于配置 Docker 的构建信息。以下是一个简单的示例：</p>
-<pre><code class="language-docker"># 使用 Node.js 作为基础镜像
+<pre><code class="language-docker"><pre data-language="docker"><code class="language-docker"># 使用 Node.js 作为基础镜像
 FROM node:16.14.2
 
 # 将当前工作目录设置为/app
@@ -61,20 +67,20 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # 启动 nginx 服务
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]
+CMD ["nginx", "-g", "daemon off;"]</code></pre>
 </code></pre>
 <p>2. <strong>构建镜像</strong></p>
 <p>在项目根目录下运行以下命令，构建前端镜像：</p>
-<pre><code class="language-docker">docker build -t my-frontend:v1 .
+<pre><code class="language-docker"><pre data-language="docker"><code class="language-docker">docker build -t my-frontend:v1 .</code></pre>
 </code></pre>
 <p>3. <strong>运行容器</strong></p>
 <p>构建完成后，运行以下命令启动容器：</p>
-<pre><code class="language-docker">docker run -d -p 3000:80 --name my-frontend-container my-frontend:v1
+<pre><code class="language-docker"><pre data-language="docker"><code class="language-docker">docker run -d -p 3000:80 --name my-frontend-container my-frontend:v1</code></pre>
 </code></pre>
 <p>访问  <code>http://localhost:3000</code>，即可看到你的前端项目已经成功部署！</p>
 <h3 id="四-后端服务的容器化">四. 后端服务的容器化</h3>
 <p>如果你的前端项目需要与后端服务交互，同样可以使用 Docker 来部署后端服务。以下是一个简单的 Node.js 后端服务的 Dockerfile 示例：</p>
-<pre><code class="language-docker"># 指定基础镜像
+<pre><code class="language-docker"><pre data-language="docker"><code class="language-docker"># 指定基础镜像
 FROM node:16.14.2
 
 # 设置工作目录
@@ -90,15 +96,15 @@ RUN npm install
 EXPOSE 1000
 
 # 启动服务
-CMD [&quot;node&quot;, &quot;app.js&quot;]
+CMD ["node", "app.js"]</code></pre>
 </code></pre>
 <p>构建并运行后端服务容器：</p>
-<pre><code class="language-docker">docker build -t my-backend:v1 .
-docker run -d --name my-backend-container -p 9000:1000 my-backend:v1
+<pre><code class="language-docker"><pre data-language="docker"><code class="language-docker">docker build -t my-backend:v1 .
+docker run -d --name my-backend-container -p 9000:1000 my-backend:v1</code></pre>
 </code></pre>
 <h3 id="五-nginx-反向代理">五. Nginx 反向代理</h3>
 <p>为了让前端项目能够正常访问后端接口，我们需要配置 Nginx 作为反向代理。在  <code>Dockerfile</code>  中添加以下配置：</p>
-<pre><code class="language-nginx">server {
+<pre><code class="language-nginx"><pre data-language="nginx"><code class="language-nginx">server {
     listen 80;
     server_name localhost;
 
@@ -108,17 +114,49 @@ docker run -d --name my-backend-container -p 9000:1000 my-backend:v1
     }
 
     location /api/ {
-        proxy_pass http://&lt;后端容器IP&gt;:&lt;后端端口&gt;;
+        proxy_pass http://<后端容器IP>:<后端端口>;
     }
-}
+}</code></pre>
 </code></pre>
 <p>修改完成后，重新构建并运行前端容器即可。</p>
 <h2 id="总结">总结</h2>
 <p>通过 Docker，你可以轻松实现前端项目的容器化部署，告别复杂的环境配置和部署流程。Docker 不仅能提高开发效率，还能确保应用在不同环境下的稳定性。希望这篇文章能帮助你快速掌握 Docker 的使用，让你的前端项目部署变得更加轻松愉快！</p>
 
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

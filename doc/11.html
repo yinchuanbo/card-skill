@@ -1,25 +1,31 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>前端包管理工具 npm、yarn 与 pnpm</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>前端包管理工具 npm、yarn 与 pnpm</h1>
-                        <div class="meta">
-                            <time datetime="Sun Mar 09 2025 18:42:49 GMT+0800 (中国标准时间)">2025/3/9</time>
-                            <div class="tags">
-                                <span class="tag">前端工程化</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="npm-install-发生了什么">npm install 发生了什么</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端包管理工具 npm、yarn 与 pnpm</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>前端包管理工具 npm、yarn 与 pnpm</h1>
+                <div class="meta">
+                    <time datetime="Sun Mar 09 2025 18:42:49 GMT+0800 (中国标准时间)">2025/3/9</time>
+                    <div class="tags">
+                        <span class="tag">前端工程化</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="npm-install-发生了什么">npm install 发生了什么</h2>
 <h3 id="1-读取-packagejson">1. 读取 package.json</h3>
 <ul>
 <li><strong>解析项目的依赖</strong>：<code>npm</code> 首先会读取当前目录下的  <code>package.json</code>  文件，以了解项目的基本信息和所需的依赖包列表。这个文件包含了项目的名称、版本、描述、脚本和依赖项等信息。</li>
@@ -179,9 +185,41 @@
 <h2 id="结语">结语</h2>
 <p>本文中讨论了我们常用且是目前最流行的<code>node.js</code>包管理工具，这是我们日常开发中使用很频繁的工具。<code>npm</code>、<code>yarn</code> 和 <code>pnpm</code> 都有它们各自的优缺点，大家可以结合项目的具体情况来选择。</p>
 
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

@@ -1,29 +1,35 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>一次搞懂 CSS 各种混合模式</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>一次搞懂 CSS 各种混合模式</h1>
-                        <div class="meta">
-                            <time datetime="Tue Mar 11 2025 04:23:43 GMT+0800 (中国标准时间)">2025/3/11</time>
-                            <div class="tags">
-                                <span class="tag">mix-blend-mode</span><span class="tag">background-blend-mode</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="一-mix-blend-mode">一. mix-blend-mode</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一次搞懂 CSS 各种混合模式</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>一次搞懂 CSS 各种混合模式</h1>
+                <div class="meta">
+                    <time datetime="Tue Mar 11 2025 04:23:43 GMT+0800 (中国标准时间)">2025/3/11</time>
+                    <div class="tags">
+                        <span class="tag">mix-blend-mode</span><span class="tag">background-blend-mode</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="一-mix-blend-mode">一. mix-blend-mode</h2>
 <p><code>mix-blend-mode</code> 用于设定一个元素如何与其父元素或背景中的其他元素进行混合。常见的应用包括图片和文字在背景上的混合，让内容与背景色彩产生有趣的视觉效果。</p>
-<pre><code class="language-css">div {
-  mix-blend-mode: difference;
-}
+<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">div</span> <span class="token punctuation">{</span>
+  <span class="token property">mix-blend-mode</span><span class="token punctuation">:</span> difference<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 </code></pre>
 <h3 id="1-预设">1. 预设</h3>
 <p><strong>1.1 normal 正常</strong></p>
@@ -128,16 +134,48 @@
 <p>保留下层的饱和度（S）和色相（H），但使用<strong>上层的明亮度（L）的颜色</strong>。</p>
 <h2 id="二-background-blend-mode">二. background-blend-mode</h2>
 <p>background <code>background-blend-mode</code>是当你使用多重背景（背景图片、颜色、渐层等）时，可以控制它们的混合模式。使用方法与可用的数值基本上与<code>mix-blend-mode</code>基本上一样。</p>
-<pre><code class="language-css">div {
-  background-blend-mode: difference;
-}
+<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">div</span> <span class="token punctuation">{</span>
+  <span class="token property">background-blend-mode</span><span class="token punctuation">:</span> difference<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 </code></pre>
 <h3 id="演示">演示</h3>
 <p>以下范例我们也是用「 <code>multiply</code>色彩增值」，做出了颜料画在墙上的效果，只不过这次是使用<code>background</code>属性：</p>
 <img src="/images/19.png" />
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

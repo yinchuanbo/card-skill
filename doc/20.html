@@ -1,25 +1,31 @@
 
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</title>
-                <link rel="stylesheet" href="/css/styles.css">
-            </head>
-            <body class="card-detail">
-                <article class="card-content">
-                    <header>
-                        <h1>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</h1>
-                        <div class="meta">
-                            <time datetime="Sat Mar 15 2025 16:41:07 GMT+0800 (中国标准时间)">2025/3/15</time>
-                            <div class="tags">
-                                <span class="tag">前端国际化</span>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="content">
-                        <h2 id="🚀-前言">🚀 前言</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="card-detail">
+    <div class="container">
+        <div class="card-content">
+            <header>
+                <h1>前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)</h1>
+                <div class="meta">
+                    <time datetime="Sat Mar 15 2025 16:41:07 GMT+0800 (中国标准时间)">2025/3/15</time>
+                    <div class="tags">
+                        <span class="tag">前端国际化</span>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <h2 id="🚀-前言">🚀 前言</h2>
 <p>大家好呀！之前给大家介绍过一个关于国际化的 Vite 插件 <code>vite-plugin-auto-i18n</code>，这是一个自动翻译的 i18n Vite 插件。但当时这个插件还不够完美。所以，时隔一年，我们带来了前端国际化插件的升级版——更兼容、更适配、更稳定。🎉</p>
 <p>国际化对于大型项目来说一直是一个令人头痛的问题。通常需要手动在项目中替换对应的文字，并维护一个配置（map）。这不仅低效，还需要耗费大量人力。一个大型项目的国际化工作可能需要测试和产品团队一起工作几个星期。那么，有没有一种方法可以无需改动业务代码，自动生成翻译呢？</p>
 <p>答案是肯定的！这就是我们基于 Babel 开发的自动翻译插件 —— <code>auto-i18n-translation-plugins</code>！</p>
@@ -42,86 +48,86 @@
 <h2 id="🌟-快速开始">🌟 快速开始</h2>
 <h3 id="1️⃣-安装插件">1️⃣ 安装插件</h3>
 <p><strong>「Vite 项目」</strong></p>
-<pre><code class="language-sh">npm install vite-auto-i18n-plugin --save-dev
-# 或
-yarn add vite-auto-i18n-plugin --dev
+<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> vite-auto-i18n-plugin --save-dev
+<span class="token comment"># 或</span>
+<span class="token function">yarn</span> <span class="token function">add</span> vite-auto-i18n-plugin <span class="token parameter variable">--dev</span></code></pre>
 </code></pre>
 <p><strong>「Webpack 项目」</strong></p>
-<pre><code class="language-sh">npm install webpack-auto-i18n-plugin --save-dev
-# 或
-yarn add webpack-auto-i18n-plugin --dev
+<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> webpack-auto-i18n-plugin --save-dev
+<span class="token comment"># 或</span>
+<span class="token function">yarn</span> <span class="token function">add</span> webpack-auto-i18n-plugin <span class="token parameter variable">--dev</span></code></pre>
 </code></pre>
 <h3 id="2️⃣-配置示例">2️⃣ 配置示例</h3>
 <p><strong>「Vite 配置示例」</strong> (vite.config.js)</p>
-<pre><code class="language-js">import { defineConfig } from &quot;vite&quot;;
-import vitePluginAutoI18n from &quot;vite-auto-i18n-plugin&quot;;
-import vue from &quot;@vitejs/plugin-vue&quot;;
+<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> defineConfig <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"vite"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> vitePluginAutoI18n <span class="token keyword">from</span> <span class="token string">"vite-auto-i18n-plugin"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> vue <span class="token keyword">from</span> <span class="token string">"@vitejs/plugin-vue"</span><span class="token punctuation">;</span>
 
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          hoistStatic: false,
-          cacheHandlers: false,
-        },
-      },
-    }),
-    vitePluginAutoI18n({
-      targetLangList: [&quot;en&quot;, &quot;ko&quot;, &quot;ja&quot;],
-      translator: new YoudaoTranslator({
-        appId: &quot;4cdb9baea8066fef&quot;,
-        appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
-      }),
-    }),
-  ],
-});
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">defineConfig</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token function">vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">template</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">compilerOptions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token literal-property property">hoistStatic</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+          <span class="token literal-property property">cacheHandlers</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">vitePluginAutoI18n</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">targetLangList</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"en"</span><span class="token punctuation">,</span> <span class="token string">"ko"</span><span class="token punctuation">,</span> <span class="token string">"ja"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">translator</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">YoudaoTranslator</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        <span class="token literal-property property">appId</span><span class="token operator">:</span> <span class="token string">"4cdb9baea8066fef"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">appKey</span><span class="token operator">:</span> <span class="token string">"ONI6AerZnGRyDqr3w7UM730mPuF8mB3j"</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 </code></pre>
 <p><strong>「Webpack 配置示例」</strong> (webpack.config.js)</p>
-<pre><code class="language-js">const webpackPluginsAutoI18n = require(&quot;webpack-auto-i18n-plugin&quot;);
-const { YoudaoTranslator } = require(&quot;webpack-auto-i18n-plugin&quot;);
+<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> webpackPluginsAutoI18n <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"webpack-auto-i18n-plugin"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> YoudaoTranslator <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"webpack-auto-i18n-plugin"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const i18nPlugin = new webpackPluginsAutoI18n.default({
-  targetLangList: [&quot;en&quot;, &quot;ko&quot;, &quot;ja&quot;, &quot;ru&quot;],
-  translator: new YoudaoTranslator({
-    appId: &quot;4cdb9baea8066fef&quot;,
-    appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
-  }),
-});
+<span class="token keyword">const</span> i18nPlugin <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">webpackPluginsAutoI18n<span class="token punctuation">.</span>default</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">targetLangList</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"en"</span><span class="token punctuation">,</span> <span class="token string">"ko"</span><span class="token punctuation">,</span> <span class="token string">"ja"</span><span class="token punctuation">,</span> <span class="token string">"ru"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">translator</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">YoudaoTranslator</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">appId</span><span class="token operator">:</span> <span class="token string">"4cdb9baea8066fef"</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">appKey</span><span class="token operator">:</span> <span class="token string">"ONI6AerZnGRyDqr3w7UM730mPuF8mB3j"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-module.exports = {
-  plugins: [
-    new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-      template: &quot;./public/index.html&quot;,
-    }),
-    i18nPlugin,
-  ],
-};
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">new</span> <span class="token class-name">VueLoaderPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">HtmlWebpackPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">template</span><span class="token operator">:</span> <span class="token string">"./public/index.html"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    i18nPlugin<span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
 </code></pre>
 <h3 id="3️⃣-翻译器配置示例">3️⃣ 翻译器配置示例</h3>
 <p>插件默认使用谷歌翻译。如果需要配置代理，可以优先使用有道翻译，翻译效果更佳。插件内置了谷歌翻译和有道翻译功能，您也可以自定义翻译器。✨</p>
 <p><strong>「使用谷歌翻译（默认）」</strong></p>
-<pre><code class="language-js">translator: new GoogleTranslator({
-  proxyOption: {
-    host: &quot;127.0.0.1&quot;,
-    port: 8899,
-    headers: {
-      &quot;User-Agent&quot;: &quot;Node&quot;,
-    },
-  },
-});
+<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token literal-property property">translator</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">GoogleTranslator</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">proxyOption</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">host</span><span class="token operator">:</span> <span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token number">8899</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">"User-Agent"</span><span class="token operator">:</span> <span class="token string">"Node"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 </code></pre>
 <p><strong>「使用有道翻译」</strong></p>
-<pre><code class="language-js">translator: new YoudaoTranslator({
-  appId: &quot;4cdb9baea8066fef&quot;,
-  appKey: &quot;ONI6AerZnGRyDqr3w7UM730mPuF8mB3j&quot;,
-});
+<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token literal-property property">translator</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">YoudaoTranslator</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">appId</span><span class="token operator">:</span> <span class="token string">"4cdb9baea8066fef"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">appKey</span><span class="token operator">:</span> <span class="token string">"ONI6AerZnGRyDqr3w7UM730mPuF8mB3j"</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 </code></pre>
 <h3 id="4️⃣-项目入口配置">4️⃣ 项目入口配置</h3>
 <p>请在项目入口文件（如 <code>main.js</code>）的顶部引入语言配置文件：</p>
-<pre><code class="language-js">import &quot;../lang/index&quot;; 
-// 📍 必须在入口文件中第一行引入，这个文件会在运行插件时自动生成，默认在打包配置目录的同一层的lang文件夹中，其中的index.js 就是配置文件了
+<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">import</span> <span class="token string">"../lang/index"</span><span class="token punctuation">;</span> 
+<span class="token comment">// 📍 必须在入口文件中第一行引入，这个文件会在运行插件时自动生成，默认在打包配置目录的同一层的lang文件夹中，其中的index.js 就是配置文件了</span></code></pre>
 </code></pre>
 <h3 id="5️⃣-用例动图：">5️⃣ 用例动图：</h3>
 <p><strong>vite + vue3：</strong></p>
@@ -293,9 +299,41 @@ module.exports = {
 <li><strong>「有翻译补全机制，如果目标语言中出现缺失，会以源语言的翻译配置为准将缺失的部分补齐。可以放心在配置中增加新语言类型。」</strong></li>
 </ul>
 
-                    </div>
-                </article>
-                <script src="/js/main.js"></script>
-            </body>
-            </html>
-            
+            </div>
+        </div>
+        
+        <div class="return-link">
+            <a href="/">&larr; 返回卡片列表</a>
+        </div>
+    </div>
+
+    <!-- 简化后的模态框结构 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div id="modalContent">
+            <!-- 模态框内容将在这里加载 -->
+        </div>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/ink-effects.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- 添加额外的语言支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+    <!-- 重新初始化Prism.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>
