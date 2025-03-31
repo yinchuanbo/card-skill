@@ -91,7 +91,7 @@ function renderCards() {
 // Create Card Element
 function createCardElement(card, index) {
   const cardElement = document.createElement("article");
-  cardElement.className = "card";
+  cardElement.className = `card ${card.type}`;
   cardElement.style.setProperty("--index", index); // For staggered animation
 
   // Format date

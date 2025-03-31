@@ -3,110 +3,111 @@
  * This script converts markdown files in the src directory to HTML files in the doc directory.
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const marked = require('marked');
-const matter = require('gray-matter');
+const fs = require("fs-extra");
+const path = require("path");
+const marked = require("marked");
+const matter = require("gray-matter");
 
 // 尝试导入Prism，处理Node.js环境下可能的问题
 let Prism;
 try {
-    Prism = require('prismjs');
-    
-    // 加载额外的语言组件
-    require('prismjs/components/prism-javascript');
-    require('prismjs/components/prism-css');
-    require('prismjs/components/prism-python');
-    require('prismjs/components/prism-java');
-    require('prismjs/components/prism-bash');
-    require('prismjs/components/prism-yaml');
-    require('prismjs/components/prism-json');
-    require('prismjs/components/prism-markdown');
+  Prism = require("prismjs");
+
+  // 加载额外的语言组件
+  require("prismjs/components/prism-javascript");
+  require("prismjs/components/prism-css");
+  require("prismjs/components/prism-python");
+  require("prismjs/components/prism-java");
+  require("prismjs/components/prism-bash");
+  require("prismjs/components/prism-yaml");
+  require("prismjs/components/prism-json");
+  require("prismjs/components/prism-markdown");
 } catch (error) {
-    console.warn('Prism.js 加载失败，将使用基本代码格式化: ', error.message);
-    Prism = null;
+  console.warn("Prism.js 加载失败，将使用基本代码格式化: ", error.message);
+  Prism = null;
 }
 
 // Configure marked for GitHub-flavored markdown
 marked.setOptions({
-    gfm: true,
-    breaks: true,
-    headerIds: true,
-    mangle: false,
-    highlight: function(code, lang) {
-        // 如果Prism不可用或语言不支持，使用基本格式
-        if (!Prism || !lang || !Prism.languages[lang]) {
-            const language = lang || 'text';
-            const dataAttr = lang ? `data-language="${lang}"` : '';
-            return `<pre ${dataAttr}><code class="language-${language}">${code}</code></pre>`;
-        }
-        
-        // 使用Prism进行高亮处理
-        const highlighted = Prism.highlight(code, Prism.languages[lang], lang);
-        const dataAttr = `data-language="${lang}"`;
-        return `<pre ${dataAttr}><code class="language-${lang}">${highlighted}</code></pre>`;
+  gfm: true,
+  breaks: true,
+  headerIds: true,
+  mangle: false,
+  highlight: function (code, lang) {
+    // 如果Prism不可用或语言不支持，使用基本格式
+    if (!Prism || !lang || !Prism.languages[lang]) {
+      const language = lang || "text";
+      const dataAttr = lang ? `data-language="${lang}"` : "";
+      return `<pre ${dataAttr}><code class="language-${language}">${code}</code></pre>`;
     }
+
+    // 使用Prism进行高亮处理
+    const highlighted = Prism.highlight(code, Prism.languages[lang], lang);
+    const dataAttr = `data-language="${lang}"`;
+    return `<pre ${dataAttr}><code class="language-${lang}">${highlighted}</code></pre>`;
+  },
 });
 
 // Main conversion function
 async function convertMarkdownToHtml() {
-    try {
-        console.log('Starting conversion of markdown files to HTML...');
-        
-        // Ensure source directory exists
-        const srcDir = path.join(__dirname, '..', 'src');
-        if (!await fs.pathExists(srcDir)) {
-            console.log('Source directory does not exist. Creating src directory...');
-            await fs.ensureDir(srcDir);
-            
-            // Create a sample markdown file if src is empty
-            const samplePath = path.join(srcDir, 'sample.md');
-            const sampleContent = createSampleMarkdown();
-            await fs.writeFile(samplePath, sampleContent);
-            console.log('Created sample markdown file in src directory.');
-        }
-        
-        // Ensure destination directory exists
-        const docDir = path.join(__dirname, '..', 'doc');
-        await fs.ensureDir(docDir);
-        
-        // Get all markdown files from src directory
-        const files = await fs.readdir(srcDir);
-        const mdFiles = files.filter(file => file.endsWith('.md'));
-        
-        if (mdFiles.length === 0) {
-            console.log('No markdown files found in src directory.');
-            return;
-        }
-        
-        console.log(`Found ${mdFiles.length} markdown files.`);
-        
-        // Array to store card metadata
-        const cards = [];
-        
-        // Process each markdown file
-        for (const file of mdFiles) {
-            const filePath = path.join(srcDir, file);
-            const content = await fs.readFile(filePath, 'utf8');
-            
-            // Parse front matter and markdown content
-            const { data, content: markdownContent } = matter(content);
-            
-            // Default values if front matter is missing
-            const title = data.title || path.basename(file, '.md');
-            const tags = data.tags || [];
-            const createdAt = data.time || data.createdAt || new Date().toISOString();
-            const summary = data.summary || markdownContent.slice(0, 150) + '...';
-            
-            // Convert markdown to HTML
-            const htmlContent = marked.parse(markdownContent);
-            
-            // Create HTML file with card information
-            const htmlFileName = path.basename(file, '.md') + '.html';
-            const htmlFilePath = path.join(docDir, htmlFileName);
-            
-            // Create HTML content with metadata
-            const htmlWithMeta = `
+  try {
+    console.log("Starting conversion of markdown files to HTML...");
+
+    // Ensure source directory exists
+    const srcDir = path.join(__dirname, "..", "src");
+    if (!(await fs.pathExists(srcDir))) {
+      console.log("Source directory does not exist. Creating src directory...");
+      await fs.ensureDir(srcDir);
+
+      // Create a sample markdown file if src is empty
+      const samplePath = path.join(srcDir, "sample.md");
+      const sampleContent = createSampleMarkdown();
+      await fs.writeFile(samplePath, sampleContent);
+      console.log("Created sample markdown file in src directory.");
+    }
+
+    // Ensure destination directory exists
+    const docDir = path.join(__dirname, "..", "doc");
+    await fs.ensureDir(docDir);
+
+    // Get all markdown files from src directory
+    const files = await fs.readdir(srcDir);
+    const mdFiles = files.filter((file) => file.endsWith(".md"));
+
+    if (mdFiles.length === 0) {
+      console.log("No markdown files found in src directory.");
+      return;
+    }
+
+    console.log(`Found ${mdFiles.length} markdown files.`);
+
+    // Array to store card metadata
+    const cards = [];
+
+    // Process each markdown file
+    for (const file of mdFiles) {
+      const filePath = path.join(srcDir, file);
+      const content = await fs.readFile(filePath, "utf8");
+
+      // Parse front matter and markdown content
+      const { data, content: markdownContent } = matter(content);
+
+      // Default values if front matter is missing
+      const title = data.title || path.basename(file, ".md");
+      const tags = data.tags || [];
+      const createdAt = data.time || data.createdAt || new Date().toISOString();
+      const type = data.type || "default";
+      const summary = data.summary || markdownContent.slice(0, 150) + "...";
+
+      // Convert markdown to HTML
+      const htmlContent = marked.parse(markdownContent);
+
+      // Create HTML file with card information
+      const htmlFileName = path.basename(file, ".md") + ".html";
+      const htmlFilePath = path.join(docDir, htmlFileName);
+
+      // Create HTML content with metadata
+      const htmlWithMeta = `
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -126,9 +127,13 @@ async function convertMarkdownToHtml() {
             <header>
                 <h1>${title}</h1>
                 <div class="meta">
-                    <time datetime="${createdAt}">${new Date(createdAt).toLocaleDateString()}</time>
+                    <time datetime="${createdAt}">${new Date(
+        createdAt
+      ).toLocaleDateString()}</time>
                     <div class="tags">
-                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${tags
+                          .map((tag) => `<span class="tag">${tag}</span>`)
+                          .join("")}
                     </div>
                 </div>
             </header>
@@ -172,36 +177,37 @@ async function convertMarkdownToHtml() {
     </script>
 </body>
 </html>`;
-            
-            // Write the HTML file
-            await fs.writeFile(htmlFilePath, htmlWithMeta);
-            console.log(`Converted ${file} -> ${htmlFileName}`);
-            
-            // Add card metadata to the array
-            cards.push({
-                id: path.basename(file, '.md'),
-                title,
-                tags,
-                createdAt,
-                summary,
-                url: `/doc/${htmlFileName}`
-            });
-        }
-        
-        // Write cards data to a JSON file for the frontend
-        const cardsJsonPath = path.join(__dirname, '..', 'public', 'cards.json');
-        await fs.writeFile(cardsJsonPath, JSON.stringify(cards, null, 2));
-        console.log(`Generated cards.json with ${cards.length} cards.`);
-        
-        console.log('Conversion completed successfully!');
-    } catch (error) {
-        console.error('Error converting markdown to HTML:', error);
+
+      // Write the HTML file
+      await fs.writeFile(htmlFilePath, htmlWithMeta);
+      console.log(`Converted ${file} -> ${htmlFileName}`);
+
+      // Add card metadata to the array
+      cards.push({
+        id: path.basename(file, ".md"),
+        title,
+        tags,
+        createdAt,
+        summary,
+        type,
+        url: `/doc/${htmlFileName}`,
+      });
     }
+
+    // Write cards data to a JSON file for the frontend
+    const cardsJsonPath = path.join(__dirname, "..", "public", "cards.json");
+    await fs.writeFile(cardsJsonPath, JSON.stringify(cards, null, 2));
+    console.log(`Generated cards.json with ${cards.length} cards.`);
+
+    console.log("Conversion completed successfully!");
+  } catch (error) {
+    console.error("Error converting markdown to HTML:", error);
+  }
 }
 
 // Create a sample markdown file
 function createSampleMarkdown() {
-    return `---
+  return `---
 title: 山水卡片系统入门指南
 tags: [教程, markdown, 入门]
 time: ${new Date().toISOString()}
@@ -249,5 +255,5 @@ summary: 此卡片包含内容的简短摘要。
 
 // Run the conversion
 convertMarkdownToHtml()
-    .then(() => console.log('Script completed.'))
-    .catch(err => console.error('Script failed:', err)); 
+  .then(() => console.log("Script completed."))
+  .catch((err) => console.error("Script failed:", err));
