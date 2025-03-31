@@ -1,31 +1,25 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>七行代码搞定无限滚动</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>七行代码搞定无限滚动</h1>
-                <div class="meta">
-                    <time datetime="Sat Mar 15 2025 17:28:38 GMT+0800 (中国标准时间)">2025/3/15</time>
-                    <div class="tags">
-                        <span class="tag">性能优化</span><span class="tag">滚动优化</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <p>无限滚动，又称瀑布流，已成为现代网站的标配。它能提升用户体验，让浏览更加流畅。分享下只需七行 JavaScript 代码，就能轻松实现高性能的无限滚动效果，并深入剖析其背后的性能优化原理。</p>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>七行代码搞定无限滚动</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>七行代码搞定无限滚动</h1>
+                        <div class="meta">
+                            <time datetime="Sat Mar 15 2025 17:28:38 GMT+0800 (中国标准时间)">2025/3/15</time>
+                            <div class="tags">
+                                <span class="tag">性能优化</span><span class="tag">滚动优化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>无限滚动，又称瀑布流，已成为现代网站的标配。它能提升用户体验，让浏览更加流畅。分享下只需七行 JavaScript 代码，就能轻松实现高性能的无限滚动效果，并深入剖析其背后的性能优化原理。</p>
 <h2 id="传统实现的痛点">传统实现的痛点</h2>
 <p>在谈论优化方案前，我们先来看看传统无限滚动实现中存在的问题：</p>
 <ol>
@@ -37,21 +31,21 @@
 <p>这些问题在数据量小时可能不明显，但当用户深度滚动时，页面会变得越来越卡顿，甚至崩溃。</p>
 <h2 id="七行代码的魔力">七行代码的魔力</h2>
 <p>下面是经过优化的无限滚动核心代码：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntersectionObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">entries</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>entries<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>isIntersecting <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>isLoading<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    isLoading <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token function">loadMoreItems</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>isLoading <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-observer<span class="token punctuation">.</span><span class="token function">observe</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"#sentinel"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">const observer = new IntersectionObserver((entries) =&gt; {
+  if (entries[0].isIntersecting &amp;&amp; !isLoading) {
+    isLoading = true;
+    loadMoreItems().then(() =&gt; (isLoading = false));
+  }
+});
+observer.observe(document.querySelector(&quot;#sentinel&quot;));
 </code></pre>
 <p>这短短七行代码解决了传统实现的所有痛点，实现了性能最优的无限滚动。看似简单，实则蕴含了多重性能优化技巧。</p>
 <h2 id="性能优化解析">性能优化解析</h2>
 <h3 id="1-intersectionobserver-代替-scroll-事件">1. IntersectionObserver 代替 Scroll 事件</h3>
 <p>传统实现通常依赖于 scroll 事件：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js">window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"scroll"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token comment">// 检查是否滚动到底部并加载更多</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">window.addEventListener(&quot;scroll&quot;, () =&gt; {
+  // 检查是否滚动到底部并加载更多
+});
 </code></pre>
 <p>问题在于 scroll 事件触发极为频繁（可达每秒数十甚至数百次），即使使用节流（throttle）或防抖（debounce）技术，也会有性能损耗。</p>
 <p>而 IntersectionObserver 是浏览器原生提供的 API，它能够异步观察目标元素与视口的交叉状态，只在需要时触发回调，极大减少了不必要的计算。</p>
@@ -80,48 +74,16 @@ observer<span class="token punctuation">.</span><span class="token function">obs
 <img src="/images/32.webp" />
 
 <p>使用示例：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">".content-container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> infiniteScroller <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InfiniteScroller</span><span class="token punctuation">(</span>container<span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">count</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> newItems <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetchData</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">renderItems</span><span class="token punctuation">(</span>newItems<span class="token punctuation">,</span> container<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">const container = document.querySelector(&quot;.content-container&quot;);
+const infiniteScroller = new InfiniteScroller(container, async (count) =&gt; {
+  const newItems = await fetchData(count);
+  renderItems(newItems, container);
+});
 </code></pre>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

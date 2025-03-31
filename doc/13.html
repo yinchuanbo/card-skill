@@ -1,35 +1,29 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果</h1>
-                <div class="meta">
-                    <time datetime="Tue Mar 11 2025 05:28:06 GMT+0800 (中国标准时间)">2025/3/11</time>
-                    <div class="tags">
-                        <span class="tag">filter / backdrop-filter</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <h2 id="一-滤镜-filter">一. 滤镜 filter</h2>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果</h1>
+                        <div class="meta">
+                            <time datetime="Tue Mar 11 2025 05:28:06 GMT+0800 (中国标准时间)">2025/3/11</time>
+                            <div class="tags">
+                                <span class="tag">filter / backdrop-filter</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="一-滤镜-filter">一. 滤镜 filter</h2>
 <p><code>filter</code>属性能让你对 HTML 元素本身做一系列的图像处理效果，让我们能在不使用绘图软体的情况下实现各种特效，例如：模糊、明度、对比度等。</p>
-<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">div</span> <span class="token punctuation">{</span>
-  <span class="token property">filter</span><span class="token punctuation">:</span> 方法<span class="token punctuation">(</span>数值<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-css">div {
+  filter: 方法(数值);
+}
 </code></pre>
 <h3 id="特效效果">特效效果</h3>
 <p>而<code>filter</code>总共有以下几种效果可以使用：</p>
@@ -67,9 +61,9 @@
 </blockquote>
 <h3 id="多重特效">多重特效</h3>
 <p>你也可以使用多种特效在一个 HTML 元素上，只要简单使用空格隔开就好了，例如：</p>
-<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">div</span> <span class="token punctuation">{</span>
-  <span class="token property">filter</span><span class="token punctuation">:</span> <span class="token function">contrast</span><span class="token punctuation">(</span>175%<span class="token punctuation">)</span> <span class="token function">brightness</span><span class="token punctuation">(</span>105%<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-css">div {
+  filter: contrast(175%) brightness(105%);
+}
 </code></pre>
 <h2 id="二-背景滤镜backdrop-filter">二. 背景滤镜<code>backdrop-filter</code></h2>
 <p><code>backdrop-filter</code>可以对 HTML 元素后面的背景制作滤镜效果，影响的是背后的东西，而不是自己本身。最常见的是用来制作非常受欢迎的「<strong>毛玻璃效果 Glassmorphism</strong> 」，利用模糊区隔出背景，制造出透明感的景深效果，最常见被用在 iOS 系统中、弹跳视窗光箱（lightbox）或是导览列（Navbar）上等等。</p>
@@ -78,9 +72,9 @@
 
 <h3 id="基本语法">基本语法</h3>
 <p><code>backdrop-filter</code>语法的使用方式，基本上和<code>filter</code>一样：</p>
-<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">div</span> <span class="token punctuation">{</span>
-  <span class="token property">backdrop-filter</span><span class="token punctuation">:</span> 方法<span class="token punctuation">(</span>数值<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-css">div {
+  backdrop-filter: 方法(数值);
+}
 </code></pre>
 <h3 id="特效效果-1">特效效果</h3>
 <p><code>backdrop-filter</code>通常用在浮动的 HTML 元素上（如：绝对定位、固定定位、 <code>sticky</code>等等）。它可使用的效果和<code>filter</code>一样，请参考上面<code>filter</code>所列出来的所有效果。</p>
@@ -93,9 +87,9 @@
 <p>刚刚说的「毛玻璃效果 Glassmorphism」就是使用其中的<code>blur()</code>效果。</p>
 <h3 id="多重特效-1">多重特效</h3>
 <p>和<code>filter</code>一样，你也可以使用多种特效在一个 HTML 元素上，只要简单使用空格隔开就好了，例如：</p>
-<pre><code class="language-css"><pre data-language="css"><code class="language-css"><span class="token selector">.element</span> <span class="token punctuation">{</span>
-  <span class="token property">backdrop-filter</span><span class="token punctuation">:</span> <span class="token function">blur</span><span class="token punctuation">(</span>10px<span class="token punctuation">)</span> <span class="token function">brightness</span><span class="token punctuation">(</span>60%<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-css">.element {
+  backdrop-filter: blur(10px) brightness(60%);
+}
 </code></pre>
 <p>上面的例子会将元素后面的背景模糊处理，并且使其稍微变暗（亮度调低至 60%）。这样可以做出类似黑色毛玻璃效果。</p>
 <h2 id="三、渐进式模糊（progressive-blur）">三、渐进式模糊（Progressive blur）</h2>
@@ -111,14 +105,14 @@
 <p>这边我们在有背景图的<code>div</code>上，新增一个满版的伪元素<code>::before</code>并且设定背景滤镜<code>backdrop-filter</code> ，然后再透过 CSS <code>mask</code>线性渐层调整模糊的范围，就可以做到啦！</p>
 <img src="/images/25.png" />
 
-<pre><code class="language-scss"><pre data-language="scss"><code class="language-scss">.photo {
+<pre><code class="language-scss">.photo {
   position: relative;
   overflow: hidden;
-  background-image: url("image.jpg");
+  background-image: url(&quot;image.jpg&quot;);
   background-size: cover;
   overflow: hidden;
-  &::before {
-    content: "";
+  &amp;::before {
+    content: &quot;&quot;;
     display: block;
     position: absolute;
     top: 0;
@@ -128,7 +122,7 @@
     backdrop-filter: blur(10px);
     mask: linear-gradient(180deg, transparent 350px, #000 450px);
   }
-}</code></pre>
+}
 </code></pre>
 <blockquote>
 <p>DEMO 连接： <a href="https://codepen.io/im1010ioio/pen/raBXezV">CSS 渐进式模糊</a></p>
@@ -148,41 +142,9 @@
 </ul>
 </blockquote>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

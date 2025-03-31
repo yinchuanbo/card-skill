@@ -1,31 +1,25 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>原生 Observable API 来了</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>原生 Observable API 来了</h1>
-                <div class="meta">
-                    <time datetime="Wed Mar 19 2025 04:32:01 GMT+0800 (中国标准时间)">2025/3/19</time>
-                    <div class="tags">
-                        <span class="tag">Observable API</span><span class="tag">实验属性</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <p>在 Web 开发中，异步事件处理始终是构建响应式、可扩展应用的核心挑战。传统方案依赖<code>addEventListener</code>进行事件监听，但在处理复杂事件流时，其命令式编程模型常导致代码臃肿、难以维护且缺乏组合性。尽管开发者通常通过 RxJS 等响应式编程库解决此类问题，但这些第三方方案需要额外学习成本和包体积负担。</p>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>原生 Observable API 来了</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>原生 Observable API 来了</h1>
+                        <div class="meta">
+                            <time datetime="Wed Mar 19 2025 04:32:01 GMT+0800 (中国标准时间)">2025/3/19</time>
+                            <div class="tags">
+                                <span class="tag">Observable API</span><span class="tag">实验属性</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>在 Web 开发中，异步事件处理始终是构建响应式、可扩展应用的核心挑战。传统方案依赖<code>addEventListener</code>进行事件监听，但在处理复杂事件流时，其命令式编程模型常导致代码臃肿、难以维护且缺乏组合性。尽管开发者通常通过 RxJS 等响应式编程库解决此类问题，但这些第三方方案需要额外学习成本和包体积负担。</p>
 <p>目前，W3C 正积极推动  <strong>Observable API</strong>  作为浏览器原生标准落地。该提案受响应式编程范式启发，引入声明式的事件处理模型，通过可观察对象和观察者的解耦设计，使开发者能以更函数式的方式组合、转换和操作事件流。</p>
 <blockquote>
 <p>注意：Observable API 是一种实验性功能，目前，仅在 Chrome v135 及以上版本中可用，且需启用“实验性 Web 平台功能”标志。</p>
@@ -42,16 +36,16 @@
 <h3 id="处理-dom-事件">处理 DOM 事件</h3>
 <p>传统<code>addEventListener</code>需手动管理订阅和清理，易导致内存泄漏。Observable API 提供声明式监听，自动绑定生命周期。</p>
 <p>通过<code>element.when(eventName)</code>监听事件，返回可观察对象，支持链式操作符：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> button <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"myButton"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const button = document.getElementById(&quot;myButton&quot;);
 
-<span class="token comment">// 监听点击事件</span>
-button<span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"click"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token function-variable function">next</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"点击坐标:"</span><span class="token punctuation">,</span> event<span class="token punctuation">.</span>clientX<span class="token punctuation">,</span> event<span class="token punctuation">.</span>clientY<span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token function-variable function">error</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"事件错误:"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token function-variable function">complete</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"监听已终止"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+// 监听点击事件
+button.when(&quot;click&quot;).subscribe({
+  next: (event) =&gt; console.log(&quot;点击坐标:&quot;, event.clientX, event.clientY),
+  error: (err) =&gt; console.error(&quot;事件错误:&quot;, err),
+  complete: () =&gt; console.log(&quot;监听已终止&quot;),
+});
 
-<span class="token comment">// 自动清理：当按钮从DOM移除时，订阅自动取消</span></code></pre>
+// 自动清理：当按钮从DOM移除时，订阅自动取消
 </code></pre>
 <p><strong>优势：</strong></p>
 <ul>
@@ -62,15 +56,15 @@ button<span class="token punctuation">.</span><span class="token function">when<
 <h3 id="带终止条件的事件流">带终止条件的事件流</h3>
 <p>场景：需统计按钮点击次数，直到用户点击“停止”按钮，传统方案需维护状态变量和多个监听器。</p>
 <p>使用<code>takeUntil</code>操作符在特定事件触发时终止流，结合<code>reduce</code>聚合结果：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> countButton <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"countBtn"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> stopButton <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"stopBtn"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const countButton = document.getElementById(&quot;countBtn&quot;);
+const stopButton = document.getElementById(&quot;stopBtn&quot;);
 
 countButton
-  <span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"click"</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">takeUntil</span><span class="token punctuation">(</span>stopButton<span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"click"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 点击停止按钮时终止流</span>
-  <span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">count</span><span class="token punctuation">)</span> <span class="token operator">=></span> count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token comment">// 初始值为0，每次点击+1</span>
-  <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">total</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">总点击次数：</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>total<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"统计失败:"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+  .when(&quot;click&quot;)
+  .takeUntil(stopButton.when(&quot;click&quot;)) // 点击停止按钮时终止流
+  .reduce((count) =&gt; count + 1, 0) // 初始值为0，每次点击+1
+  .then((total) =&gt; console.log(`总点击次数：${total}`))
+  .catch((err) =&gt; console.error(&quot;统计失败:&quot;, err));
 </code></pre>
 <p><strong>优势：</strong></p>
 <ul>
@@ -81,15 +75,15 @@ countButton
 <h3 id="事件过滤与转换"><strong>事件过滤与转换</strong></h3>
 <p>场景：仅响应特定子元素的点击事件，并将事件对象转换为坐标数据。</p>
 <p>链式使用  <code>filter</code>  和  <code>map</code>  操作符实现：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const container = document.getElementById(&quot;container&quot;);
 
 container
-  <span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"click"</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token string">".interactive"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 仅匹配.interactive元素</span>
-  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">x</span><span class="token operator">:</span> e<span class="token punctuation">.</span>clientX<span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> e<span class="token punctuation">.</span>clientY <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 转换为坐标对象</span>
-  <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-    <span class="token function-variable function">next</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> x<span class="token punctuation">,</span> y <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">有效点击坐标：(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>x<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>y<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+  .when(&quot;click&quot;)
+  .filter((e) =&gt; e.target.matches(&quot;.interactive&quot;)) // 仅匹配.interactive元素
+  .map((e) =&gt; ({ x: e.clientX, y: e.clientY })) // 转换为坐标对象
+  .subscribe({
+    next: ({ x, y }) =&gt; console.log(`有效点击坐标：(${x},${y})`),
+  });
 </code></pre>
 <p><strong>优势：</strong></p>
 <ul>
@@ -100,43 +94,43 @@ container
 <h3 id="websocket-数据流处理"><strong>WebSocket 数据流处理</strong></h3>
 <p>场景：实时接收 WebSocket 消息，处理特定类型的数据并在连接关闭时自动清理。</p>
 <p>通过  <code>WebSocket</code>  对象的  <code>when(&quot;message&quot;)</code>  监听消息，结合  <code>takeUntil</code>  监听关闭事件：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> ws <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WebSocket</span><span class="token punctuation">(</span><span class="token string">"wss://api.example.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const ws = new WebSocket(&quot;wss://api.example.com&quot;);
 
-ws<span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">takeUntil</span><span class="token punctuation">(</span>ws<span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span><span class="token string">"close"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 连接关闭时终止流</span>
-  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 解析JSON数据</span>
-  <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=></span> data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"update"</span><span class="token punctuation">)</span> <span class="token comment">// 仅处理update类型</span>
-  <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-    <span class="token function-variable function">next</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">update</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"收到更新:"</span><span class="token punctuation">,</span> update<span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">complete</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"连接已关闭"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+ws.when(&quot;message&quot;)
+  .takeUntil(ws.when(&quot;close&quot;)) // 连接关闭时终止流
+  .map((e) =&gt; JSON.parse(e.data)) // 解析JSON数据
+  .filter((data) =&gt; data.type === &quot;update&quot;) // 仅处理update类型
+  .subscribe({
+    next: (update) =&gt; console.log(&quot;收到更新:&quot;, update),
+    complete: () =&gt; console.log(&quot;连接已关闭&quot;),
+  });
 </code></pre>
 <h3 id="自定义事件流">自定义事件流</h3>
 <p>场景：创建定时计数器，每秒递增并在达到阈值时自动终止。</p>
 <p>通过<code>new Observable</code>构造函数定义自定义流，利用<code>setInterval</code>和  <code>subscriber</code>控制流程：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> observable <span class="token operator">=</span> <span class="token function">newObservable</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">subscriber</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> id <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>count <span class="token operator">></span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      subscriber<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0.1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      subscriber<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token function">newError</span><span class="token punctuation">(</span><span class="token string">"出错了！"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    subscriber<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>count<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    subscriber<span class="token punctuation">.</span><span class="token function">addTeardown</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"清理！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token function">clearInterval</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token function-variable function">next</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">计数: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token function-variable function">error</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token function-variable function">complete</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"完成！"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">const observable = newObservable((subscriber) =&gt; {
+  let count = 0;
+  const id = setInterval(() =&gt; {
+    if (count &gt; 10) {
+      subscriber.complete();
+      return;
+    }
+    if (Math.random() &lt; 0.1) {
+      subscriber.error(newError(&quot;出错了！&quot;));
+      return;
+    }
+    subscriber.next(count++);
+    subscriber.addTeardown(() =&gt; {
+      console.log(&quot;清理！&quot;);
+      clearInterval(id);
+    });
+  }, 1000);
+});
+observable.subscribe({
+  next: (value) =&gt; console.log(`计数: ${value}`),
+  error: (error) =&gt; console.error(error),
+  complete: () =&gt; console.log(&quot;完成！&quot;),
+});
 </code></pre>
 <h2 id="observable-实例的方法">Observable 实例的方法</h2>
 <p>Observable 接口提供了多种方法，方便事件流的处理。以下是部分方法的总结：</p>
@@ -150,41 +144,9 @@ observable<span class="token punctuation">.</span><span class="token function">s
 </ul>
 <p>因此，Observable API 可能在浏览器事件处理中取代 RxJS 的某些用途，而无法完全取代 RxJS，尤其在复杂场景或跨环境开发中。</p>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

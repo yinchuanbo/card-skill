@@ -137,7 +137,7 @@ async function convertMarkdownToHtml() {
                     </div>
                 </div>
             </header>
-            <div class="content">
+            <div class="content ${type}">
                 ${htmlContent}
             </div>
         </div>

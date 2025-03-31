@@ -1,36 +1,30 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>告别 React 性能瓶颈</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>告别 React 性能瓶颈</h1>
-                <div class="meta">
-                    <time datetime="Sun Mar 16 2025 02:11:08 GMT+0800 (中国标准时间)">2025/3/16</time>
-                    <div class="tags">
-                        <span class="tag">React</span><span class="tag">性能优化</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <h2 id="1-分析和监控性能">1. 分析和监控性能</h2>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>告别 React 性能瓶颈</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>告别 React 性能瓶颈</h1>
+                        <div class="meta">
+                            <time datetime="Sun Mar 16 2025 02:11:08 GMT+0800 (中国标准时间)">2025/3/16</time>
+                            <div class="tags">
+                                <span class="tag">React</span><span class="tag">性能优化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="1-分析和监控性能">1. 分析和监控性能</h2>
 <p>使用工具找出瓶颈：</p>
 <ul>
 <li>React DevTools：检查组件层次结构，识别重新渲染问题。</li>
 </ul>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> --save-dev @react-devtools/extension</code></pre>
+<pre><code class="language-sh">npm install --save-dev @react-devtools/extension
 </code></pre>
 <p>在浏览器中使用它来检查不必要的渲染。</p>
 <p>VS Code 扩展：</p>
@@ -41,97 +35,97 @@
 </ul>
 <h2 id="2-优化渲染">2. 优化渲染</h2>
 <p>使用 <code>React.memo</code>：包装函数组件，避免不必要的重新渲染。</p>
-<pre><code class="language-jsx"><pre data-language="jsx"><code class="language-jsx">import React, { memo } from "react";
+<pre><code class="language-jsx">import React, { memo } from &quot;react&quot;;
 
-constMyComponent = memo(({ prop }) => {
-  console.log("Rendering MyComponent");
-  return <div>{prop}</div>;
+constMyComponent = memo(({ prop }) =&gt; {
+  console.log(&quot;Rendering MyComponent&quot;);
+  return &lt;div&gt;{prop}&lt;/div&gt;;
 });
 
-exportdefaultMyComponent;</code></pre>
+exportdefaultMyComponent;
 </code></pre>
 <p>使用<code>useCallback</code>和<code>useMemo</code>：防止每次渲染时创建新的函数实例。</p>
-<pre><code class="language-jsx"><pre data-language="jsx"><code class="language-jsx">import React, { useState, useCallback, useMemo } from "react";
+<pre><code class="language-jsx">import React, { useState, useCallback, useMemo } from &quot;react&quot;;
 
-constApp = () => {
+constApp = () =&gt; {
   const [count, setCount] = useState(0);
 
-  const expensiveComputation = useMemo(() => {
-    console.log("Expensive computation");
+  const expensiveComputation = useMemo(() =&gt; {
+    console.log(&quot;Expensive computation&quot;);
     return count * 2;
   }, [count]);
 
-  const handleClick = useCallback(() => {
-    setCount((prev) => prev + 1);
+  const handleClick = useCallback(() =&gt; {
+    setCount((prev) =&gt; prev + 1);
   }, []);
 
   return (
-    <div>
+    &lt;div&gt;
       Count: {count}
-      <br />
+      &lt;br /&gt;
       Double: {expensiveComputation}
-      <br />
-      <button onClick={handleClick}>Increment</button>
-    </div>
+      &lt;br /&gt;
+      &lt;button onClick={handleClick}&gt;Increment&lt;/button&gt;
+    &lt;/div&gt;
   );
 };
 
-export default App;</code></pre>
+export default App;
 </code></pre>
 <h2 id="3-最小化状态重新渲染">3. 最小化状态重新渲染</h2>
 <p>提升状态：仅在必要时共享状态。</p>
 <p>避免 <strong>Props Drilling</strong> ：使用 Context API 或状态管理工具，如 Redux 或 Zustand。</p>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> zustand</code></pre>
+<pre><code class="language-sh">npm install zustand
 </code></pre>
 <p>使用 Zustand 的示例：</p>
-<pre><code class="language-jsx"><pre data-language="jsx"><code class="language-jsx">import create from "zustand";
+<pre><code class="language-jsx">import create from &quot;zustand&quot;;
 
-const useStore = create((set) => ({
+const useStore = create((set) =&gt; ({
   count: 0,
-  increment: () => set((state) => ({ count: state.count + 1 })),
+  increment: () =&gt; set((state) =&gt; ({ count: state.count + 1 })),
 }));
 
-constCounter = () => {
+constCounter = () =&gt; {
   const { count, increment } = useStore();
 
   return (
-    <div>
+    &lt;div&gt;
       Count: {count}
-      <br />
-      <button onClick={increment}>Increment</button>
-    </div>
+      &lt;br /&gt;
+      &lt;button onClick={increment}&gt;Increment&lt;/button&gt;
+    &lt;/div&gt;
   );
 };
 
-export default Counter;</code></pre>
+export default Counter;
 </code></pre>
 <h2 id="4-代码分割和懒加载">4. 代码分割和懒加载</h2>
 <p>通过分割代码和懒加载组件来减少初始加载时间：</p>
-<pre><code class="language-jsx"><pre data-language="jsx"><code class="language-jsx">import React, { Suspense, lazy } from "react";
+<pre><code class="language-jsx">import React, { Suspense, lazy } from &quot;react&quot;;
 
-constLazyComponent = lazy(() => import("./LazyComponent"));
+constLazyComponent = lazy(() =&gt; import(&quot;./LazyComponent&quot;));
 
-constApp = () => {
+constApp = () =&gt; {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LazyComponent />
-    </Suspense>
+    &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;LazyComponent /&gt;
+    &lt;/Suspense&gt;
   );
 };
 
-export default App;</code></pre>
+export default App;
 </code></pre>
 <h2 id="5-使用正确的构建工具">5. 使用正确的构建工具</h2>
 <p>使用 ESBuild 或 SWC 进行更快的构建：</p>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-D</span> esbuild</code></pre>
+<pre><code class="language-sh">npm install -D esbuild
 </code></pre>
 <p>切换到 Vite 以获得更快的开发服务器：</p>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> create vite@latest</code></pre>
+<pre><code class="language-sh">npm create vite@latest
 </code></pre>
 <h2 id="6-审查您的依赖项">6. 审查您的依赖项</h2>
 <p>使用工具如 npm analyze 来识别大型库：</p>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> source-map-explorer
-source-map-explorer build/static/js/*.js</code></pre>
+<pre><code class="language-sh">npm install -g source-map-explorer
+source-map-explorer build/static/js/*.js
 </code></pre>
 <p>用轻量级替代品替换沉重的库：</p>
 <ul>
@@ -145,20 +139,20 @@ source-map-explorer build/static/js/*.js</code></pre>
 <li>React Pure Components：突出显示可以优化的组件。</li>
 </ul>
 <p>调整 VS Code 设置：</p>
-<pre><code class="language-json"><pre data-language="json"><code class="language-json"><span class="token punctuation">{</span>
-  <span class="token property">"editor.quickSuggestions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"other"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token property">"files.autoSave"</span><span class="token operator">:</span> <span class="token string">"onFocusChange"</span><span class="token punctuation">,</span>
-  <span class="token property">"editor.formatOnSave"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-  <span class="token property">"typescript.tsserver.experimental.enableProjectDiagnostics"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-json">{
+  &quot;editor.quickSuggestions&quot;: {
+    &quot;other&quot;: true
+  },
+  &quot;files.autoSave&quot;: &quot;onFocusChange&quot;,
+  &quot;editor.formatOnSave&quot;: true,
+  &quot;typescript.tsserver.experimental.enableProjectDiagnostics&quot;: true
+}
 </code></pre>
 <h2 id="8-优化图片和资产">8. 优化图片和资产</h2>
 <p>使用 Next.js Image Optimization 或 react-image 等库进行懒加载图片。</p>
 <p>压缩资产：</p>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> imagemin-cli
-imagemin src/assets/* --out-dir<span class="token operator">=</span>dist/assets</code></pre>
+<pre><code class="language-sh">npm install imagemin-cli
+imagemin src/assets/* --out-dir=dist/assets
 </code></pre>
 <h2 id="9-切换到替代品">9. 切换到替代品</h2>
 <p>如果 React 无法满足您的性能需求，请尝试其他框架：</p>
@@ -167,41 +161,9 @@ imagemin src/assets/* --out-dir<span class="token operator">=</span>dist/assets<
 <li>Svelte：在编译时优化组件。</li>
 </ul>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

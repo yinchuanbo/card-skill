@@ -1,36 +1,33 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>发布订阅模式</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>发布订阅模式</h1>
-                <div class="meta">
-                    <time datetime="Sun Feb 23 2025 05:49:40 GMT+0800 (中国标准时间)">2025/2/23</time>
-                    <div class="tags">
-                        <span class="tag">发布订阅</span><span class="tag">设计模式</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <h3 id="1-发布订阅模式是啥？">1. 发布订阅模式是啥？</h3>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>发布订阅模式</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>发布订阅模式</h1>
+                        <div class="meta">
+                            <time datetime="Sun Feb 23 2025 05:49:40 GMT+0800 (中国标准时间)">2025/2/23</time>
+                            <div class="tags">
+                                <span class="tag">发布订阅</span><span class="tag">设计模式</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h3 id="1-发布订阅模式是啥？">1. 发布订阅模式是啥？</h3>
 <p>简单来说，发布订阅模式就是一种<strong>消息通信机制</strong>。</p>
 <ul>
-<li><strong>发布者（Publisher）</strong><br>：负责发消息。</li>
-<li><strong>订阅者（Subscriber）</strong><br>：负责收消息。</li>
-<li><strong>消息中心（Event Bus）</strong><br>：负责管理消息的发布和订阅。</li>
+<li><strong>发布者（Publisher）</strong>
+：负责发消息。</li>
+<li><strong>订阅者（Subscriber）</strong>
+：负责收消息。</li>
+<li><strong>消息中心（Event Bus）</strong>
+：负责管理消息的发布和订阅。</li>
 </ul>
 <p>举个例子：</p>
 <ul>
@@ -43,46 +40,46 @@
 <p><strong>原因三：考察实际应用经验</strong>  <br>很多前端框架（比如 Vue、React）都用到了发布订阅模式，面试官想看看你是否真的理解它的应用场景。</p>
 <h3 id="3-发布订阅模式的代码实现">3. 发布订阅模式的代码实现</h3>
 <p>下面是一个简单的发布订阅模式实现：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">EventBus</span> <span class="token punctuation">{</span>
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>events <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+<pre><code class="language-js">class EventBus {
+  constructor() {
+    this.events = {};
+  }
 
-  <span class="token comment">// 订阅事件</span>
-  <span class="token function">on</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+  // 订阅事件
+  on(event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  }
 
-  <span class="token comment">// 发布事件</span>
-  <span class="token function">emit</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> <span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">callback</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-        <span class="token function">callback</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
+  // 发布事件
+  emit(event, ...args) {
+    if (this.events[event]) {
+      this.events[event].forEach((callback) =&gt; {
+        callback(...args);
+      });
+    }
+  }
 
-  <span class="token comment">// 取消订阅</span>
-  <span class="token function">off</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>events<span class="token punctuation">[</span>event<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">cb</span><span class="token punctuation">)</span> <span class="token operator">=></span> cb <span class="token operator">!==</span> callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+  // 取消订阅
+  off(event, callback) {
+    if (this.events[event]) {
+      this.events[event] = this.events[event].filter((cb) =&gt; cb !== callback);
+    }
+  }
+}
 
-<span class="token comment">// 使用示例</span>
-<span class="token keyword">const</span> eventBus <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">EventBus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+// 使用示例
+const eventBus = new EventBus();
 
-<span class="token comment">// 订阅事件</span>
-eventBus<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"order"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">的奶茶好了！</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+// 订阅事件
+eventBus.on(&quot;order&quot;, (name) =&gt; {
+  console.log(`${name}的奶茶好了！`);
+});
 
-<span class="token comment">// 发布事件</span>
-eventBus<span class="token punctuation">.</span><span class="token function">emit</span><span class="token punctuation">(</span><span class="token string">"order"</span><span class="token punctuation">,</span> <span class="token string">"张三"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+// 发布事件
+eventBus.emit(&quot;order&quot;, &quot;张三&quot;);
 </code></pre>
 <h3 id="4-发布订阅模式的应用场景">4. 发布订阅模式的应用场景</h3>
 <p><strong>场景一：组件通信</strong>  <br>比如 Vue 中的  <code>EventBus</code>，就是用来实现非父子组件之间的通信。</p>
@@ -104,41 +101,9 @@ eventBus<span class="token punctuation">.</span><span class="token function">emi
 <li>在订阅时传入优先级参数，发布时按优先级顺序执行回调。</li>
 </ul>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

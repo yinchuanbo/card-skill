@@ -1,58 +1,52 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比</h1>
-                <div class="meta">
-                    <time datetime="Fri Mar 21 2025 03:36:42 GMT+0800 (中国标准时间)">2025/3/21</time>
-                    <div class="tags">
-                        <span class="tag">前端异常处理</span><span class="tag">Proxy</span><span class="tag">Web Workers</span><span class="tag">iframe</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <p>在插件化架构中，<strong>异常隔离</strong>是保障系统稳定性的核心机制。通过隔离插件与宿主环境，即使单个插件崩溃，也不会影响整体系统运行。</p>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比</h1>
+                        <div class="meta">
+                            <time datetime="Fri Mar 21 2025 03:36:42 GMT+0800 (中国标准时间)">2025/3/21</time>
+                            <div class="tags">
+                                <span class="tag">前端异常处理</span><span class="tag">Proxy</span><span class="tag">Web Workers</span><span class="tag">iframe</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>在插件化架构中，<strong>异常隔离</strong>是保障系统稳定性的核心机制。通过隔离插件与宿主环境，即使单个插件崩溃，也不会影响整体系统运行。</p>
 <p>在前端开发中，异常隔离是保障应用稳定性的核心需求，尤其是在处理第三方脚本、插件或不可信代码时。本文将从 <strong>实现原理</strong>、<strong>隔离级别</strong>、<strong>性能开销</strong> 和 <strong>适用场景</strong> 四个维度，深入对比三种主流方案：<strong>Proxy 代理</strong>、<strong>Web Workers</strong> 和 <strong>iframe</strong>，并解释为何某些场景下不推荐 iframe。</p>
 <h2 id="一、proxy-代理：轻量级逻辑隔离">一、Proxy 代理：轻量级逻辑隔离</h2>
 <h3 id="1-实现原理">1. 实现原理</h3>
 <p>通过 JavaScript 的 <code>Proxy</code> 对象拦截对全局对象（如 <code>window</code>）的访问，实现权限控制：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> sandbox <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Proxy</span><span class="token punctuation">(</span>window<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-  <span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 禁止访问敏感 API</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">===</span> <span class="token string">"document"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"无权访问 DOM！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> Reflect<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token function">set</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 禁止修改关键属性</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">===</span> <span class="token string">"location"</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> Reflect<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const sandbox = new Proxy(window, {
+  get(target, key) {
+    // 禁止访问敏感 API
+    if (key === &quot;document&quot;) {
+      throw new Error(&quot;无权访问 DOM！&quot;);
+    }
+    return Reflect.get(target, key);
+  },
+  set(target, key, value) {
+    // 禁止修改关键属性
+    if (key === &quot;location&quot;) return false;
+    return Reflect.set(target, key, value);
+  },
+});
 
-<span class="token comment">// 在沙箱中运行插件代码</span>
-<span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">window</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    window<span class="token punctuation">.</span>document<span class="token punctuation">.</span>title <span class="token operator">=</span> <span class="token string">"Hacked!"</span><span class="token punctuation">;</span> <span class="token comment">// 触发异常</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"拦截到非法操作:"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span>sandbox<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+// 在沙箱中运行插件代码
+(function (window) {
+  try {
+    window.document.title = &quot;Hacked!&quot;; // 触发异常
+  } catch (err) {
+    console.error(&quot;拦截到非法操作:&quot;, err);
+  }
+})(sandbox);
 </code></pre>
 <h3 id="2-特点">2. 特点</h3>
 <ul>
@@ -67,24 +61,24 @@
 <h2 id="二、web-workers：物理线程隔离">二、Web Workers：物理线程隔离</h2>
 <h3 id="1-实现原理-1">1. 实现原理</h3>
 <p>将代码运行在独立线程，通过 <code>postMessage</code> 通信：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 主线程</span>
-<span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Worker</span><span class="token punctuation">(</span><span class="token string">"plugin.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-worker<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">cmd</span><span class="token operator">:</span> <span class="token string">"init"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-worker<span class="token punctuation">.</span><span class="token function-variable function">onmessage</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token punctuation">.</span>error<span class="token punctuation">)</span> <span class="token function">handleError</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token punctuation">.</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">else</span> <span class="token function">handleData</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<pre><code class="language-js">// 主线程
+const worker = new Worker(&quot;plugin.js&quot;);
+worker.postMessage({ cmd: &quot;init&quot; });
+worker.onmessage = (e) =&gt; {
+  if (e.data.error) handleError(e.data.error);
+  else handleData(e.data);
+};
 
-<span class="token comment">// plugin.js（Worker 线程）</span>
-self<span class="token punctuation">.</span><span class="token function-variable function">onmessage</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 无法访问 DOM，只能执行纯计算</span>
-    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">process</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    self<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    self<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">error</span><span class="token operator">:</span> err<span class="token punctuation">.</span>message <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+// plugin.js（Worker 线程）
+self.onmessage = (e) =&gt; {
+  try {
+    // 无法访问 DOM，只能执行纯计算
+    const result = process(e.data);
+    self.postMessage(result);
+  } catch (err) {
+    self.postMessage({ error: err.message });
+  }
+};
 </code></pre>
 <h3 id="2-特点-1">2. 特点</h3>
 <ul>
@@ -99,10 +93,10 @@ self<span class="token punctuation">.</span><span class="token function-variable
 <h2 id="三、iframe：浏览器级进程隔离">三、iframe：浏览器级进程隔离</h2>
 <h3 id="1-实现原理-2">1. 实现原理</h3>
 <p>利用浏览器多进程架构，通过 <code>sandbox</code> 属性限制权限：</p>
-<pre><code class="language-html"><pre data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>iframe</span>
-  <span class="token attr-name">sandbox</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>allow-scripts allow-same-origin<span class="token punctuation">"</span></span>
-  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>third-party.html<span class="token punctuation">"</span></span>
-<span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>iframe</span><span class="token punctuation">></span></span></code></pre>
+<pre><code class="language-html">&lt;iframe
+  sandbox=&quot;allow-scripts allow-same-origin&quot;
+  src=&quot;third-party.html&quot;
+&gt;&lt;/iframe&gt;
 </code></pre>
 <ul>
 <li><code>allow-scripts</code>：允许执行脚本。</li>
@@ -195,13 +189,13 @@ self<span class="token punctuation">.</span><span class="token function-variable
 </ul>
 <h2 id="六、如何选择最佳方案？">六、如何选择最佳方案？</h2>
 <h3 id="1-决策树">1. 决策树</h3>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh">是否需要访问 DOM？
+<pre><code class="language-sh">是否需要访问 DOM？
 ├── 是 → 是否需要高安全性？
 │   ├── 是 → iframe（配置 sandbox 权限）
 │   └── 否 → Proxy 代理
 └── 否 → 是否需要高性能计算？
     ├── 是 → Web Workers
-    └── 否 → Proxy 代理</code></pre>
+    └── 否 → Proxy 代理
 </code></pre>
 <h3 id="2-实战案例">2. 实战案例</h3>
 <ul>
@@ -233,34 +227,34 @@ self<span class="token punctuation">.</span><span class="token function-variable
 <li><strong>通信机制</strong>：<code>postMessage</code> + Protobuf 序列化</li>
 </ol>
 <p><strong>代码片段</strong></p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 主线程</span>
-<span class="token keyword">class</span> <span class="token class-name">TrackerSDK</span> <span class="token punctuation">{</span>
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Worker</span><span class="token punctuation">(</span><span class="token string">"plugin-worker.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>worker<span class="token punctuation">.</span>onmessage <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleMessage<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+<pre><code class="language-js">// 主线程
+class TrackerSDK {
+  constructor() {
+    this.worker = new Worker(&quot;plugin-worker.js&quot;);
+    this.worker.onmessage = this.handleMessage;
+  }
 
-  <span class="token comment">// 加载第三方插件</span>
-  <span class="token function">loadPlugin</span><span class="token punctuation">(</span><span class="token parameter">code</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>worker<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"LOAD_PLUGIN"</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">code</span><span class="token operator">:</span> <span class="token function">transpile</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// 代码转译</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+  // 加载第三方插件
+  loadPlugin(code) {
+    this.worker.postMessage({
+      type: &quot;LOAD_PLUGIN&quot;,
+      code: transpile(code), // 代码转译
+    });
+  }
+}
 
-<span class="token comment">// plugin-worker.js</span>
-self<span class="token punctuation">.</span><span class="token function">importScripts</span><span class="token punctuation">(</span><span class="token string">"sandbox-proxy.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引入 Proxy 沙箱</span>
+// plugin-worker.js
+self.importScripts(&quot;sandbox-proxy.js&quot;); // 引入 Proxy 沙箱
 
-self<span class="token punctuation">.</span><span class="token function-variable function">onmessage</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> sandbox <span class="token operator">=</span> <span class="token function">createSandbox</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 创建沙箱环境</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> plugin <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Function</span><span class="token punctuation">(</span><span class="token string">"window"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>data<span class="token punctuation">.</span>code<span class="token punctuation">)</span><span class="token punctuation">(</span>sandbox<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    plugin<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    self<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"PLUGIN_ERROR"</span><span class="token punctuation">,</span> <span class="token literal-property property">error</span><span class="token operator">:</span> err <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+self.onmessage = (e) =&gt; {
+  const sandbox = createSandbox(); // 创建沙箱环境
+  try {
+    const plugin = new Function(&quot;window&quot;, e.data.code)(sandbox);
+    plugin.init();
+  } catch (err) {
+    self.postMessage({ type: &quot;PLUGIN_ERROR&quot;, error: err });
+  }
+};
 </code></pre>
 <h3 id="3-效果对比">3. 效果对比</h3>
 <table>
@@ -289,78 +283,46 @@ self<span class="token punctuation">.</span><span class="token function-variable
 </tbody></table>
 <h2 id="安全加固：你必须知道的实战技巧">安全加固：你必须知道的实战技巧</h2>
 <h3 id="1-防范原型链污染">1. 防范原型链污染</h3>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> sandbox <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 纯净对象</span>
-sandbox<span class="token punctuation">.</span>window <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Proxy</span><span class="token punctuation">(</span>
-  <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">{</span>
-    <span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">===</span> <span class="token string">"__proto__"</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 阻断原型链访问</span>
-      <span class="token comment">// ...</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">const sandbox = Object.create(null); // 纯净对象
+sandbox.window = new Proxy(
+  {},
+  {
+    get(target, key) {
+      if (key === &quot;__proto__&quot;) return null; // 阻断原型链访问
+      // ...
+    },
+  }
+);
 </code></pre>
 <h3 id="2-控制资源消耗">2. 控制资源消耗</h3>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 在 Worker 中限制执行时间</span>
-<span class="token keyword">const</span> timer <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token function">terminatePlugin</span><span class="token punctuation">(</span><span class="token string">"执行超时"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">// 在 Worker 中限制执行时间
+const timer = setTimeout(() =&gt; {
+  terminatePlugin(&quot;执行超时&quot;);
+}, 5000);
 
-<span class="token keyword">function</span> <span class="token function">runPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// ...</span>
-  <span class="token function">clearTimeout</span><span class="token punctuation">(</span>timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+function runPlugin() {
+  // ...
+  clearTimeout(timer);
+}
 </code></pre>
 <h3 id="3-敏感操作审计">3. 敏感操作审计</h3>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> audit <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Proxy</span><span class="token punctuation">(</span>console<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-  <span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">===</span> <span class="token string">"log"</span><span class="token punctuation">)</span>
-      <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-        <span class="token function">recordLog</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 记录日志</span>
-        target<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> target<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const audit = new Proxy(console, {
+  get(target, key) {
+    if (key === &quot;log&quot;)
+      return (...args) =&gt; {
+        recordLog(args); // 记录日志
+        target[key](...args);
+      };
+    return target[key];
+  },
+});
 
-sandbox<span class="token punctuation">.</span>console <span class="token operator">=</span> audit<span class="token punctuation">;</span></code></pre>
+sandbox.console = audit;
 </code></pre>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -1,269 +1,231 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一起聊聊 Symbols 在前端的几个妙用</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>一起聊聊 Symbols 在前端的几个妙用</h1>
-                <div class="meta">
-                    <time datetime="Sun Mar 09 2025 02:09:52 GMT+0800 (中国标准时间)">2025/3/9</time>
-                    <div class="tags">
-                        <span class="tag">Symbols</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <h2 id="1-javascript-的-symbols-有什么用">1. JavaScript 的 Symbols 有什么用</h2>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>一起聊聊 Symbols 在前端的几个妙用</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>一起聊聊 Symbols 在前端的几个妙用</h1>
+                        <div class="meta">
+                            <time datetime="Sun Mar 09 2025 02:09:52 GMT+0800 (中国标准时间)">2025/3/9</time>
+                            <div class="tags">
+                                <span class="tag">Symbols</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="1-javascript-的-symbols-有什么用">1. JavaScript 的 Symbols 有什么用</h2>
 <p>Symbols 与其他 JavaScript 原语不同，其保证唯一性。</p>
 <p>当开发者使用 <code>Symbol(&#39;description&#39;)</code> 创建 Symbols 时，其值永远不会与任何其他 Symbols 相同，即使是使用相同描述创建的 Symbols，这种独特性使其在特定用例中非常强大。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> symbol1 <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"description"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> symbol2 <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"description"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>symbol1 <span class="token operator">===</span> symbol2<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出 false</span></code></pre>
+<pre><code class="language-js">const symbol1 = Symbol(&quot;description&quot;);
+const symbol2 = Symbol(&quot;description&quot;);
+console.log(symbol1 === symbol2);
+// 输出 false
 </code></pre>
 <p>Symbols 的真正魅力在于对象处理，与字符串或数字不同，Symbols 可以用作属性键，而不会与现有属性发生冲突。这使其在向对象添加功能而不影响现有代码方面非常有用。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> metadata <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"elementMetadata"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">function</span> <span class="token function">attachMetadata</span><span class="token punctuation">(</span><span class="token parameter">element<span class="token punctuation">,</span> data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  element<span class="token punctuation">[</span>metadata<span class="token punctuation">]</span> <span class="token operator">=</span> data<span class="token punctuation">;</span>
-  <span class="token keyword">return</span> element<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token keyword">const</span> div <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"div"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> divWithMetadata <span class="token operator">=</span> <span class="token function">attachMetadata</span><span class="token punctuation">(</span>div<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">lastUpdated</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>divWithMetadata<span class="token punctuation">[</span>metadata<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// {lastUpdated: 1684244400000}</span></code></pre>
+<pre><code class="language-js">const metadata = Symbol(&quot;elementMetadata&quot;);
+function attachMetadata(element, data) {
+  element[metadata] = data;
+  return element;
+}
+const div = document.createElement(&quot;div&quot;);
+const divWithMetadata = attachMetadata(div, { lastUpdated: Date.now() });
+console.log(divWithMetadata[metadata]);
+// {lastUpdated: 1684244400000}
 </code></pre>
 <p>同时，当使用 Symbol 作为属性键时，其不会显示在 <code>Object.keys()</code> 或普通 for...in 循环中。但是，开发者仍可以通过 <code>Object.getOwnPropertySymbols()</code> 访问这些属性。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> nameKey <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> person <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token punctuation">[</span>nameKey<span class="token punctuation">]</span><span class="token operator">:</span> <span class="token string">"Alex"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">city</span><span class="token operator">:</span> <span class="token string">"London"</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">getOwnPropertySymbols</span><span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// [Symbol(name)]</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>person<span class="token punctuation">[</span>nameKey<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出'Alex'</span></code></pre>
+<pre><code class="language-js">const nameKey = Symbol(&quot;name&quot;);
+const person = {
+  [nameKey]: &quot;Alex&quot;,
+  city: &quot;London&quot;,
+};
+console.log(Object.getOwnPropertySymbols(person));
+// [Symbol(name)]
+console.log(person[nameKey]);
+// 输出&#39;Alex&#39;
 </code></pre>
 <h2 id="2-symbolfor-创建全局-symbol-注册表">2. Symbol.for 创建全局 Symbol 注册表</h2>
 <p>全局 Symbol 注册表为 Symbol 的使用增加了另一个维度。虽然普通的 Symbol 始终是唯一的，但有时开发者确实需要在代码的不同部分之间共享 Symbol，此时就是 <code>Symbol.for()</code> 的用武之地。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 使用 Symbol.for() 在不同模块之间共享 Symbol</span>
-<span class="token keyword">const</span> <span class="token constant">PRIORITY_LEVEL</span> <span class="token operator">=</span> Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"priority"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> <span class="token constant">PROCESS_MESSAGE</span> <span class="token operator">=</span> Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"processMessage"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">function</span> <span class="token function">createMessage</span><span class="token punctuation">(</span><span class="token parameter">content<span class="token punctuation">,</span> priority <span class="token operator">=</span> <span class="token number">1</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> message <span class="token operator">=</span> <span class="token punctuation">{</span>
-    content<span class="token punctuation">,</span>
-    <span class="token punctuation">[</span><span class="token constant">PRIORITY_LEVEL</span><span class="token punctuation">]</span><span class="token operator">:</span> priority<span class="token punctuation">,</span>
-    <span class="token punctuation">[</span><span class="token constant">PROCESS_MESSAGE</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Processing: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>content<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (Priority: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">[</span><span class="token constant">PRIORITY_LEVEL</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> message<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token keyword">function</span> <span class="token function">processMessage</span><span class="token punctuation">(</span><span class="token parameter">message</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>message<span class="token punctuation">[</span><span class="token constant">PROCESS_MESSAGE</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> message<span class="token punctuation">[</span><span class="token constant">PROCESS_MESSAGE</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid message format"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token keyword">const</span> msg <span class="token operator">=</span> <span class="token function">createMessage</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">processMessage</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出 "Processing: Hello World (Priority: 2)"</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"processMessage"</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token constant">PROCESS_MESSAGE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出 true</span>
-<span class="token comment">// 常规 Symbols 永远不相等</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"processMessage"</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"processMessage"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span></code></pre>
+<pre><code class="language-js">// 使用 Symbol.for() 在不同模块之间共享 Symbol
+const PRIORITY_LEVEL = Symbol.for(&quot;priority&quot;);
+const PROCESS_MESSAGE = Symbol.for(&quot;processMessage&quot;);
+function createMessage(content, priority = 1) {
+  const message = {
+    content,
+    [PRIORITY_LEVEL]: priority,
+    [PROCESS_MESSAGE]() {
+      return `Processing: ${this.content} (Priority: ${this[PRIORITY_LEVEL]})`;
+    },
+  };
+  return message;
+}
+function processMessage(message) {
+  if (message[PROCESS_MESSAGE]) {
+    return message[PROCESS_MESSAGE]();
+  }
+  throw new Error(&quot;Invalid message format&quot;);
+}
+const msg = createMessage(&quot;Hello World&quot;, 2);
+console.log(processMessage(msg));
+// 输出 &quot;Processing: Hello World (Priority: 2)&quot;
+console.log(Symbol.for(&quot;processMessage&quot;) === PROCESS_MESSAGE);
+// 输出 true
+// 常规 Symbols 永远不相等
+console.log(Symbol(&quot;processMessage&quot;) === Symbol(&quot;processMessage&quot;)); // false
 </code></pre>
 <p><code>Symbol.for</code> 可以保证多次调用返回的值完全相同，因此也经常用于多个模块之间的内容共享。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 模块 A 的内容</span>
-<span class="token keyword">const</span> <span class="token constant">SHARED_KEY</span> <span class="token operator">=</span> Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"app.sharedKey"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> moduleA <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token punctuation">[</span><span class="token constant">SHARED_KEY</span><span class="token punctuation">]</span><span class="token operator">:</span> <span class="token string">"secret value"</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token comment">// 模块 B 的内容，且在不同的文件中</span>
-<span class="token keyword">const</span> sameKey <span class="token operator">=</span> Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"app.sharedKey"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">SHARED_KEY</span> <span class="token operator">===</span> sameKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出 true</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>moduleA<span class="token punctuation">[</span>sameKey<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出'secret value'</span>
-<span class="token comment">// 常规 Symbols 多次调用永远不同‘</span>
-<span class="token keyword">const</span> regularSymbol <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"regular"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> anotherRegular <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"regular"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>regularSymbol <span class="token operator">===</span> anotherRegular<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span></code></pre>
+<pre><code class="language-js">// 模块 A 的内容
+const SHARED_KEY = Symbol.for(&quot;app.sharedKey&quot;);
+const moduleA = {
+  [SHARED_KEY]: &quot;secret value&quot;,
+};
+// 模块 B 的内容，且在不同的文件中
+const sameKey = Symbol.for(&quot;app.sharedKey&quot;);
+console.log(SHARED_KEY === sameKey);
+// 输出 true
+console.log(moduleA[sameKey]);
+// 输出&#39;secret value&#39;
+// 常规 Symbols 多次调用永远不同‘
+const regularSymbol = Symbol(&quot;regular&quot;);
+const anotherRegular = Symbol(&quot;regular&quot;);
+console.log(regularSymbol === anotherRegular); // false
 </code></pre>
 <p><code>Symbol.for()</code> 创建的 Symbol 的作用类似于共享密钥，应用程序可以通过相同的名称共享。而常规 Symbol 始终唯一，即使具有相同的名称。</p>
 <h2 id="3-使用-symbols-修改-javascript-内置行为">3. 使用 Symbols 修改 JavaScript 内置行为</h2>
 <p>JavaScript 提供了众多内置 Symbol 让开发者修改对象在不同情况下的行为方式，相当于语言功能的各种钩子。</p>
 <p>一个常见的用例是使用 <code>Symbol.iterator</code> 使对象可迭代，从而可以对对象使用 <code>for...of</code> 循环：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 添加 Symbol.iterator 让对象可迭代</span>
-<span class="token keyword">const</span> tasks <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"write code"</span><span class="token punctuation">,</span> <span class="token string">"review PR"</span><span class="token punctuation">,</span> <span class="token string">"fix bugs"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token punctuation">{</span>
-      <span class="token function-variable function">next</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>index <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>items<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token keyword">return</span> <span class="token punctuation">{</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>items<span class="token punctuation">[</span>index<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token literal-property property">done</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">return</span> <span class="token punctuation">{</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token literal-property property">done</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> task <span class="token keyword">of</span> tasks<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// 输出值'write code', 'review PR', 'fix bugs'</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-js">// 添加 Symbol.iterator 让对象可迭代
+const tasks = {
+  items: [&quot;write code&quot;, &quot;review PR&quot;, &quot;fix bugs&quot;],
+  [Symbol.iterator]() {
+    let index = 0;
+    return {
+      next: () =&gt; {
+        if (index &lt; this.items.length) {
+          return { value: this.items[index++], done: false };
+        }
+        return { value: undefined, done: true };
+      },
+    };
+  },
+};
+for (let task of tasks) {
+  console.log(task);
+  // 输出值&#39;write code&#39;, &#39;review PR&#39;, &#39;fix bugs&#39;
+}
 </code></pre>
 <p>另一个强大的功能是 <code>Symbol.toPrimitive</code>，其用于控制对象如何转换为数字或字符串等原始值。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Alex"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">score</span><span class="token operator">:</span> <span class="token number">42</span><span class="token punctuation">,</span>
-  <span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>toPrimitive<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token parameter">hint</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// JavaScript 引擎使用 hint 参数表示类型</span>
-    <span class="token comment">// hint 可以是'number', 'string', or 'default'</span>
-    <span class="token keyword">switch</span> <span class="token punctuation">(</span>hint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">case</span> <span class="token string">"number"</span><span class="token operator">:</span>
-        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>score<span class="token punctuation">;</span>
-      <span class="token keyword">case</span> <span class="token string">"string"</span><span class="token operator">:</span>
-        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token punctuation">;</span>
-      <span class="token keyword">default</span><span class="token operator">:</span>
-        <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>score<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
-      <span class="token comment">// 其他例如  user + ''</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token operator">+</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// + 操作符表示想要数字，输出 42</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 模板字符串表示需要字符串, 输出 "Alex"</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>user <span class="token operator">+</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// `+ 字符串 ` 表示 "Alex (42)"</span></code></pre>
+<pre><code class="language-js">const user = {
+  name: &quot;Alex&quot;,
+  score: 42,
+  [Symbol.toPrimitive](hint) {
+    // JavaScript 引擎使用 hint 参数表示类型
+    // hint 可以是&#39;number&#39;, &#39;string&#39;, or &#39;default&#39;
+    switch (hint) {
+      case &quot;number&quot;:
+        return this.score;
+      case &quot;string&quot;:
+        return this.name;
+      default:
+        return `${this.name} (${this.score})`;
+      // 其他例如  user + &#39;&#39;
+    }
+  },
+};
+console.log(+user);
+// + 操作符表示想要数字，输出 42
+console.log(`${user}`);
+// 模板字符串表示需要字符串, 输出 &quot;Alex&quot;
+console.log(user + &quot;&quot;);
+// `+ 字符串 ` 表示 &quot;Alex (42)&quot;
 </code></pre>
 <p>当然，开发者还可以通过 <code>Symbol.hasInstance</code> 修改 instanceof 的默认行为，比如下面的 JSONArray 对象：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">JSONArray</span> <span class="token punctuation">{</span>
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>items <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token comment">// 自定义 instanceof 行为</span>
-  <span class="token keyword">static</span> <span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>hasInstance<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token parameter">instance</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> instance <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> instance <span class="token operator">===</span> <span class="token string">"object"</span> <span class="token operator">&amp;&amp;</span> <span class="token string">"items"</span> <span class="token keyword">in</span> instance<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<pre><code class="language-js">class JSONArray {
+  constructor() {
+    this.items = [];
+  }
+  // 自定义 instanceof 行为
+  static [Symbol.hasInstance](instance) {
+    return instance &amp;&amp; typeof instance === &quot;object&quot; &amp;&amp; &quot;items&quot; in instance;
+  }
+}
 </code></pre>
 <p>此时，下面代码的 instanceof 将直接输出 true:</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> a <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-a <span class="token keyword">instanceof</span> <span class="token class-name">JSONArray</span><span class="token punctuation">;</span> <span class="token comment">// 输出 true</span></code></pre>
+<pre><code class="language-js">const a = { items: [] };
+a instanceof JSONArray; // 输出 true
 </code></pre>
 <h2 id="4-使用-symbolspecies-进行继承控制">4. 使用 Symbol.species 进行继承控制</h2>
 <p>在 JavaScript 中使用数组时有时需要限制可以保存的值类型，这时就需要使用专用数组，不过值得注意的是其可能导致 <code>map()</code> 和 <code>filter()</code> 等方法出现意外行为。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">createNumberArray</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>numbers</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> array <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>numbers<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  array<span class="token punctuation">.</span><span class="token function-variable function">push</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">item</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> item <span class="token operator">!==</span> <span class="token string">"number"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Only numbers allowed"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> <span class="token class-name">Array</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token comment">// 告诉 JavaScript 引擎使用常规数组方法，例如：map</span>
-  <span class="token comment">// 此时 map 派生数组不受影响</span>
-  Object<span class="token punctuation">.</span><span class="token function">defineProperty</span><span class="token punctuation">(</span>array<span class="token punctuation">.</span>constructor<span class="token punctuation">,</span> Symbol<span class="token punctuation">.</span>species<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-    <span class="token function-variable function">get</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">return</span> Array<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> array<span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> nums <span class="token operator">=</span> <span class="token function">createNumberArray</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-nums<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// Works ✅</span>
-nums<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">"5"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// Error! ❌ (as expected for nums)</span>
-<span class="token keyword">const</span> doubled <span class="token operator">=</span> nums<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> x <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-doubled<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">"6"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// Works! ✅ (doubled is a regular array)</span></code></pre>
+<pre><code class="language-js">const createNumberArray = (...numbers) =&gt; {
+  const array = [...numbers];
+  array.push = function (item) {
+    if (typeof item !== &quot;number&quot;) {
+      throw new Error(&quot;Only numbers allowed&quot;);
+    }
+    return Array.prototype.push.call(this, item);
+  };
+  // 告诉 JavaScript 引擎使用常规数组方法，例如：map
+  // 此时 map 派生数组不受影响
+  Object.defineProperty(array.constructor, Symbol.species, {
+    get: function () {
+      return Array;
+    },
+  });
+  return array;
+};
+const nums = createNumberArray(1, 2, 3);
+nums.push(4);
+// Works ✅
+nums.push(&quot;5&quot;);
+// Error! ❌ (as expected for nums)
+const doubled = nums.map((x) =&gt; x * 2);
+doubled.push(&quot;6&quot;);
+// Works! ✅ (doubled is a regular array)
 </code></pre>
 <h2 id="5-symbol-限制和陷阱">5. Symbol 限制和陷阱</h2>
 <p>在 JSON 中使用 Symbol 需要特别注意，例如：Symbol 属性在 JSON 序列化过程中将完全消失，这一点与 React 利用 Symbol 防止服务器端 JSON 漏洞非常类似。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> <span class="token constant">API_KEY</span> <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"apiKey"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 将 Symbol 用于属性 Key</span>
-<span class="token keyword">const</span> userData <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token punctuation">[</span><span class="token constant">API_KEY</span><span class="token punctuation">]</span><span class="token operator">:</span> <span class="token string">"abc123xyz"</span><span class="token punctuation">,</span>
-  <span class="token comment">//  Symbol 用于隐藏的 API key</span>
-  <span class="token literal-property property">username</span><span class="token operator">:</span> <span class="token string">"alex"</span><span class="token punctuation">,</span>
-  <span class="token comment">// 常规属性</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>userData<span class="token punctuation">[</span><span class="token constant">API_KEY</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出值: 'abc123xyz'</span>
-<span class="token comment">// 序列化后 Symbol 完全丢失</span>
-<span class="token keyword">const</span> savedData <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>userData<span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>savedData<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 打印: {"username":"alex"}</span></code></pre>
+<pre><code class="language-js">const API_KEY = Symbol(&quot;apiKey&quot;);
+// 将 Symbol 用于属性 Key
+const userData = {
+  [API_KEY]: &quot;abc123xyz&quot;,
+  //  Symbol 用于隐藏的 API key
+  username: &quot;alex&quot;,
+  // 常规属性
+};
+console.log(userData[API_KEY]);
+// 输出值: &#39;abc123xyz&#39;
+// 序列化后 Symbol 完全丢失
+const savedData = JSON.stringify(userData);
+console.log(savedData);
+// 打印: {&quot;username&quot;:&quot;alex&quot;}
 </code></pre>
 <p>同时，Symbols 的字符串强制转换会导致另一个常见的陷阱。虽然开发者可能期望 Symbols 像其他基本类型一样工作，但它们对类型转换有严格的规则：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> label <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"myLabel"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 抛出类型错误</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>label <span class="token operator">+</span> <span class="token string">"is my label"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 开发者必须显式转化为 String</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">String</span><span class="token punctuation">(</span>label<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"is my label"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出值 "Symbol(myLabel) is my label"</span></code></pre>
+<pre><code class="language-js">const label = Symbol(&quot;myLabel&quot;);
+// 抛出类型错误
+console.log(label + &quot;is my label&quot;);
+// 开发者必须显式转化为 String
+console.log(String(label) + &quot;is my label&quot;);
+// 输出值 &quot;Symbol(myLabel) is my label&quot;
 </code></pre>
 <p>使用 Symbol 进行内存管理比较棘手，尤其是在使用全局 Symbol 注册表时。当没有引用时，常规 Symbol 可以被垃圾收集，但注册表 Symbol 会保留下来：</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// 常规 Symbol 可以垃圾回收</span>
-<span class="token keyword">let</span> regularSymbol <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"temp"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-regularSymbol <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-<span class="token comment">// 注册表 Registry Symbol 保留</span>
-Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"permanent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 即使没用引用也会保留</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"permanent"</span><span class="token punctuation">)</span> <span class="token operator">===</span> Symbol<span class="token punctuation">.</span><span class="token function">for</span><span class="token punctuation">(</span><span class="token string">"permanent"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 输出 true</span></code></pre>
+<pre><code class="language-js">// 常规 Symbol 可以垃圾回收
+let regularSymbol = Symbol(&quot;temp&quot;);
+regularSymbol = null;
+// 注册表 Registry Symbol 保留
+Symbol.for(&quot;permanent&quot;);
+// 即使没用引用也会保留
+console.log(Symbol.for(&quot;permanent&quot;) === Symbol.for(&quot;permanent&quot;));
+// 输出 true
 </code></pre>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -100,7 +100,7 @@ app.get("/doc/:htmlFile", async (req, res) => {
                         </div>
                     </div>
                 </header>
-                <div class="content">
+                <div class="content ${type}">
                     ${htmlContent}
                 </div>
             </article>
@@ -142,6 +142,7 @@ async function generateCardsData() {
       const title = data.title || path.basename(file, ".md");
       const tags = data.tags || [];
       const createdAt = data.time || data.createdAt || new Date().toISOString();
+      const type = data.type || "default";
       const summary = data.summary || markdownContent.slice(0, 150) + "...";
 
       // 添加卡片元数据到数组
@@ -151,6 +152,7 @@ async function generateCardsData() {
         tags,
         createdAt,
         summary,
+        type,
         url: `/doc/${path.basename(file, ".md")}.html`,
       });
     }
@@ -191,6 +193,7 @@ async function convertMarkdownToHtml() {
       // 如果front matter缺失则使用默认值
       const title = data.title || path.basename(file, ".md");
       const tags = data.tags || [];
+      const type = data.type || "default";
       const createdAt = data.time || data.createdAt || new Date().toISOString();
 
       // 转换markdown为html
@@ -227,7 +230,7 @@ async function convertMarkdownToHtml() {
                             </div>
                         </div>
                     </header>
-                    <div class="content">
+                    <div class="content ${type}">
                         ${htmlContent}
                     </div>
                 </article>

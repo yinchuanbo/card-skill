@@ -1,36 +1,30 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>前端项目优化-让网站飞起来的秘籍</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>前端项目优化-让网站飞起来的秘籍</h1>
-                <div class="meta">
-                    <time datetime="Sat Mar 15 2025 06:51:35 GMT+0800 (中国标准时间)">2025/3/15</time>
-                    <div class="tags">
-                        <span class="tag">性能优化</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <p>在如今这个信息爆炸的时代，前端性能优化已经成为提升用户体验和网站竞争力的关键因素。一个加载迅速、响应灵敏的网站，不仅能吸引更多的用户，还能提高用户留存率和转化率。今天，就让我们一起深入探讨前端项目优化的方方面面，掌握那些能让网站“飞起来”的秘籍。</p>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>前端项目优化-让网站飞起来的秘籍</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>前端项目优化-让网站飞起来的秘籍</h1>
+                        <div class="meta">
+                            <time datetime="Sat Mar 15 2025 06:51:35 GMT+0800 (中国标准时间)">2025/3/15</time>
+                            <div class="tags">
+                                <span class="tag">性能优化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>在如今这个信息爆炸的时代，前端性能优化已经成为提升用户体验和网站竞争力的关键因素。一个加载迅速、响应灵敏的网站，不仅能吸引更多的用户，还能提高用户留存率和转化率。今天，就让我们一起深入探讨前端项目优化的方方面面，掌握那些能让网站“飞起来”的秘籍。</p>
 <h2 id="一、加载时性能优化">一、加载时性能优化</h2>
 <h3 id="按需加载，减少初始加载量">按需加载，减少初始加载量</h3>
 <p>在大型项目中，若将所有组件一次性加载，会导致初始加载时间过长，严重影响用户体验。此时，按需加载便成为了我们的得力助手。以 Vue 为例，可以使用 Vue 的异步组件和 Webpack 的 import() 方法，实现组件的按需加载。这样，只有在用户真正访问某个页面时，相关的代码才会被加载，大大减少了初始加载时间，提升了页面响应速度。</p>
-<pre><code class="language-vue"><pre data-language="vue"><code class="language-vue">const Home = () => import(/* webpackChunkName: "home" */ './views/Home.vue');
-const About = () => import(/* webpackChunkName: "about" */ './views/About.vue');</code></pre>
+<pre><code class="language-vue">const Home = () =&gt; import(/* webpackChunkName: &quot;home&quot; */ &#39;./views/Home.vue&#39;);
+const About = () =&gt; import(/* webpackChunkName: &quot;about&quot; */ &#39;./views/About.vue&#39;);
 </code></pre>
 <p>在 React 中，也有类似的实现方式，如使用 <code>React.lazy</code> 和 <code>Suspense</code> 组件进行路由级的懒加载。同时，为了进一步提升用户体验，还可以在鼠标移入导航栏时预加载路由组件，让用户在点击导航链接时能更快地看到页面内容。</p>
 <ul>
@@ -39,26 +33,26 @@ const About = () => import(/* webpackChunkName: "about" */ './views/About.vue');
 <li><strong>Preconnect</strong>：提前与第三方资源的域名建立 TCP 连接，减少连接时间，适用于重要的第三方资源，如 CDN、API 等。</li>
 <li><strong>DNS-Prefetch</strong>：提前解析域名的 DNS，适用于低优先级的跨域资源预解析，提升首次请求的速度。</li>
 </ul>
-<pre><code class="language-html"><pre data-language="html"><code class="language-html"><span class="token comment">&lt;!-- Prefetch 示例 --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prefetch<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>next-page.js<span class="token punctuation">"</span></span> <span class="token attr-name">as</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>script<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prefetch<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>next-page.css<span class="token punctuation">"</span></span> <span class="token attr-name">as</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>style<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<pre><code class="language-html">&lt;!-- Prefetch 示例 --&gt;
+&lt;link rel=&quot;prefetch&quot; href=&quot;next-page.js&quot; as=&quot;script&quot; /&gt;
+&lt;link rel=&quot;prefetch&quot; href=&quot;next-page.css&quot; as=&quot;style&quot; /&gt;
 
-<span class="token comment">&lt;!-- Preload 示例 --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>preload<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>critical.js<span class="token punctuation">"</span></span> <span class="token attr-name">as</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>script<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>preload<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>styles.css<span class="token punctuation">"</span></span> <span class="token attr-name">as</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>style<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span>
-  <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>preload<span class="token punctuation">"</span></span>
-  <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>font.woff2<span class="token punctuation">"</span></span>
-  <span class="token attr-name">as</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>font<span class="token punctuation">"</span></span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>font/woff2<span class="token punctuation">"</span></span>
-  <span class="token attr-name">crossorigin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>anonymous<span class="token punctuation">"</span></span>
-<span class="token punctuation">/></span></span>
+&lt;!-- Preload 示例 --&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;critical.js&quot; as=&quot;script&quot; /&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;styles.css&quot; as=&quot;style&quot; /&gt;
+&lt;link
+  rel=&quot;preload&quot;
+  href=&quot;font.woff2&quot;
+  as=&quot;font&quot;
+  type=&quot;font/woff2&quot;
+  crossorigin=&quot;anonymous&quot;
+/&gt;
 
-<span class="token comment">&lt;!-- Preconnect 示例 --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>preconnect<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://api.example.com<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+&lt;!-- Preconnect 示例 --&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://api.example.com&quot; /&gt;
 
-<span class="token comment">&lt;!-- DNS-Prefetch 示例 --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dns-prefetch<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.example.com<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></code></pre>
+&lt;!-- DNS-Prefetch 示例 --&gt;
+&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//cdn.example.com&quot; /&gt;
 </code></pre>
 <h2 id="二、资源体积优化">二、资源体积优化</h2>
 <h3 id="压缩图片，减少图片体积">压缩图片，减少图片体积</h3>
@@ -86,62 +80,62 @@ const About = () => import(/* webpackChunkName: "about" */ './views/About.vue');
 <h2 id="四、构建与部署优化">四、构建与部署优化</h2>
 <h3 id="使用-webpack-dll-plugin，减少打包时间">使用 Webpack DLL Plugin，减少打包时间</h3>
 <p>在大型项目中，包含大量的第三方依赖库，每次构建时都重新编译这些稳定的依赖库会浪费大量时间。Webpack 的 DLL Plugin 可以将不常变动的第三方依赖单独编译，并在后续构建时直接引用，避免重复编译，大幅减少打包时间。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// webpack.dll.js 配置文件示例</span>
-<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"path"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> webpack <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"webpack"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">// webpack.dll.js 配置文件示例
+const path = require(&quot;path&quot;);
+const webpack = require(&quot;webpack&quot;);
 
-module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">entry</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">vendor</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"react"</span><span class="token punctuation">,</span> <span class="token string">"react-dom"</span><span class="token punctuation">,</span> <span class="token string">"lodash"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// 需要预编译的库</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">output</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">path</span><span class="token operator">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">"dll"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">filename</span><span class="token operator">:</span> <span class="token string">"[name].dll.js"</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">library</span><span class="token operator">:</span> <span class="token string">"[name]_library"</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    <span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>DllPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"[name]_library"</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">path</span><span class="token operator">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">"dll"</span><span class="token punctuation">,</span> <span class="token string">"[name]-manifest.json"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+module.exports = {
+  entry: {
+    vendor: [&quot;react&quot;, &quot;react-dom&quot;, &quot;lodash&quot;], // 需要预编译的库
+  },
+  output: {
+    path: path.resolve(__dirname, &quot;dll&quot;),
+    filename: &quot;[name].dll.js&quot;,
+    library: &quot;[name]_library&quot;,
+  },
+  plugins: [
+    new webpack.DllPlugin({
+      name: &quot;[name]_library&quot;,
+      path: path.resolve(__dirname, &quot;dll&quot;, &quot;[name]-manifest.json&quot;),
+    }),
+  ],
+};
 </code></pre>
 <h3 id="启用-webpack-缓存，加快增量构建">启用 Webpack 缓存，加快增量构建</h3>
 <p>Webpack 提供了缓存机制，可以存储编译结果，在后续构建中直接复用，从而提高性能，减少不必要的重复编译。通过启用 Babel 缓存、Terser 压缩缓存以及持久化缓存等策略，可以有效加快增量构建的速度，提升开发效率。</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">// Webpack 配置文件中启用缓存的示例</span>
-module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"filesystem"</span><span class="token punctuation">,</span> <span class="token comment">// 持久化缓存（存储在磁盘上）</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">module</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">rules</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-      <span class="token punctuation">{</span>
-        <span class="token literal-property property">test</span><span class="token operator">:</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">.js$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span>
-        <span class="token literal-property property">use</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-          <span class="token punctuation">{</span>
-            <span class="token literal-property property">loader</span><span class="token operator">:</span> <span class="token string">"babel-loader"</span><span class="token punctuation">,</span>
-            <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-              <span class="token literal-property property">cacheDirectory</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// 启用 Babel 缓存</span>
-            <span class="token punctuation">}</span><span class="token punctuation">,</span>
-          <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        <span class="token punctuation">]</span><span class="token punctuation">,</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">optimization</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">minimizer</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-      <span class="token keyword">new</span> <span class="token class-name">TerserPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-        <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// 开启压缩缓存</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">// Webpack 配置文件中启用缓存的示例
+module.exports = {
+  cache: {
+    type: &quot;filesystem&quot;, // 持久化缓存（存储在磁盘上）
+  },
+  module: {
+    rules: [
+      {
+        test: /.js$/,
+        use: [
+          {
+            loader: &quot;babel-loader&quot;,
+            options: {
+              cacheDirectory: true, // 启用 Babel 缓存
+            },
+          },
+        ],
+      },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        cache: true, // 开启压缩缓存
+      }),
+    ],
+  },
+};
 </code></pre>
 <h2 id="五、性能监控与持续优化">五、性能监控与持续优化</h2>
 <p>为了确保前端性能的持续提升，建立有效的性能监控体系至关重要。可以引入内部前端监控平台，如烛龙，将性能指标落到监控平台，实现可视化的监控前端性能指标。通过实时监测页面的加载时间、渲染时间、资源加载情况等关键指标，及时发现性能问题，并针对性地进行优化，形成一个持续优化的闭环。</p>
-<pre><code class="language-jsx"><pre data-language="jsx"><code class="language-jsx">// 初始化性能监控组件示例
-useEffect(() => {
+<pre><code class="language-jsx">// 初始化性能监控组件示例
+useEffect(() =&gt; {
   // 初始化测速组件
   if (IS_PROD) {
     // @ts-ignore
@@ -155,46 +149,14 @@ useEffect(() => {
       profilingRate: 1,
     });
   }
-}, []);</code></pre>
+}, []);
 </code></pre>
 <h2 id="总结">总结</h2>
 <p>前端项目优化是一个系统性工程，涉及加载优化、资源优化、代码优化、构建优化以及性能监控等多个方面。通过采用按需加载、预加载、图片压缩、代码压缩与混淆、构建缓存等技术手段，并结合有效的性能监控体系，我们能够显著提升前端项目的性能，为用户提供更快、更流畅的浏览体验。在实际项目中，我们需要根据项目的具体需求和特点，灵活运用这些优化方法，不断探索和实践，持续提升前端性能，让网站真正“飞起来”。</p>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -509,6 +509,42 @@ body.loaded {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* 添加古诗类型卡片的标识 */
+.card.gushi::after {
+  content: "诗";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.2rem;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--water-blue);
+  opacity: 0.7;
+  z-index: 2;
+  font-family: var(--font-calligraphy-1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-medium);
+}
+
+.card.gushi:hover::after {
+  transform: translateY(-3px);
+  opacity: 0.9;
+  color: var(--water-blue);
+}
+
+.gushi > *:not(h2) {
+  text-align: center !important;
+}
+
+/* 暗色主题下的古诗标识调整 */
+[data-theme="dark"] .card.gushi::after {
+  /* color: var(--water-blue-light); */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
 .card::before {
   content: "";
   position: absolute;

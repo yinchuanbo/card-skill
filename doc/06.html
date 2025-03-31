@@ -1,31 +1,25 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map最佳实践</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>Map最佳实践</h1>
-                <div class="meta">
-                    <time datetime="Sun Mar 09 2025 04:31:37 GMT+0800 (中国标准时间)">2025/3/9</time>
-                    <div class="tags">
-                        <span class="tag">Map</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <img src="/images/02.webp" />
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Map最佳实践</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>Map最佳实践</h1>
+                        <div class="meta">
+                            <time datetime="Sun Mar 09 2025 04:31:37 GMT+0800 (中国标准时间)">2025/3/9</time>
+                            <div class="tags">
+                                <span class="tag">Map</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <img src="/images/02.webp" />
 
 <p><strong>「Map」</strong> 映射是一种经典的数据结构类型，其中数据以  <strong>「key/value」</strong>  的键值对形式存在</p>
 <table>
@@ -61,183 +55,183 @@
 <blockquote>
 <p>接受任何类型的键 划重点，是任何 any!!!</p>
 </blockquote>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> testMap <span class="token operator">=</span> <span class="token function">newMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const testMap = newMap();
 
-<span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">"今天不学习"</span><span class="token punctuation">,</span>
-  num <span class="token operator">=</span> <span class="token number">666</span><span class="token punctuation">,</span>
-  <span class="token function-variable function">keyFunction</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-  keySymbol <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"Web"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  keyNull <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
-  keyUndefined <span class="token operator">=</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span>
-  keyNaN <span class="token operator">=</span> <span class="token number">NaN</span><span class="token punctuation">;</span>
-<span class="token comment">//添加键值对</span>
-<span class="token comment">//基本用法</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key"</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Map(1) {"key" => "value"}</span>
+let str = &quot;今天不学习&quot;,
+  num = 666,
+  keyFunction = function () {},
+  keySymbol = Symbol(&quot;Web&quot;),
+  keyNull = null,
+  keyUndefined = undefined,
+  keyNaN = NaN;
+//添加键值对
+//基本用法
+testMap.set(&quot;key&quot;, &quot;value&quot;); // Map(1) {&quot;key&quot; =&gt; &quot;value&quot;}
 
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> <span class="token string">"明天变辣鸡"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>num<span class="token punctuation">,</span> <span class="token string">"前端Sneaker"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>keyFunction<span class="token punctuation">,</span> <span class="token string">"你的函数写的好棒棒哦"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>keySymbol<span class="token punctuation">,</span> <span class="token string">"大前端"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>keyNull<span class="token punctuation">,</span> <span class="token string">"我是个Null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>keyUndefined<span class="token punctuation">,</span> <span class="token string">"我是个Undifined"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-testMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>keyNaN<span class="token punctuation">,</span> <span class="token string">"我是个NaN"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+testMap.set(str, &quot;明天变辣鸡&quot;);
+testMap.set(num, &quot;前端Sneaker&quot;);
+testMap.set(keyFunction, &quot;你的函数写的好棒棒哦&quot;);
+testMap.set(keySymbol, &quot;大前端&quot;);
+testMap.set(keyNull, &quot;我是个Null&quot;);
+testMap.set(keyUndefined, &quot;我是个Undifined&quot;);
+testMap.set(keyNaN, &quot;我是个NaN&quot;);
 
-testMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//undefined</span>
-testMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">"Web"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//undefined</span>
+testMap.get(function () {}); //undefined
+testMap.get(Symbol(&quot;Web&quot;)); //undefined
 
-<span class="token comment">//虽然NaN !== NaN 但是作为Map键名并无区别</span>
-testMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">NaN</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//"我是个NaN"</span>
-testMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token function">Number</span><span class="token punctuation">(</span><span class="token string">"NaN"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//"我是个NaN"</span></code></pre>
+//虽然NaN !== NaN 但是作为Map键名并无区别
+testMap.get(NaN); //&quot;我是个NaN&quot;
+testMap.get(Number(&quot;NaN&quot;)); //&quot;我是个NaN&quot;
 </code></pre>
 <blockquote>
 <p>除了 NaN 比较特殊外，其他 <strong>「Map」</strong> 的 get 方法都是通过对比键名是否相等（===）来获取，不相等则返回 undefined</p>
 </blockquote>
 <h2 id="比较-map-和-object">比较 Map 和 Object</h2>
 <h3 id="定义">定义</h3>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">//Map</span>
-<span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key"</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Map(1) {"key" => "value"}</span>
-map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"key"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'value'</span>
+<pre><code class="language-js">//Map
+const map = new Map();
+map.set(&quot;key&quot;, &quot;value&quot;); // Map(1) {&quot;key&quot; =&gt; &quot;value&quot;}
+map.get(&quot;key&quot;); // &#39;value&#39;
 
-<span class="token comment">//Object</span>
-<span class="token keyword">const</span> someObject <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-someObject<span class="token punctuation">.</span>key <span class="token operator">=</span> <span class="token string">"value"</span><span class="token punctuation">;</span>
-someObject<span class="token punctuation">.</span>key<span class="token punctuation">;</span> <span class="token comment">// 'value'</span></code></pre>
+//Object
+const someObject = {};
+someObject.key = &quot;value&quot;;
+someObject.key; // &#39;value&#39;
 </code></pre>
 <p>这里可以明显看出其实其定义行为是十分相似的，想必看到这里大家还没看出 <strong>「Map」</strong> 到底在何时使用才是最佳实践，别急接着来。</p>
 <h3 id="键名类型">键名类型</h3>
 <p>JavaScript <strong>「Object」</strong> 只接收两种类型的键名  String 和 Symbol，你可以使用其他类型的键名，但是最终 JavaScript 都会隐式转换为字符串</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token comment">//直接看几种比较特殊的键名</span>
-obj<span class="token punctuation">[</span><span class="token boolean">true</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"Boolean"</span><span class="token punctuation">;</span>
-obj<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"Number"</span><span class="token punctuation">;</span>
-obj<span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token literal-property property">前端</span><span class="token operator">:</span> <span class="token string">"Sneaker"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"666"</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const obj = {};
+//直接看几种比较特殊的键名
+obj[true] = &quot;Boolean&quot;;
+obj[1] = &quot;Number&quot;;
+obj[{ 前端: &quot;Sneaker&quot; }] = &quot;666&quot;;
 
-Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ["1", "true", "[object Object]"]</span></code></pre>
+Object.keys(obj); // [&quot;1&quot;, &quot;true&quot;, &quot;[object Object]&quot;]
 </code></pre>
 <p>再来看看  <strong>「Map」</strong>  的，其接收任何类型的键名并保留其键名类型 (此处简单举例，详细可看文章开头<strong>「Map」</strong>基本使用)</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">key</span><span class="token operator">:</span> <span class="token string">"value"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> key <span class="token keyword">of</span> map<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// 1</span>
-<span class="token comment">// true</span>
-<span class="token comment">// {key: "value"}</span>
+<pre><code class="language-js">const map = new Map();
+map.set(1, &quot;value&quot;);
+map.set(true, &quot;value&quot;);
+map.set({ key: &quot;value&quot; }, &quot;value&quot;);
+for (const key of map.keys()) {
+  console.log(key);
+}
+// 1
+// true
+// {key: &quot;value&quot;}
 
-<span class="token comment">//除此之外，Map还支持正则作为键名</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^1[3456789]\d{9}$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token string">"手机号正则"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">//Map(1) {/^1[3456789]\d{9}$/ => "手机号正则"}</span></code></pre>
+//除此之外，Map还支持正则作为键名
+map.set(/^1[3456789]\d{9}$/, &quot;手机号正则&quot;);
+//Map(1) {/^1[3456789]\d{9}$/ =&gt; &quot;手机号正则&quot;}
 </code></pre>
 <blockquote>
 <p><strong>「Map」</strong> 支持正则表达式作为键名，这在 Object 是不被允许的直接报错</p>
 </blockquote>
 <h3 id="原型-prototype">原型 Prototype</h3>
 <p><strong>「Object」</strong> 不同于 <strong>「Map」</strong>，它不仅仅是表面所看到的。<strong>「Map」</strong> 只包含你所定义的键值对，但是 <strong>「Object」</strong> 对象具有其原型中的一些内置属性</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> newObject <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-newObject<span class="token punctuation">.</span>constructor<span class="token punctuation">;</span> <span class="token comment">// ƒ Object() { [native code] }</span></code></pre>
+<pre><code class="language-js">const newObject = {};
+newObject.constructor; // ƒ Object() { [native code] }
 </code></pre>
 <p>如果操作不当没有正确遍历对象属性，可能会导致出现问题，产生你意料之外的 bug</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">countWords</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">words</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> counts <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> word <span class="token keyword">of</span> words<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    counts<span class="token punctuation">[</span>word<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>counts<span class="token punctuation">[</span>word<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">return</span> counts<span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> counts <span class="token operator">=</span> <span class="token function">countWords</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"constructor"</span><span class="token punctuation">,</span> <span class="token string">"creates"</span><span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"bug"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// {constructor: "function Object() { [native code] }1", creates: 1, a: 1, bug: 1}</span></code></pre>
+<pre><code class="language-js">const countWords = (words) =&gt; {
+  const counts = {};
+  for (const word of words) {
+    counts[word] = (counts[word] || 0) + 1;
+  }
+  return counts;
+};
+const counts = countWords([&quot;constructor&quot;, &quot;creates&quot;, &quot;a&quot;, &quot;bug&quot;]);
+// {constructor: &quot;function Object() { [native code] }1&quot;, creates: 1, a: 1, bug: 1}
 </code></pre>
 <h3 id="迭代器">迭代器</h3>
 <p><strong>「Map」</strong>  是可迭代的，可以直接进行迭代，例如 forEach 循环或者 <code>for...of...</code> 循环</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token comment">//forEach</span>
-<span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key1"</span><span class="token punctuation">,</span> <span class="token string">"value1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key2"</span><span class="token punctuation">,</span> <span class="token string">"value2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key3"</span><span class="token punctuation">,</span> <span class="token string">"value3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">value<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// key1 value1</span>
-<span class="token comment">// key2 value2</span>
-<span class="token comment">// key3 value3</span>
+<pre><code class="language-js">//forEach
+const map = new Map();
+map.set(&quot;key1&quot;, &quot;value1&quot;);
+map.set(&quot;key2&quot;, &quot;value2&quot;);
+map.set(&quot;key3&quot;, &quot;value3&quot;);
+map.forEach((value, key) =&gt; {
+  console.log(key, value);
+});
+// key1 value1
+// key2 value2
+// key3 value3
 
-<span class="token comment">//for...of...</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> entry <span class="token keyword">of</span> map<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>entry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// ["key1", "value1"]</span>
-<span class="token comment">// ["key2", "value2"]</span>
-<span class="token comment">// ["key3", "value3"]</span></code></pre>
+//for...of...
+for (const entry of map) {
+  console.log(entry);
+}
+// [&quot;key1&quot;, &quot;value1&quot;]
+// [&quot;key2&quot;, &quot;value2&quot;]
+// [&quot;key3&quot;, &quot;value3&quot;]
 </code></pre>
 <p>但是对于 <strong>「Object」</strong> 是不能直接迭代的，当你尝试迭代将导致报错</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> object <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">key1</span><span class="token operator">:</span> <span class="token string">"value1"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">key2</span><span class="token operator">:</span> <span class="token string">"value2"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">key3</span><span class="token operator">:</span> <span class="token string">"value3"</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> entry <span class="token keyword">of</span> object<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>entry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// Uncaught TypeError: object is not iterable</span></code></pre>
+<pre><code class="language-js">const object = {
+  key1: &quot;value1&quot;,
+  key2: &quot;value2&quot;,
+  key3: &quot;value3&quot;,
+};
+for (const entry of object) {
+  console.log(entry);
+}
+// Uncaught TypeError: object is not iterable
 </code></pre>
 <p>这时候你就需要一个额外的步骤来检索其键名、键值或者键值对</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> key <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// key1</span>
-<span class="token comment">// key2</span>
-<span class="token comment">// key3</span>
+<pre><code class="language-js">for (const key of Object.keys(object)) {
+  console.log(key);
+}
+// key1
+// key2
+// key3
 
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> value <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// value1</span>
-<span class="token comment">// value2</span>
-<span class="token comment">// value3</span>
+for (const value of Object.values(object)) {
+  console.log(value);
+}
+// value1
+// value2
+// value3
 
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> entry <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>entry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// ["key1", "value1"]</span>
-<span class="token comment">// ["key2", "value2"]</span>
-<span class="token comment">// ["key3", "value3"]</span>
+for (const entry of Object.entries(object)) {
+  console.log(entry);
+}
+// [&quot;key1&quot;, &quot;value1&quot;]
+// [&quot;key2&quot;, &quot;value2&quot;]
+// [&quot;key3&quot;, &quot;value3&quot;]
 
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span> <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">//"key1", "value1"</span>
-<span class="token comment">//"key2", "value2"</span>
-<span class="token comment">//"key3", "value3"</span></code></pre>
+for (const [key, value] of Object.entries(object)) {
+  console.log(key, value);
+}
+//&quot;key1&quot;, &quot;value1&quot;
+//&quot;key2&quot;, &quot;value2&quot;
+//&quot;key3&quot;, &quot;value3&quot;
 </code></pre>
 <p>当然也可以使用 <code>for...in...</code> 进行遍历循环键名</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> key <span class="token keyword">in</span> object<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">// key1</span>
-<span class="token comment">// key2</span>
-<span class="token comment">// key3</span></code></pre>
+<pre><code class="language-js">for (const key in object) {
+  console.log(key);
+}
+// key1
+// key2
+// key3
 </code></pre>
 <h3 id="元素顺序和长度">元素顺序和长度</h3>
 <p>Map 保持对长度的跟踪，使其能够在 <code>O(1)</code> 复杂度中进行访问</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key1"</span><span class="token punctuation">,</span> <span class="token string">"value1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key2"</span><span class="token punctuation">,</span> <span class="token string">"value2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key3"</span><span class="token punctuation">,</span> <span class="token string">"value3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span>size<span class="token punctuation">;</span> <span class="token comment">// 3</span></code></pre>
+<pre><code class="language-js">const map = new Map();
+map.set(&quot;key1&quot;, &quot;value1&quot;);
+map.set(&quot;key2&quot;, &quot;value2&quot;);
+map.set(&quot;key3&quot;, &quot;value3&quot;);
+map.size; // 3
 </code></pre>
 <p>而另一方面，对于 <strong>「Object」</strong> 而言，想要获得对象的属性长度，需要手动对其进行迭代，使其为 <code>O(n)</code> 复杂度，属性长度为 n</p>
 <p>在上文提及的示例中，我们可以看到 <strong>「Map」</strong> 始终保持按插入顺序返回键名。但 <strong>「Object」</strong> 却不是。从 ES6 开始，String 和 Symbol 键是按顺序保存起来的，但是通过隐式转换保存成 String 的键就是乱序的</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> object <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-object<span class="token punctuation">[</span><span class="token string">"key1"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"value1"</span><span class="token punctuation">;</span>
-object<span class="token punctuation">[</span><span class="token string">"key0"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"value0"</span><span class="token punctuation">;</span>
-object<span class="token punctuation">;</span> <span class="token comment">// {key1: "value1", key0: "value0"}</span>
-object<span class="token punctuation">[</span><span class="token number">20</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"value20"</span><span class="token punctuation">;</span>
-object<span class="token punctuation">;</span> <span class="token comment">// {20: "value20", key1: "value1", key0: "value0"}</span>
+<pre><code class="language-js">const object = {};
+object[&quot;key1&quot;] = &quot;value1&quot;;
+object[&quot;key0&quot;] = &quot;value0&quot;;
+object; // {key1: &quot;value1&quot;, key0: &quot;value0&quot;}
+object[20] = &quot;value20&quot;;
+object; // {20: &quot;value20&quot;, key1: &quot;value1&quot;, key0: &quot;value0&quot;}
 
-Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span> <span class="token comment">//3</span></code></pre>
+Object.keys(object).length; //3
 </code></pre>
 <h2 id="objectmap-何为最佳实践">Object/Map 何为最佳实践</h2>
 <p>如上就是  <strong>「Map」</strong>  和  <strong>「Object」</strong>  的基本区别，在解决问题考虑两者的时候就需要考虑两者的区别。</p>
@@ -251,59 +245,59 @@ Object<span class="token punctuation">.</span><span class="token function">keys<
 <li><p>再举一个实际的例子，比如有一个自定义字段的用户操作功能，用户可以通过表单自定义字段，那么这时候最好是使用 Map，因为很有可能会破坏原有的对象</p>
 </li>
 </ul>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> userCustomFields <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"blue"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token string">"medium"</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">toString</span><span class="token operator">:</span> <span class="token string">"A blue box"</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<pre><code class="language-js">const userCustomFields = {
+  color: &quot;blue&quot;,
+  size: &quot;medium&quot;,
+  toString: &quot;A blue box&quot;,
+};
 </code></pre>
 <p>此时用户自定义的  toString  就会破坏到原有的对象 而  <strong>「Map」</strong>  键名接受任何类型，没有影响</p>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">isMap</span><span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> value<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">"[object Map]"</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+<pre><code class="language-js">function isMap(value) {
+  return value.toString() === &quot;[object Map]&quot;;
+}
 
-<span class="token keyword">const</span> actorMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const actorMap = new Map();
 
-actorMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"Harrison Ford"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-actorMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"toString"</span><span class="token punctuation">,</span> <span class="token string">"Actor: Harrison Ford"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+actorMap.set(&quot;name&quot;, &quot;Harrison Ford&quot;);
+actorMap.set(&quot;toString&quot;, &quot;Actor: Harrison Ford&quot;);
 
-<span class="token comment">// Works!</span>
-<span class="token function">isMap</span><span class="token punctuation">(</span>actorMap<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre>
+// Works!
+isMap(actorMap); // =&gt; true
 </code></pre>
 <ul>
 <li>当你需要处理一些属性，那么  <strong>「Object」</strong>  是完全受用的，尤其是需要处理 JSON 数据的时候。由于  <strong>「Map」</strong>  可以是任意类型，因此没有可以将其转化为 JSON 的原生方法。</li>
 </ul>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-map<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"key"</span><span class="token punctuation">,</span> <span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//"{}"</span></code></pre>
+<pre><code class="language-js">var map = new Map();
+map.set(&quot;key&quot;, &quot;value&quot;);
+JSON.stringify(map); //&quot;{}&quot;
 </code></pre>
 <ul>
 <li>当你需要通正则表达式判断去处理一些业务逻辑时，<strong>「Map」</strong> 将是你的最佳解决方案</li>
 </ul>
-<pre><code class="language-js"><pre data-language="js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">actions</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> <span class="token function-variable function">functionA</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">/*do sth*/</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> <span class="token function-variable function">functionB</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">/*do sth*/</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> <span class="token function-variable function">functionC</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">/*send log*/</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token function">returnnewMap</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
-    <span class="token punctuation">[</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^guest_[1-4]$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> functionA<span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">[</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^guest_5$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> functionB<span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">[</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^guest_.*$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> functionC<span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token comment">//...</span>
-  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<pre><code class="language-js">const actions = () =&gt; {
+  const functionA = () =&gt; {
+    /*do sth*/
+  };
+  const functionB = () =&gt; {
+    /*do sth*/
+  };
+  const functionC = () =&gt; {
+    /*send log*/
+  };
+  returnnewMap([
+    [/^guest_[1-4]$/, functionA],
+    [/^guest_5$/, functionB],
+    [/^guest_.*$/, functionC],
+    //...
+  ]);
+};
 
-<span class="token keyword">const</span> <span class="token function-variable function">onButtonClick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">identity<span class="token punctuation">,</span> status</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> action <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span><span class="token function">actions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span>
-    key<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>identity<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">_</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>status<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
-  <span class="token punctuation">)</span><span class="token punctuation">;</span>
-  action<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">value</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+const onButtonClick = (identity, status) =&gt; {
+  let action = [...actions()].filter(([key, value]) =&gt;
+    key.test(`${identity}_${status}`)
+  );
+  action.forEach(([key, value]) =&gt; value.call(this));
+};
 </code></pre>
 <p>利用数组循环的特性，符合正则条件的逻辑都会被执行，那就可以同时执行公共逻辑和单独逻辑，因为正则的存在，你可以打开想象力解锁更多的玩法,更多相关 Map 用法样例可以查看<a href="https://mp.weixin.qq.com/s?__biz=MzAwNzQ2ODEyMQ==&mid=2247484997&idx=1&sn=e03a05eb82fb1f8a191e58ae307a5113&scene=21#wechat_redirect">JavaScript 复杂判断的更优雅写法</a></p>
 <h2 id="总结：">总结：</h2>
@@ -317,41 +311,9 @@ map<span class="token punctuation">.</span><span class="token function">set</spa
 <p>不要将 <strong>「Map」</strong> 作为普通 <strong>「Object」</strong> 的替代品，而应该是普通对象的补充</p>
 </blockquote>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

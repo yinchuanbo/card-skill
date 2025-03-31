@@ -217,7 +217,7 @@ async function openModal(card) {
     // 设置模态内容，不再嵌套card-content
     modalContent.innerHTML = `
             <header>${header}</header>
-            <div class="content">${content}</div>
+            <div class="content ${card?.type || ""}">${content}</div>
         `;
 
     // 应用代码高亮

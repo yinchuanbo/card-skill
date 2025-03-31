@@ -1,31 +1,25 @@
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>无限动画CSS工具库</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body class="card-detail">
-    <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>无限动画CSS工具库</h1>
-                <div class="meta">
-                    <time datetime="Fri Mar 14 2025 03:48:06 GMT+0800 (中国标准时间)">2025/3/14</time>
-                    <div class="tags">
-                        <span class="tag">动画库</span>
-                    </div>
-                </div>
-            </header>
-            <div class="content">
-                <p>今天，我们为大家介绍一款强大的 CSS 动画库——<strong>AnimXYZ</strong>，它能够帮助开发者轻松创建、定制和组合动画效果，而无需编写任何关键帧代码。</p>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>无限动画CSS工具库</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>无限动画CSS工具库</h1>
+                        <div class="meta">
+                            <time datetime="Fri Mar 14 2025 03:48:06 GMT+0800 (中国标准时间)">2025/3/14</time>
+                            <div class="tags">
+                                <span class="tag">动画库</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>今天，我们为大家介绍一款强大的 CSS 动画库——<strong>AnimXYZ</strong>，它能够帮助开发者轻松创建、定制和组合动画效果，而无需编写任何关键帧代码。</p>
 <img src="/images/03.gif">
 
 <h2 id="什么是-animxyz？">什么是 AnimXYZ？</h2>
@@ -52,21 +46,21 @@
 <ul>
 <li><strong>HTML 集成方法</strong></li>
 </ul>
-<pre><code class="language-html"><pre data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@animxyz/core<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></code></pre>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@animxyz/core&quot; /&gt;
 </code></pre>
 <ul>
 <li><strong>Vue 安装</strong></li>
 </ul>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token comment"># Vue2.x 安装</span>
-<span class="token function">npm</span> <span class="token function">install</span> @animxyz/vue
+<pre><code class="language-sh"># Vue2.x 安装
+npm install @animxyz/vue
 
-<span class="token comment"># Vue3.x 安装</span>
-<span class="token function">npm</span> <span class="token function">install</span> @animxyz/vue3</code></pre>
+# Vue3.x 安装
+npm install @animxyz/vue3
 </code></pre>
 <ul>
 <li><strong>React 安装</strong></li>
 </ul>
-<pre><code class="language-sh"><pre data-language="sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> @animxyz/react</code></pre>
+<pre><code class="language-sh">npm install @animxyz/react
 </code></pre>
 <p>更多超酷的动画案例，请移步：<code>https://animxyz.com/docs</code></p>
 <h2 id="实用工具">实用工具</h2>
@@ -84,41 +78,9 @@
 <li><strong>官方文档</strong>：<code>https://animxyz.com/</code></li>
 </ul>
 
-            </div>
-        </div>
-        
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
-        </div>
-    </div>
-
-    <!-- 简化后的模态框结构 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
-    </div>
-    
-    <script src="/js/main.js"></script>
-    <script src="/js/ink-effects.js"></script>
-    <!-- Prism.js JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 添加额外的语言支持 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html>
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
