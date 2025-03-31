@@ -317,5 +317,16 @@
     "summary": "\r\n## 什么是 Node Modules Inspector\r\n\r\n`node-modules-inspector` 工具可用于可视化 `node_modules`、项目依赖项检查等等。\r\n\r\n开发者可以通过在 `pnpm/npm` 项目下运行以下命令来快速尝鲜：\r\n\r\n```sh\r\npnpx n...",
     "type": "default",
     "url": "/doc/29.html"
+  },
+  {
+    "id": "30",
+    "title": "使用 GitDiagram 让你几秒钟读懂开源项目架构",
+    "tags": [
+      "工具集"
+    ],
+    "createdAt": "2025-03-31T21:15:42.000Z",
+    "summary": "\r\n## 项目概述\r\n\r\nGitDiagram 是一款革命性的开源工具，能够在几秒钟内将任何 GitHub 存储库转换为精美的**可视化交互式图表**。由开发者 Ahmed Khaleel 创建，该项目完美结合了 AI 技术与现代 Web 开发栈，为开发者提供了一种全新的代码库探索方式。\r\n\r\n##...",
+    "type": "default",
+    "url": "/doc/30.html"
   }
 ]

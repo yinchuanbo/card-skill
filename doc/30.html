@@ -1,0 +1,105 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>使用 GitDiagram 让你几秒钟读懂开源项目架构</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>使用 GitDiagram 让你几秒钟读懂开源项目架构</h1>
+                        <div class="meta">
+                            <time datetime="Tue Apr 01 2025 05:15:42 GMT+0800 (中国标准时间)">2025/4/1</time>
+                            <div class="tags">
+                                <span class="tag">工具集</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="项目概述">项目概述</h2>
+<p>GitDiagram 是一款革命性的开源工具，能够在几秒钟内将任何 GitHub 存储库转换为精美的<strong>可视化交互式图表</strong>。由开发者 Ahmed Khaleel 创建，该项目完美结合了 AI 技术与现代 Web 开发栈，为开发者提供了一种全新的代码库探索方式。</p>
+<h2 id="核心功能亮点">核心功能亮点</h2>
+<p>🚀 <strong>一键可视化转换</strong></p>
+<ul>
+<li>只需在浏览器地址栏将 GitHub URL 中的&quot;hub&quot;替换为&quot;diagram&quot;，即可立即查看任何公开仓库的系统架构图</li>
+<li>支持私有仓库（需提供 GitHub 个人访问令牌）</li>
+</ul>
+<p>🤖 <strong>AI 智能解析</strong></p>
+<ul>
+<li>采用 OpenAI o3-mini（原 Claude 3.5 Sonnet）AI 模型分析代码库</li>
+<li>通过精心设计的提示工程自动生成 Mermaid.js 图表</li>
+<li>智能整合文件树和 README 信息，确保图表准确性</li>
+</ul>
+<p>🖱️ <strong>交互式体验</strong></p>
+<ul>
+<li>点击图表组件可直接跳转到对应源文件和目录</li>
+<li>支持自定义指令修改和重新生成图表</li>
+<li>直观展示项目结构和模块关系</li>
+</ul>
+<h2 id="尝鲜">尝鲜</h2>
+<p>以<code>Vue3</code>为例，查看它的架构：</p>
+<img src="/images/50.webp" />
+
+<img src="/images/51.webp" />
+
+<p>点击相关语法还能直接跳转到相关的 github 文件中：</p>
+<img src="/images/52.webp" />
+
+<h2 id="技术架构解析">技术架构解析</h2>
+<p>GitDiagram 采用了现代化的全栈技术架构：</p>
+<p><strong>前端部分</strong>：</p>
+<ul>
+<li>Next.js 框架提供 SSR 支持</li>
+<li>TypeScript 确保类型安全</li>
+<li>Tailwind CSS + ShadCN 构建美观 UI</li>
+</ul>
+<p><strong>后端服务</strong>：</p>
+<ul>
+<li>FastAPI 高性能 Python 后端</li>
+<li>服务器端处理确保安全性</li>
+<li>PostgreSQL 数据库（使用 Drizzle ORM）</li>
+</ul>
+<p><strong>AI 与基础设施</strong>：</p>
+<ul>
+<li>OpenAI o3-mini 驱动核心 AI 功能</li>
+<li>Vercel 托管前端应用</li>
+<li>AWS EC2 运行后端服务</li>
+<li>GitHub Actions 实现 CI/CD 自动化</li>
+<li>PostHog 和 Api-Analytics 进行产品分析</li>
+</ul>
+<h2 id="使用场景">使用场景</h2>
+<p>GitDiagram 适用于多种开发场景：</p>
+<ul>
+<li>评估新开源项目时快速了解其架构</li>
+<li>接手遗留代码项目时的学习工具</li>
+<li>团队内部架构设计和评审</li>
+<li>技术分享和文档编写</li>
+<li>代码库健康度检查</li>
+</ul>
+<h2 id="部署与自托管方案">部署与自托管方案</h2>
+<p>GitDiagram 提供灵活的部署选项：</p>
+<p><strong>云端使用</strong>：<br>直接访问官网，输入 GitHub 仓库地址即可</p>
+<p><strong>本地开发环境</strong>：</p>
+<ol>
+<li>克隆仓库：<code>git clone https://github.com/ahmedkhaleel2004/gitdiagram.git</code></li>
+<li>安装依赖：<code>pnpm i</code></li>
+<li>配置环境变量</li>
+<li>使用 Docker 启动后端服务</li>
+<li>初始化数据库</li>
+<li>运行前端开发服务器</li>
+</ol>
+<p>完整自托管文档包含详细步骤和配置说明，支持开发者完全掌控自己的实例</p>
+<h2 id="结语">结语</h2>
+<p>GitDiagram 代表了开发者工具的创新方向，通过 AI 技术将复杂的代码库转化为直观的可视化图表，极大提升了代码理解和项目上手的效率。作为完全开源的项目，它不仅解决了实际问题，也为开发者社区贡献了优秀的技术实践。</p>
+<p>github 地址：<a href="https://github.com/ahmedkhaleel2004/gitdiagram">https://github.com/ahmedkhaleel2004/gitdiagram</a></p>
+<p>线上地址：<a href="https://gitdiagram.com/">https://gitdiagram.com/</a></p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
