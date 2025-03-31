@@ -232,6 +232,9 @@ async function openModal(card) {
     // Add to browser history
     window.history.pushState({ cardId: card.id }, "", card.url);
 
+    // 添加导航按钮
+    addModalNavigation();
+
     // 禁用body滚动
     document.body.classList.add("modal-open");
 
@@ -254,6 +257,10 @@ function closeModal() {
   if (window.history.state && window.history.state.cardId) {
     window.history.back();
   }
+
+  // 移除导航按钮
+  const navButtons = document.querySelectorAll(".modal-nav");
+  navButtons.forEach((button) => button.remove());
 
   // 恢复body滚动
   document.body.classList.remove("modal-open");
@@ -552,3 +559,59 @@ function updateThemeIcon() {
 document.addEventListener("DOMContentLoaded", function () {
   initThemeToggle();
 });
+
+// 添加模态窗口导航功能
+function addModalNavigation() {
+  // 移除现有的导航按钮（如果有）
+  const existingButtons = document.querySelectorAll(".modal-nav");
+  existingButtons.forEach((button) => button.remove());
+
+  // 创建导航按钮
+  const prevButton = document.createElement("button");
+  prevButton.className = "modal-nav modal-nav-prev";
+  prevButton.innerHTML = "&larr;";
+  prevButton.setAttribute("aria-label", "Previous article");
+  prevButton.setAttribute("title", "Previous article");
+
+  const nextButton = document.createElement("button");
+  nextButton.className = "modal-nav modal-nav-next";
+  nextButton.innerHTML = "&rarr;";
+  nextButton.setAttribute("aria-label", "Next article");
+  nextButton.setAttribute("title", "Next article");
+
+  // 添加到模态窗口
+  modalOverlay.appendChild(prevButton);
+  modalOverlay.appendChild(nextButton);
+
+  // 获取当前卡片的索引
+  const currentCardId = window.history.state?.cardId;
+  const currentCardIndex = cards.findIndex((card) => card.id === currentCardId);
+
+  // 添加点击事件
+  prevButton.addEventListener("click", () => {
+    if (currentCardIndex > 0) {
+      // 导航到上一篇文章
+      openModal(cards[currentCardIndex - 1]);
+    }
+  });
+
+  nextButton.addEventListener("click", () => {
+    if (currentCardIndex < cards.length - 1) {
+      // 导航到下一篇文章
+      openModal(cards[currentCardIndex + 1]);
+    }
+  });
+
+  // 禁用不可用的按钮
+  if (currentCardIndex <= 0) {
+    prevButton.disabled = true;
+    prevButton.style.opacity = "0.3";
+    prevButton.style.cursor = "not-allowed";
+  }
+
+  if (currentCardIndex >= cards.length - 1) {
+    nextButton.disabled = true;
+    nextButton.style.opacity = "0.3";
+    nextButton.style.cursor = "not-allowed";
+  }
+}

@@ -235,16 +235,6 @@
     "url": "/doc/23.html"
   },
   {
-    "id": "24",
-    "title": "语言基础",
-    "tags": [
-      "高级程序设计"
-    ],
-    "createdAt": "2025-03-16T21:38:09.000Z",
-    "summary": "\r\n## 变量\r\n\r\n### let 声明\r\n\r\n**for 循环中的 let 声明**\r\n\r\n在 let 出现之前，for 循环定义的迭代变量会泄露到循环体外部。\r\n\r\n```js\r\nfor (var i = 0; i < 5; i++) {\r\n  // 循环逻辑\r\n}\r\nconsole.log(...",
-    "url": "/doc/24.html"
-  },
-  {
     "id": "25",
     "title": "原生 Observable API 来了",
     "tags": [

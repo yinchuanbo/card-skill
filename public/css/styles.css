@@ -2380,3 +2380,51 @@ body.modal-open {
 #modalContent code:not([class*="language-"]) {
   font-size: 0.95em; /* 相对于父元素的字号 */
 }
+
+/* 模态窗口导航按钮样式 */
+.modal-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: var(--border-subtle);
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: var(--shadow-subtle);
+  transition: var(--transition-medium);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.modal-nav:hover {
+  opacity: 1;
+  background-color: white;
+  box-shadow: var(--shadow-strong);
+}
+
+.modal-nav-prev {
+  left: 20px;
+}
+
+.modal-nav-next {
+  right: 20px;
+}
+
+/* 暗色主题下的模态导航按钮 */
+[data-theme="dark"] .modal-nav {
+  background-color: rgba(25, 35, 45, 0.8);
+  color: var(--text-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-nav:hover {
+  background-color: var(--mountain-green);
+  color: #f0f0f0;
+}
