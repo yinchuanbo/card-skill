@@ -162,10 +162,20 @@
 
 /* 暗色主题下的代码块调整 */
 [data-theme="dark"] pre[class*="language-"] {
-  background-color: rgba(10, 15, 22, 0.95) !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-  border: none;
+  background-color: #0d0d0d !important;
+  background-image: linear-gradient(
+      135deg,
+      rgba(30, 35, 42, 0.98),
+      rgba(25, 30, 36, 0.99)
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Cpath d='M20,20 C40,40 60,20 80,40 C100,60 120,40 140,60' stroke='%233e5c3e' stroke-width='0.5' stroke-opacity='0.05' fill='none' stroke-dasharray='1,20'/%3E%3C/svg%3E");
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] code[class*="language-"],
+[data-theme="dark"] pre[class*="language-"] {
+  color: #e0e0e0;
 }
 
 /* 暗色主题下的过渡动画 */
@@ -1099,12 +1109,13 @@ body.loaded {
 /* 行内代码样式 */
 #modalContent code:not([class*="language-"]) {
   font-family: var(--font-code);
-  font-size: 0.9em;
+  font-size: 0.9rem;
   background: rgba(62, 92, 62, 0.1);
   color: var(--pine-dark);
   padding: 0.2em 0.4em;
   border-radius: 3px;
   border: 1px solid rgba(62, 92, 62, 0.1);
+  font-style: italic;
 }
 
 /* 列表样式 */
@@ -2210,11 +2221,11 @@ pre[class*="language-"] {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05),
     0 0 0 1px rgba(220, 225, 230, 0.1);
   /* border-left: 3px solid var(--mountain-green); */
-  background-color: #0d0d0d !important;
+  background-color: #f7f5f0 !important;
   background-image: linear-gradient(
       135deg,
-      rgba(30, 35, 42, 0.98),
-      rgba(25, 30, 36, 0.99)
+      rgba(245, 242, 235, 0.97),
+      rgba(250, 248, 244, 0.98)
     ),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Cpath d='M20,20 C40,40 60,20 80,40 C100,60 120,40 140,60' stroke='%233e5c3e' stroke-width='0.5' stroke-opacity='0.05' fill='none' stroke-dasharray='1,20'/%3E%3C/svg%3E");
   background-size: 100% 100%, 400px 400px;
@@ -2222,17 +2233,19 @@ pre[class*="language-"] {
   position: relative;
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   scroll-padding: 1rem;
+  border: 1px solid rgba(62, 92, 62, 0.1);
 }
 
 code[class*="language-"],
 pre[class*="language-"] {
   font-family: var(--font-code) !important;
   font-style: italic;
+  color: #333;
 }
 
 pre[class*="language-"]:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.08),
-    0 0 0 1px rgba(220, 225, 230, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(62, 92, 62, 0.15);
   border-left-color: var(--rust-red);
 }
 
@@ -2255,17 +2268,17 @@ pre[class*="language-"]::before {
   z-index: 1;
 }
 
-/* 优化语法高亮颜色，使其更契合山水主题 */
+/* 优化语法高亮颜色，使其更契合山水主题 - 浅色背景 */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #758575;
+  color: #6a7c6a;
   font-style: italic;
 }
 
 .token.punctuation {
-  color: #9bb4cf;
+  color: #6b7a8a;
 }
 
 .token.property,
@@ -2273,12 +2286,12 @@ pre[class*="language-"]::before {
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #da7c6f;
+  color: #b15a4e;
 }
 
 .token.boolean,
 .token.number {
-  color: #d9b775;
+  color: #ad7f31;
 }
 
 .token.selector,
@@ -2287,7 +2300,7 @@ pre[class*="language-"]::before {
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #8bba8c;
+  color: #3e5c3e;
 }
 
 .token.operator,
@@ -2295,24 +2308,24 @@ pre[class*="language-"]::before {
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: #b7b7b7;
+  color: #7a7a7a;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #6d91b7;
+  color: #456189;
 }
 
 .token.function,
 .token.class-name {
-  color: #e5c06e;
+  color: #9a7930;
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  color: #e99757;
+  color: #b55f25;
 }
 
 /* 代码块内行高亮效果 */
@@ -2905,9 +2918,6 @@ body.modal-open {
 }
 
 /* 调整模态窗口内内联代码的字号 */
-#modalContent code:not([class*="language-"]) {
-  font-size: 0.95em; /* 相对于父元素的字号 */
-}
 
 /* 模态窗口导航按钮样式 */
 .modal-nav {
@@ -4267,9 +4277,16 @@ blockquote p:last-child {
   border-radius: 10px;
   margin: 2rem 0;
   padding: 1.5rem !important;
-  background: rgba(18, 25, 32, 0.97) !important;
-  border: 1px solid var(--tech-border);
+  background: #f7f5f0 !important;
+  border: 1px solid rgba(62, 92, 62, 0.1);
   overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .tech-article-content pre {
+  background: rgba(18, 25, 32, 0.97) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .tech-code-decoration {
