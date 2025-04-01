@@ -57,6 +57,9 @@ async function initializeApp() {
   cardTitles.forEach((title) => {
     title.setAttribute("title", title.textContent);
   });
+
+  // 初始收集图片
+  collectImagesInModal();
 }
 
 // Fetch Cards Data
@@ -393,6 +396,12 @@ function closeModal() {
   const navButtons = document.querySelectorAll(".modal-nav");
   navButtons.forEach((button) => button.remove());
 
+  // 关闭可能打开的 lightbox
+  const lightbox = document.querySelector(".image-lightbox");
+  if (lightbox && lightbox.classList.contains("active")) {
+    lightbox.classList.remove("active");
+  }
+
   // 恢复body滚动
   document.body.classList.remove("modal-open");
 }
@@ -515,19 +524,24 @@ function addScrollIndicators() {
  * Image Lightbox Functionality
  */
 function initImageLightbox() {
-  // Create lightbox elements
-  const lightbox = document.createElement("div");
-  lightbox.className = "image-lightbox";
-  lightbox.innerHTML = `
-        <button class="lightbox-close">&times;</button>
-        <button class="lightbox-nav lightbox-prev">&larr;</button>
-        <button class="lightbox-nav lightbox-next">&rarr;</button>
-        <div class="lightbox-content">
-            <img src="" alt="Lightbox Image">
-        </div>
-        <div class="lightbox-counter">1 / 1</div>
-    `;
-  document.body.appendChild(lightbox);
+  // 检查是否已经存在 lightbox 元素，避免重复创建
+  let lightbox = document.querySelector(".image-lightbox");
+
+  // 如果不存在，才创建新的 lightbox 元素
+  if (!lightbox) {
+    lightbox = document.createElement("div");
+    lightbox.className = "image-lightbox";
+    lightbox.innerHTML = `
+          <button class="lightbox-close">&times;</button>
+          <button class="lightbox-nav lightbox-prev">&larr;</button>
+          <button class="lightbox-nav lightbox-next">&rarr;</button>
+          <div class="lightbox-content">
+              <img src="" alt="Lightbox Image">
+          </div>
+          <div class="lightbox-counter">1 / 1</div>
+      `;
+    document.body.appendChild(lightbox);
+  }
 
   const lightboxImg = lightbox.querySelector(".lightbox-content img");
   const lightboxClose = lightbox.querySelector(".lightbox-close");
@@ -557,12 +571,25 @@ function initImageLightbox() {
 
   // Observer to watch for changes in the modal content
   if (modalContent) {
+    // 移除可能存在的旧观察器
+    if (window.modalImagesObserver) {
+      window.modalImagesObserver.disconnect();
+    }
+
+    // 创建新的观察器
     const observer = new MutationObserver(collectImagesInModal);
     observer.observe(modalContent, { childList: true, subtree: true });
+    window.modalImagesObserver = observer;
   }
 
-  // Add click event to images in modal content
-  document.addEventListener("click", function (event) {
+  // 移除之前可能添加的事件监听器，避免重复绑定
+  document.removeEventListener("click", handleImageClick);
+
+  // 添加图片点击事件
+  document.addEventListener("click", handleImageClick);
+
+  // 图片点击处理函数
+  function handleImageClick(event) {
     const clickedImage = event.target.closest("#modalContent img");
     if (!clickedImage) return;
 
@@ -570,7 +597,7 @@ function initImageLightbox() {
     currentIndex = images.indexOf(clickedImage);
     openLightbox(clickedImage.src);
     event.preventDefault();
-  });
+  }
 
   // Open lightbox with specified image
   function openLightbox(src) {
@@ -609,13 +636,23 @@ function initImageLightbox() {
     }
   }
 
-  // Event listeners
+  // 移除旧的事件监听器，避免多次绑定
+  lightboxClose.removeEventListener("click", closeLightbox);
+  lightboxPrev.removeEventListener("click", prevImage);
+  lightboxNext.removeEventListener("click", nextImage);
+
+  // 添加新的事件监听器
   lightboxClose.addEventListener("click", closeLightbox);
   lightboxPrev.addEventListener("click", prevImage);
   lightboxNext.addEventListener("click", nextImage);
 
-  // Keyboard navigation
-  document.addEventListener("keydown", function (e) {
+  // 清理之前的键盘事件监听器
+  document.removeEventListener("keydown", handleLightboxKeyDown);
+
+  // 添加键盘导航
+  document.addEventListener("keydown", handleLightboxKeyDown);
+
+  function handleLightboxKeyDown(e) {
     if (!lightbox.classList.contains("active")) return;
 
     if (e.key === "Escape") {
@@ -625,14 +662,22 @@ function initImageLightbox() {
     } else if (e.key === "ArrowRight") {
       nextImage();
     }
-  });
+  }
 
-  // Close when clicking outside the image
-  lightbox.addEventListener("click", function (e) {
+  // 清理旧的点击事件
+  lightbox.removeEventListener("click", handleLightboxBackgroundClick);
+
+  // 点击背景关闭
+  lightbox.addEventListener("click", handleLightboxBackgroundClick);
+
+  function handleLightboxBackgroundClick(e) {
     if (e.target === lightbox) {
       closeLightbox();
     }
-  });
+  }
+
+  // 初始收集图片
+  collectImagesInModal();
 }
 
 // Initialize image lightbox when DOM is loaded
@@ -788,26 +833,9 @@ function addModalEffects(modalContent) {
     block.parentNode.appendChild(copyBtn);
   });
 
-  // 添加图片交互
+  // 添加图片加载动画（移除图片点击事件，避免与 initImageLightbox 重复）
   const images = modalContent.querySelectorAll("img");
   images.forEach((img) => {
-    img.addEventListener("click", function () {
-      // 简单的图片浏览模式
-      const overlay = document.createElement("div");
-      overlay.className = "tech-image-overlay";
-
-      const imgClone = document.createElement("img");
-      imgClone.src = this.src;
-      imgClone.alt = this.alt;
-
-      overlay.appendChild(imgClone);
-      document.body.appendChild(overlay);
-
-      overlay.addEventListener("click", function () {
-        this.remove();
-      });
-    });
-
     // 添加加载动画
     img.style.opacity = "0";
     img.style.transition = "opacity 0.3s ease";
