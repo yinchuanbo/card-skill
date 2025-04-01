@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 背景圆形与墨滴渐变 -->
+  <defs>
+    <radialGradient id="avatarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#3e5c3e;stop-opacity:0.1" />
+      <stop offset="70%" style="stop-color:#3e5c3e;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#2c3c2c;stop-opacity:0.9" />
+    </radialGradient>
+    
+    <!-- 纹理图案 -->
+    <pattern id="inkTexture" patternUnits="userSpaceOnUse" width="100" height="100" patternTransform="scale(0.15)">
+      <path d="M0,90 Q25,70 50,90 T100,90" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+      <path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+      <path d="M0,30 Q25,10 50,30 T100,30" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+    </pattern>
+  </defs>
+  
+  <!-- 主圆形背景 -->
+  <circle cx="50" cy="50" r="48" fill="url(#avatarGradient)" />
+  
+  <!-- 纹理层 -->
+  <circle cx="50" cy="50" r="48" fill="url(#inkTexture)" fill-opacity="0.3" />
+  
+  <!-- 边框 -->
+  <circle cx="50" cy="50" r="48" stroke="#2c3c2c" stroke-width="1.5" fill="none" stroke-opacity="0.6" />
+  
+  <!-- 简化的人物轮廓 - 墨画风格 -->
+  <path d="M50,25 C40,25 32,35 32,45 C32,55 38,63 50,63 C62,63 68,55 68,45 C68,35 60,25 50,25 Z" 
+        fill="#f9f6f0" fill-opacity="0.9" />
+  
+  <!-- 简化的肩部 -->
+  <path d="M30,70 C30,60 40,63 50,63 C60,63 70,60 70,70 L70,85 C70,85 60,90 50,90 C40,90 30,85 30,85 Z" 
+        fill="#f9f6f0" fill-opacity="0.9" />
+  
+  <!-- 墨滴装饰效果 -->
+  <circle cx="30" cy="28" r="3" fill="#3e5c3e" fill-opacity="0.5" />
+  <circle cx="70" cy="28" r="3" fill="#3e5c3e" fill-opacity="0.5" />
+  <circle cx="37" cy="78" r="4" fill="#3e5c3e" fill-opacity="0.3" />
+  <circle cx="63" cy="78" r="4" fill="#3e5c3e" fill-opacity="0.3" />
+  
+  <!-- 毛笔笔触效果 -->
+  <path d="M35,40 Q45,35 50,40 T65,40" stroke="#3e5c3e" stroke-width="1.5" stroke-opacity="0.7" fill="none" />
+</svg> 
