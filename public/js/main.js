@@ -10,6 +10,10 @@ const modalContent = document.getElementById("modalContent");
 let cards = [];
 let activeFilters = [];
 
+// Helper functions
+// Format a number as a 2-digit string
+const formatDigit = (num) => num.toString().padStart(2, "0");
+
 // Event Listeners
 document.addEventListener("DOMContentLoaded", initializeApp);
 if (searchInput) searchInput.addEventListener("input", filterCards);
@@ -77,7 +81,10 @@ function renderCards() {
   const filteredCards = filterCardsBySearch(filterCardsByTags(cards));
 
   if (filteredCards.length === 0) {
-    cardGrid.innerHTML = `<div class="no-results">No cards match your filters</div>`;
+    cardGrid.innerHTML = `<div class="tech-loading">
+      <div class="tech-loading-spinner"></div>
+      <p>没有找到匹配的卡片</p>
+    </div>`;
     return;
   }
 
@@ -86,21 +93,30 @@ function renderCards() {
     const cardElement = createCardElement(card, index);
     cardGrid.appendChild(cardElement);
   });
+
+  // 添加淡入动画类
+  setTimeout(() => {
+    document.querySelectorAll(".tech-card").forEach((card) => {
+      card.classList.add("fade-in");
+    });
+  }, 100);
 }
 
 // Create Card Element
 function createCardElement(card, index) {
-  const cardElement = document.createElement("article");
-  cardElement.className = `card ${card.type}`;
-  cardElement.style.setProperty("--index", index); // For staggered animation
+  // 如果没有提供index，默认为0
+  index = index || 0;
 
-  // Format date
+  // 创建卡片元素
+  const cardElement = document.createElement("div");
+  cardElement.className = `tech-card ${card.type || "default"}`;
+  // 设置自定义延迟属性用于动画
+  cardElement.style.setProperty("--delay", `${index * 0.05}s`);
+
+  // 格式化日期显示
   const date = new Date(card.createdAt);
-
-  // Format as YYYY-MM-DD HH:MM:SS
-  const formatDigit = (num) => num.toString().padStart(2, "0");
   const year = date.getFullYear();
-  const month = formatDigit(date.getMonth() + 1); // getMonth() is 0-indexed
+  const month = formatDigit(date.getMonth() + 1);
   const day = formatDigit(date.getDate());
   const hours = formatDigit(date.getHours());
   const minutes = formatDigit(date.getMinutes());
@@ -108,25 +124,84 @@ function createCardElement(card, index) {
 
   const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-  // Create card HTML
-  cardElement.innerHTML = `
-        <div class="card-header">
-            <h2>${card.title}</h2>
-            <div class="card-meta">
-                <time datetime="${card.createdAt}">${formattedDate}</time>
-            </div>
-            <div class="card-tags">
-                ${card.tags
-                  .map((tag) => `<span class="tag">${tag}</span>`)
-                  .join("")}
-            </div>
-        </div>
-    `;
+  // 清理摘要内容，移除HTML标签和Markdown语法
+  const sanitizedSummary = sanitizeSummary(card.summary);
 
-  // Add click event to open modal
+  // 创建卡片HTML
+  cardElement.innerHTML = `
+    <div class="tech-card-header">
+      <h2>${card.title}</h2>
+      <div class="card-meta">
+        <time datetime="${card.createdAt}">${formattedDate}</time>
+      </div>
+      <div class="card-tags">
+        ${card.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
+      </div>
+    </div>
+    <div class="card-summary">
+      ${sanitizedSummary}
+    </div>
+  `;
+
+  // 添加点击事件以打开模态框
   cardElement.addEventListener("click", () => openModal(card));
 
   return cardElement;
+}
+
+/**
+ * 清理摘要内容，移除HTML标签和Markdown语法
+ * @param {string} summary - 原始摘要内容
+ * @returns {string} 清理后的摘要内容
+ */
+function sanitizeSummary(summary) {
+  if (!summary) return "";
+
+  let cleaned = summary;
+
+  // 移除HTML标签，但更精确地处理
+  cleaned = cleaned.replace(/<img[^>]*>/gi, ""); // 首先专门移除图片标签
+  cleaned = cleaned.replace(/<[^>]*>/g, ""); // 然后移除其他所有HTML标签
+
+  // 解码HTML实体
+  cleaned = cleaned
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ");
+
+  // 移除Markdown图片语法
+  cleaned = cleaned.replace(/!\[(?:.*?)\]\((?:.*?)\)/g, "");
+
+  // 移除Markdown链接，但保留文本
+  cleaned = cleaned.replace(/\[(.*?)\]\((?:.*?)\)/g, "$1");
+
+  // 移除Markdown标题符号
+  cleaned = cleaned.replace(/^#{1,6}\s+/gm, "");
+
+  // 移除Markdown粗体和斜体
+  cleaned = cleaned.replace(/(\*\*|__)(.*?)(\*\*|__)/g, "$2"); // 粗体
+  cleaned = cleaned.replace(/(\*|_)(.*?)(\*|_)/g, "$2"); // 斜体
+
+  // 移除Markdown引用符号
+  cleaned = cleaned.replace(/^\s*>\s*/gm, "");
+
+  // 移除Markdown代码块
+  cleaned = cleaned.replace(/```(?:.*?)\n([\s\S]*?)```/g, "");
+
+  // 移除行内代码
+  cleaned = cleaned.replace(/`([^`]+)`/g, "$1");
+
+  // 移除表格语法
+  cleaned = cleaned.replace(/\|[^\n]*\|/g, "");
+  cleaned = cleaned.replace(/^[\s\-:|]+$/gm, "");
+
+  // 移除额外的空白字符和换行
+  cleaned = cleaned.replace(/\n+/g, " ");
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
+  return cleaned;
 }
 
 // Filter functions
@@ -170,9 +245,15 @@ function setupTagFilters() {
   // Create tag filter elements
   allTags.forEach((tag) => {
     const tagElement = document.createElement("span");
-    tagElement.className = "tag-filter";
+    tagElement.className = "tech-tag-filter";
     tagElement.textContent = tag;
 
+    // 如果此标签已激活，添加active类
+    if (activeFilters.includes(tag)) {
+      tagElement.classList.add("active");
+    }
+
+    // 添加点击事件
     tagElement.addEventListener("click", () => {
       toggleTagFilter(tag, tagElement);
     });

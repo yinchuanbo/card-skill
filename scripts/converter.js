@@ -97,7 +97,10 @@ async function convertMarkdownToHtml() {
       const tags = data.tags || [];
       const createdAt = data.time || data.createdAt || new Date().toISOString();
       const type = data.type || "default";
-      const summary = data.summary || markdownContent.slice(0, 150) + "...";
+
+      // 获取摘要并清理HTML和Markdown标记
+      let summary = data.summary || markdownContent.slice(0, 150) + "...";
+      summary = sanitizeSummary(summary);
 
       // Convert markdown to HTML
       const htmlContent = marked.parse(markdownContent);
@@ -158,29 +161,58 @@ async function convertMarkdownToHtml() {
     <!-- Prism.js CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
 </head>
-<body class="card-detail">
+<body class="card-detail tech-theme">
+    <div class="tech-bg-grid"></div>
     <div class="container">
-        <div class="card-content">
-            <header>
-                <h1>${title}</h1>
+        <!-- 高科技风格头部 -->
+        <header class="tech-article-header">
+            <canvas class="tech-article-particles" id="headerParticles"></canvas>
+            <div class="tech-header-content">
+                <h1 data-text="${title}">${title}</h1>
                 <div class="meta">
-                    <time datetime="${createdAt}">${new Date(
-        createdAt
-      ).toLocaleDateString()}</time>
-                    <div class="tags">
+                    <time datetime="${createdAt}" class="tech-timestamp">
+                        <span class="tech-timestamp-icon"></span>
+                        ${new Date(createdAt).toLocaleDateString()}
+                    </time>
+                    <div class="tech-tags">
                         ${tags
-                          .map((tag) => `<span class="tag">${tag}</span>`)
+                          .map((tag) => `<span class="tech-tag">${tag}</span>`)
                           .join("")}
                     </div>
                 </div>
-            </header>
+                <div class="tech-breadcrumb">
+                    <a href="/" class="tech-breadcrumb-link">墨境智库</a> 
+                    <span class="tech-breadcrumb-separator"></span> 
+                    <span class="tech-breadcrumb-current">${title}</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="tech-article-content">
+            <div class="tech-article-decoration top-left"></div>
+            <div class="tech-article-decoration top-right"></div>
+            <div class="tech-article-decoration bottom-left"></div>
+            <div class="tech-article-decoration bottom-right"></div>
+            
+            <div class="tech-progress-indicator">
+                <div class="tech-progress-bar"></div>
+            </div>
+            
             <div class="content ${type}">
                 ${htmlContent}
             </div>
+            
+            <div class="tech-article-footer">
+                <div class="tech-footer-decoration"></div>
+                <div class="tech-time-to-read">预计阅读时间：<span id="readTime">5</span> 分钟</div>
+            </div>
         </div>
         
-        <div class="return-link">
-            <a href="/">&larr; 返回卡片列表</a>
+        <div class="tech-return-link">
+            <a href="/" class="tech-return-button">
+                <span class="tech-return-icon"></span>
+                <span class="tech-return-text">返回知识库</span>
+            </a>
         </div>
     </div>
 
@@ -194,6 +226,8 @@ async function convertMarkdownToHtml() {
     
     <script src="/js/main.js"></script>
     <script src="/js/ink-effects.js"></script>
+    <script src="/js/particle-effects.js"></script>
+    <script src="/js/article-effects.js"></script>
     <!-- Prism.js JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <!-- 添加额外的语言支持 -->
@@ -205,10 +239,10 @@ async function convertMarkdownToHtml() {
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-    <!-- 重新初始化Prism.js -->
+    <!-- 初始化脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 手动触发Prism高亮，确保动态加载的内容也能高亮
+            // 手动触发Prism高亮
             Prism.highlightAll();
         });
     </script>
@@ -240,6 +274,61 @@ async function convertMarkdownToHtml() {
   } catch (error) {
     console.error("Error converting markdown to HTML:", error);
   }
+}
+
+/**
+ * 清理摘要内容，移除HTML标签和Markdown语法
+ * @param {string} summary - 原始摘要内容
+ * @returns {string} 清理后的摘要内容
+ */
+function sanitizeSummary(summary) {
+  if (!summary) return "";
+
+  let cleaned = summary;
+
+  // 移除HTML标签，但更精确地处理
+  cleaned = cleaned.replace(/<img[^>]*>/gi, ""); // 首先专门移除图片标签
+  cleaned = cleaned.replace(/<[^>]*>/g, ""); // 然后移除其他所有HTML标签
+
+  // 解码HTML实体
+  cleaned = cleaned
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ");
+
+  // 移除Markdown图片语法
+  cleaned = cleaned.replace(/!\[(?:.*?)\]\((?:.*?)\)/g, "");
+
+  // 移除Markdown链接，但保留文本
+  cleaned = cleaned.replace(/\[(.*?)\]\((?:.*?)\)/g, "$1");
+
+  // 移除Markdown标题符号
+  cleaned = cleaned.replace(/^#{1,6}\s+/gm, "");
+
+  // 移除Markdown粗体和斜体
+  cleaned = cleaned.replace(/(\*\*|__)(.*?)(\*\*|__)/g, "$2"); // 粗体
+  cleaned = cleaned.replace(/(\*|_)(.*?)(\*|_)/g, "$2"); // 斜体
+
+  // 移除Markdown引用符号
+  cleaned = cleaned.replace(/^\s*>\s*/gm, "");
+
+  // 移除Markdown代码块
+  cleaned = cleaned.replace(/```(?:.*?)\n([\s\S]*?)```/g, "");
+
+  // 移除行内代码
+  cleaned = cleaned.replace(/`([^`]+)`/g, "$1");
+
+  // 移除表格语法
+  cleaned = cleaned.replace(/\|[^\n]*\|/g, "");
+  cleaned = cleaned.replace(/^[\s\-:|]+$/gm, "");
+
+  // 移除额外的空白字符和换行
+  cleaned = cleaned.replace(/\n+/g, " ");
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
+  return cleaned;
 }
 
 // Create a sample markdown file

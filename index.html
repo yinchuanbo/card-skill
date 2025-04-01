@@ -62,21 +62,33 @@
   </head>
   <body>
     <div class="container">
-      <header class="main-header">
+      <!-- 高科技风格头部 -->
+      <header class="tech-header">
+        <canvas id="particleCanvas" class="particle-canvas"></canvas>
         <h1>墨境智库</h1>
         <p class="subtitle">知识如山水长流，观之可悟</p>
       </header>
 
-      <div class="filter-container">
-        <input type="text" id="searchInput" placeholder="搜索卡片..." />
-        <div class="tag-filters" id="tagFilters">
+      <!-- 高科技风格过滤器容器 -->
+      <div class="tech-filter-container">
+        <input
+          type="text"
+          id="searchInput"
+          class="tech-search-input"
+          placeholder="搜索知识卡片..."
+        />
+        <div class="tech-tag-filters" id="tagFilters">
           <!-- 标签过滤器将由JavaScript填充 -->
         </div>
       </div>
 
-      <main class="card-grid" id="cardGrid">
+      <!-- 高科技风格卡片网格 -->
+      <main class="tech-card-grid" id="cardGrid">
         <!-- 卡片将由JavaScript填充 -->
-        <div class="loading">正在加载卡片...</div>
+        <div class="tech-loading">
+          <div class="tech-loading-spinner"></div>
+          <p>正在加载知识卡片...</p>
+        </div>
       </main>
 
       <footer class="main-footer">
@@ -105,5 +117,8 @@
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+
+    <!-- 添加粒子效果脚本 -->
+    <script src="/js/particle-effects.js"></script>
   </body>
 </html>
