@@ -1,46 +1,95 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>山水卡片学习系统</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>墨境智库 - 优雅的知识管理系统</title>
+
+    <!-- SEO Metadata -->
+    <meta
+      name="description"
+      content="墨境智库是一个优雅的知识管理系统，将知识以卡片形式组织，结合中国传统山水墨画风格，打造沉浸式学习体验。"
+    />
+    <meta
+      name="keywords"
+      content="墨境智库,知识管理,卡片系统,学习方法,中国风,山水墨画"
+    />
+    <meta name="author" content="墨境智库" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mojingzhiku.com/" />
+    <meta property="og:title" content="墨境智库 - 优雅的知识管理系统" />
+    <meta
+      property="og:description"
+      content="墨境智库是一个优雅的知识管理系统，将知识以卡片形式组织，结合中国传统山水墨画风格，打造沉浸式学习体验。"
+    />
+    <meta property="og:image" content="/images/icons/social-preview.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mojingzhiku.com/" />
+    <meta property="twitter:title" content="墨境智库 - 优雅的知识管理系统" />
+    <meta
+      property="twitter:description"
+      content="墨境智库是一个优雅的知识管理系统，将知识以卡片形式组织，结合中国传统山水墨画风格，打造沉浸式学习体验。"
+    />
+    <meta property="twitter:image" content="/images/icons/social-preview.png" />
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="/images/icons/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="alternate icon"
+      href="/images/icons/favicon.ico.svg"
+      type="image/svg+xml"
+    />
+    <link rel="apple-touch-icon" href="/images/icons/icon-192.png" />
+    <meta name="theme-color" content="#3e5c3e" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+    />
+  </head>
+  <body>
     <div class="container">
-        <header class="main-header">
-            <h1>山水卡片学习系统</h1>
-            <p class="subtitle">知识如山水长流，观之可悟</p>
-        </header>
+      <header class="main-header">
+        <h1>墨境智库</h1>
+        <p class="subtitle">知识如山水长流，观之可悟</p>
+      </header>
 
-        <div class="filter-container">
-            <input type="text" id="searchInput" placeholder="搜索卡片...">
-            <div class="tag-filters" id="tagFilters">
-                <!-- 标签过滤器将由JavaScript填充 -->
-            </div>
+      <div class="filter-container">
+        <input type="text" id="searchInput" placeholder="搜索卡片..." />
+        <div class="tag-filters" id="tagFilters">
+          <!-- 标签过滤器将由JavaScript填充 -->
         </div>
+      </div>
 
-        <main class="card-grid" id="cardGrid">
-            <!-- 卡片将由JavaScript填充 -->
-            <div class="loading">正在加载卡片...</div>
-        </main>
+      <main class="card-grid" id="cardGrid">
+        <!-- 卡片将由JavaScript填充 -->
+        <div class="loading">正在加载卡片...</div>
+      </main>
 
-        <footer class="main-footer">
-            <p>&copy; 2023 山水卡片学习系统</p>
-        </footer>
+      <footer class="main-footer">
+        <p>&copy; 2023 墨境智库</p>
+      </footer>
     </div>
 
     <!-- 简化后的模态框结构 -->
     <div class="modal-overlay" id="modalOverlay">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div id="modalContent">
-            <!-- 模态框内容将在这里加载 -->
-        </div>
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div id="modalContent">
+        <!-- 模态框内容将在这里加载 -->
+      </div>
     </div>
 
     <script src="/js/main.js"></script>
@@ -56,5 +105,5 @@
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
-</body>
-</html> 
+  </body>
+</html>

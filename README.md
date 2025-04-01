@@ -1,6 +1,6 @@
-# 山水卡片学习系统
+# 墨境智库
 
-一个基于 Node.js 开发的卡片学习系统，支持 Markdown 格式的知识卡片，具有中国传统文化风格的界面设计。
+一个基于 Node.js 开发的知识管理系统，支持 Markdown 格式的知识卡片，具有中国传统文化风格的界面设计。
 
 ## 功能特点
 
@@ -13,7 +13,7 @@
 
 ## Vercel 一键部署
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fshanshui-card-system)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fmojing-zhiku)
 
 ## 本地开发
 
@@ -27,8 +27,8 @@
 1. 克隆仓库
 
    ```bash
-   git clone https://github.com/yourusername/shanshui-card-system.git
-   cd shanshui-card-system
+   git clone https://github.com/yourusername/mojing-zhiku.git
+   cd mojing-zhiku
    ```
 
 2. 安装依赖

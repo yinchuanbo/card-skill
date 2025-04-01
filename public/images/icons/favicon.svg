@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle with ink gradient -->
+  <defs>
+    <radialGradient id="inkGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#3e5c3e;stop-opacity:0.1" />
+      <stop offset="70%" style="stop-color:#3e5c3e;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#2c3c2c;stop-opacity:0.9" />
+    </radialGradient>
+    <!-- Texture pattern for ink effect -->
+    <pattern id="inkTexture" patternUnits="userSpaceOnUse" width="100" height="100" patternTransform="scale(0.15)">
+      <path d="M0,90 Q25,70 50,90 T100,90" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+      <path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+      <path d="M0,30 Q25,10 50,30 T100,30" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1" />
+    </pattern>
+  </defs>
+  
+  <!-- Main ink drop shape -->
+  <path d="M50,10 C20,15 10,40 15,60 C20,80 40,90 60,85 C80,80 90,60 85,40 C80,20 60,10 50,10 Z" 
+        fill="url(#inkGradient)" />
+  
+  <!-- Texture overlay -->
+  <path d="M50,10 C20,15 10,40 15,60 C20,80 40,90 60,85 C80,80 90,60 85,40 C80,20 60,10 50,10 Z" 
+        fill="url(#inkTexture)" fill-opacity="0.3" />
+        
+  <!-- Ink border -->
+  <path d="M50,10 C20,15 10,40 15,60 C20,80 40,90 60,85 C80,80 90,60 85,40 C80,20 60,10 50,10 Z" 
+        stroke="#2c3c2c" stroke-width="1.5" fill="none" stroke-opacity="0.6" />
+  
+  <!-- Stylized Chinese character for "智" (wisdom/knowledge) -->
+  <g transform="translate(50, 53) scale(0.35)">
+    <path d="M10,-40 H90 M50,-40 V-20 M30,-20 H70 M30,-20 V0 M70,-20 V0 M30,0 H70 M50,0 V20 M30,20 H70 M10,40 H90" 
+          stroke="#f9f6f0" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+  
+  <!-- Small decorative dots -->
+  <circle cx="27" cy="35" r="2" fill="#f9f6f0" fill-opacity="0.8" />
+  <circle cx="73" cy="35" r="2" fill="#f9f6f0" fill-opacity="0.8" />
+  
+  <!-- Subtle brushstrokes -->
+  <path d="M25,75 Q35,72 45,75" stroke="#f9f6f0" stroke-width="1.5" stroke-opacity="0.3" fill="none" />
+  <path d="M55,75 Q65,72 75,75" stroke="#f9f6f0" stroke-width="1.5" stroke-opacity="0.3" fill="none" />
+</svg> 

@@ -113,7 +113,44 @@ async function convertMarkdownToHtml() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
+    <title>${title} - 墨境智库</title>
+    
+    <!-- SEO Metadata -->
+    <meta name="description" content="${
+      summary ? summary.slice(0, 160) : "墨境智库知识卡片"
+    }" />
+    <meta name="keywords" content="${tags.join(",")},墨境智库,知识管理" />
+    <meta name="author" content="墨境智库" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mojingzhiku.com/doc/${path.basename(
+      htmlFilePath
+    )}" />
+    <meta property="og:title" content="${title} - 墨境智库" />
+    <meta property="og:description" content="${
+      summary ? summary.slice(0, 160) : "墨境智库知识卡片"
+    }" />
+    <meta property="og:image" content="/images/icons/social-preview.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mojingzhiku.com/doc/${path.basename(
+      htmlFilePath
+    )}" />
+    <meta property="twitter:title" content="${title} - 墨境智库" />
+    <meta property="twitter:description" content="${
+      summary ? summary.slice(0, 160) : "墨境智库知识卡片"
+    }" />
+    <meta property="twitter:image" content="/images/icons/social-preview.png" />
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="/images/icons/favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="/images/icons/favicon.ico.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/images/icons/icon-192.png">
+    <meta name="theme-color" content="#3e5c3e">
+    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -208,15 +245,15 @@ async function convertMarkdownToHtml() {
 // Create a sample markdown file
 function createSampleMarkdown() {
   return `---
-title: 山水卡片系统入门指南
+title: 墨境智库入门指南
 tags: [教程, markdown, 入门]
 time: ${new Date().toISOString()}
-summary: 关于如何使用山水卡片学习系统进行有效学习和知识管理的快速介绍。
+summary: 关于如何使用墨境智库进行有效学习和知识管理的快速介绍。
 ---
 
-# 山水卡片学习系统入门指南
+# 墨境智库入门指南
 
-欢迎使用山水卡片学习系统！本平台帮助您将知识组织成易于消化的卡片形式，以便更有效地学习和检索。
+欢迎使用墨境智库！本平台帮助您将知识组织成易于消化的卡片形式，以便更有效地学习和检索。
 
 ## 如何创建卡片
 
