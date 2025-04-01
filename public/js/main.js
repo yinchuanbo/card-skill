@@ -230,57 +230,290 @@ function filterCardsBySearch(cardsToFilter) {
 function filterCardsByTags(cardsToFilter) {
   if (activeFilters.length === 0) return cardsToFilter;
 
-  return cardsToFilter.filter((card) =>
-    activeFilters.every((tag) => card.tags.includes(tag))
-  );
+  return cardsToFilter.filter((card) => {
+    return activeFilters.every((activeTag) => {
+      // 尝试多种匹配方式以提高健壮性
+      if (card.tags.includes(activeTag)) return true; // 直接精确匹配
+
+      // 转换为小写并比较
+      if (
+        card.tags.some((tag) => tag.toLowerCase() === activeTag.toLowerCase())
+      )
+        return true;
+
+      // 移除空格后比较
+      if (
+        card.tags.some(
+          (tag) => tag.replace(/\s+/g, "") === activeTag.replace(/\s+/g, "")
+        )
+      )
+        return true;
+
+      // 如果标签是经过编码的，尝试对编码进行匹配
+      if (
+        card.tags.some((tag) => {
+          try {
+            // 尝试多种解码方式进行比较
+            return (
+              decodeURIComponent(tag) === activeTag ||
+              tag === activeTag ||
+              tag.includes(activeTag) ||
+              activeTag.includes(tag)
+            );
+          } catch (e) {
+            // 如果解码失败，退回到简单的包含比较
+            return tag.includes(activeTag) || activeTag.includes(tag);
+          }
+        })
+      )
+        return true;
+
+      return false;
+    });
+  });
 }
 
 // Setup Tag Filters
 function setupTagFilters() {
   if (!tagFilters) return;
 
-  // Get all unique tags
-  const allTags = new Set();
+  // 初始清空活动过滤器数组，确保在初始化时不会有默认选中的标签
+  activeFilters = [];
+
+  // 创建一个对象来存储每个标签及其首次出现的时间戳
+  const tagsWithTimestamp = {};
+
+  // 遍历所有卡片，按照创建时间排序（从新到旧）
   cards.forEach((card) => {
-    card.tags.forEach((tag) => allTags.add(tag));
+    if (Array.isArray(card.tags)) {
+      card.tags.forEach((tag) => {
+        try {
+          // 处理可能存在编码问题的标签
+          let processedTag = tag;
+          // 首先尝试解码可能的 URI 编码
+          try {
+            const decodedTag = decodeURIComponent(tag);
+            if (decodedTag !== tag && decodedTag.length > 0) {
+              processedTag = decodedTag;
+            }
+          } catch (e) {
+            // 解码失败，保持原样
+          }
+
+          // 如果标签不为空，且尚未记录时间戳，则添加到对象中
+          if (
+            processedTag &&
+            processedTag.trim() &&
+            !tagsWithTimestamp[processedTag]
+          ) {
+            tagsWithTimestamp[processedTag] = new Date(
+              card.createdAt
+            ).getTime();
+          }
+        } catch (e) {
+          console.error("Error processing tag:", tag, e);
+        }
+      });
+    }
+  });
+
+  // 将标签转换为数组并按时间戳排序（从新到旧）
+  const sortedTags = Object.keys(tagsWithTimestamp).sort((a, b) => {
+    return tagsWithTimestamp[b] - tagsWithTimestamp[a];
   });
 
   // Clear existing filters
   tagFilters.innerHTML = "";
 
+  // 创建内部容器以便更好地控制布局和事件
+  const innerContainer = document.createElement("div");
+  innerContainer.className = "tech-tag-filters-inner";
+
   // Create tag filter elements
-  allTags.forEach((tag) => {
+  sortedTags.forEach((tag) => {
     const tagElement = document.createElement("span");
     tagElement.className = "tech-tag-filter";
+    tagElement.dataset.tag = tag; // 存储标签值在数据属性中
     tagElement.textContent = tag;
+    tagElement.setAttribute("role", "button"); // 添加ARIA角色以增强可访问性
+    tagElement.setAttribute("tabindex", "0"); // 使元素可聚焦
 
-    // 如果此标签已激活，添加active类
-    if (activeFilters.includes(tag)) {
+    // 单选模式中，最多只有一个标签应该被激活
+    // 只有当 activeFilters 不为空且包含当前标签时才添加 active 类
+    if (activeFilters.length === 1 && activeFilters[0] === tag) {
       tagElement.classList.add("active");
     }
 
-    // 添加点击事件
-    tagElement.addEventListener("click", () => {
-      toggleTagFilter(tag, tagElement);
-    });
-
-    tagFilters.appendChild(tagElement);
+    // 我们使用专用的数据属性和事件委托来处理点击
+    innerContainer.appendChild(tagElement);
   });
-}
 
-// Toggle Tag Filter
-function toggleTagFilter(tag, element) {
-  if (activeFilters.includes(tag)) {
-    // Remove filter
-    activeFilters = activeFilters.filter((t) => t !== tag);
-    element.classList.remove("active");
-  } else {
-    // Add filter
-    activeFilters.push(tag);
-    element.classList.add("active");
+  // 移除之前可能添加的事件监听器，避免重复绑定
+  if (tagFilters.hasOldClickListener) {
+    tagFilters.removeEventListener("click", handleTagFilterClick);
   }
 
+  // 将内部容器添加到过滤器容器
+  tagFilters.appendChild(innerContainer);
+
+  // 添加委托的事件监听器，这样不管DOM结构如何变化，事件都能正确传递
+  tagFilters.addEventListener("click", handleTagFilterClick);
+  tagFilters.hasOldClickListener = true; // 标记已添加事件监听器
+
+  // 创建并添加"查看更多"按钮，但只在标签数量超过一定数量时显示
+  if (sortedTags.length > 5) {
+    // 找到父容器，用于添加切换按钮
+    const filterContainer = tagFilters.parentElement;
+
+    // 检查是否已存在切换按钮，如果有则移除
+    const existingToggle = filterContainer.querySelector(".tech-tags-toggle");
+    if (existingToggle) {
+      existingToggle.remove();
+    }
+
+    // 创建切换按钮
+    const toggleButton = document.createElement("div");
+    toggleButton.className = "tech-tags-toggle";
+    toggleButton.id = "tagsToggleBtn"; // 添加ID以便于查找
+    toggleButton.innerHTML = `查看更多 <span class="icon">▼</span>`;
+
+    // 将按钮添加到过滤器容器之后
+    filterContainer.appendChild(toggleButton);
+
+    // 使用单独的事件监听器处理切换按钮的点击
+    toggleButton.addEventListener("click", handleTagsToggle);
+  }
+}
+
+// 处理标签过滤器的点击事件（事件委托方式）
+function handleTagFilterClick(e) {
+  // 检查点击的是否是标签元素
+  const tagElement = e.target.closest(".tech-tag-filter");
+  if (!tagElement) return; // 如果不是标签元素，直接返回
+
+  e.stopPropagation(); // 阻止事件冒泡，避免与其他事件冲突
+
+  // 获取标签值并切换过滤器状态
+  const tag = tagElement.dataset.tag; // 从数据属性获取标签值
+  if (!tag) {
+    console.error("没有找到标签值:", tagElement);
+    return;
+  }
+
+  console.log("点击标签:", tag); // 调试输出
+  toggleTagFilter(tag, tagElement);
+}
+
+// 处理切换按钮的点击事件
+function handleTagsToggle(e) {
+  e.stopPropagation(); // 阻止事件冒泡
+
+  // 获取标签过滤器容器和切换按钮
+  const tagFiltersElement = document.getElementById("tagFilters");
+  const toggleButton = e.currentTarget;
+
+  // 切换展开状态
+  tagFiltersElement.classList.toggle("expanded");
+  toggleButton.classList.toggle("expanded");
+
+  // 更新按钮文本
+  if (toggleButton.classList.contains("expanded")) {
+    toggleButton.innerHTML = `收起标签 <span class="icon">▼</span>`;
+  } else {
+    toggleButton.innerHTML = `查看更多 <span class="icon">▼</span>`;
+  }
+}
+
+// 切换标签过滤器状态
+function toggleTagFilter(tag, element) {
+  console.log("切换标签过滤器状态:", tag, activeFilters); // 调试输出
+
+  // 如果没有有效的标签值，直接返回
+  if (!tag) return;
+
+  // 检查标签是否已在活动过滤器中
+  let tagIndex = -1;
+
+  // 使用多种方式尝试匹配标签，增强健壮性
+  for (let i = 0; i < activeFilters.length; i++) {
+    const activeTag = activeFilters[i];
+    if (
+      activeTag === tag ||
+      activeTag.toLowerCase() === tag.toLowerCase() ||
+      activeTag.replace(/\s+/g, "") === tag.replace(/\s+/g, "") ||
+      (function () {
+        try {
+          return decodeURIComponent(activeTag) === tag;
+        } catch (e) {
+          return false;
+        }
+      })()
+    ) {
+      tagIndex = i;
+      break;
+    }
+  }
+
+  if (tagIndex !== -1) {
+    // 已激活的标签被点击，移除过滤器（取消选择）
+    activeFilters = [];
+    if (element) element.classList.remove("active");
+    console.log("取消选择标签:", tag, activeFilters); // 调试输出
+  } else {
+    // 清除所有已存在的激活标签，实现单选模式
+    activeFilters = [];
+
+    // 添加新选中的过滤器
+    activeFilters.push(tag);
+    if (element) element.classList.add("active");
+    console.log("选择新标签:", tag, activeFilters); // 调试输出
+  }
+
+  // 触发筛选并重新渲染卡片
   filterCards();
+
+  // 确保所有标签过滤器的状态正确反映在UI上
+  updateTagFilterUI();
+}
+
+// 更新标签过滤器UI状态
+function updateTagFilterUI() {
+  // 获取所有标签过滤器元素
+  const filterElements = document.querySelectorAll(".tech-tag-filter");
+
+  // 更新每个过滤器的状态
+  filterElements.forEach((element) => {
+    const tag = element.dataset.tag; // 从数据属性获取标签值
+    if (!tag) return;
+
+    // 默认移除所有激活状态
+    element.classList.remove("active");
+
+    // 如果没有激活的过滤器，直接返回（所有标签都保持未选中状态）
+    if (activeFilters.length === 0) {
+      return;
+    }
+
+    // 检查标签是否是当前激活的标签
+    const isActive = activeFilters.some(
+      (activeTag) =>
+        activeTag === tag ||
+        activeTag.toLowerCase() === tag.toLowerCase() ||
+        activeTag.replace(/\s+/g, "") === tag.replace(/\s+/g, "") ||
+        (function () {
+          try {
+            return decodeURIComponent(activeTag) === tag;
+          } catch (e) {
+            return false;
+          }
+        })()
+    );
+
+    // 仅为激活的标签添加 active 类
+    if (isActive) {
+      element.classList.add("active");
+    }
+  });
 }
 
 // Modal Functions

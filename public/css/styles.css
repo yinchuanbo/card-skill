@@ -3232,20 +3232,20 @@ blockquote p:last-child {
 .tech-filter-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
-  backdrop-filter: blur(5px);
-  border-radius: var(--border-radius-lg);
+  align-items: stretch;
+  background: rgba(249, 246, 240, 0.8);
+  border-radius: 10px;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: var(--shadow-subtle);
-  border: 1px solid rgba(62, 92, 62, 0.08);
+  margin-bottom: 2rem;
+  border: 1px solid rgba(62, 92, 62, 0.1);
   position: relative;
+  z-index: 20; /* 确保容器有足够的z-index层级 */
   transition: var(--transition-medium);
 }
 
 .tech-filter-container:hover {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: var(--shadow-strong);
+  background: rgba(249, 246, 240, 0.95);
+  box-shadow: 0 4px 15px rgba(62, 92, 62, 0.08);
 }
 
 /* 科技感搜索输入 */
@@ -3274,9 +3274,29 @@ blockquote p:last-child {
 /* 科技感标签过滤器 */
 .tech-tag-filters {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.8rem;
   margin-top: 1rem;
+  max-height: 2.8rem; /* 初始只显示一行标签 */
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 11; /* 确保有足够的z-index使得内部元素可点击 */
+  padding-top: 5px;
+}
+
+.tech-tag-filters.expanded {
+  max-height: 300px; /* 展开后的最大高度，足够容纳多行标签 */
+  overflow-y: visible; /* 确保展开时能够正确点击所有元素 */
+}
+
+/* 添加新的内部容器样式 */
+.tech-tag-filters-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  width: 100%;
+  pointer-events: auto; /* 确保事件能够传递 */
 }
 
 .tech-tag-filter {
@@ -3291,6 +3311,9 @@ blockquote p:last-child {
   transition: var(--transition-medium);
   border: 1px solid transparent;
   user-select: none;
+  position: relative; /* 确保定位上下文 */
+  z-index: 5; /* 确保标签可点击 */
+  pointer-events: auto; /* 明确指定接收点击事件 */
 }
 
 .tech-tag-filter:hover {
@@ -3301,8 +3324,123 @@ blockquote p:last-child {
 .tech-tag-filter.active {
   background: var(--mountain-green-light);
   color: var(--mountain-green);
-  border-color: rgba(62, 92, 62, 0.2);
+  border-color: var(--mountain-green);
+  font-weight: 600;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(62, 92, 62, 0.2);
+  position: relative;
+  z-index: 6; /* 提高选中标签的层级 */
+}
+
+.tech-tag-filter.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: var(--mountain-green);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.tech-tags-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.8rem;
+  padding: 0.4rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  background: rgba(62, 92, 62, 0.07);
+  color: var(--mountain-green);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  border: 1px solid rgba(62, 92, 62, 0.12);
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(62, 92, 62, 0.05);
+  position: relative;
+  overflow: hidden;
   font-weight: 500;
+  letter-spacing: 0.02em;
+  z-index: 15; /* 确保按钮有合适的z-index层级 */
+  align-self: flex-start; /* 让按钮与标签对齐 */
+  pointer-events: auto; /* 明确指定接收点击事件 */
+}
+
+.tech-tags-toggle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(62, 92, 62, 0.07),
+    rgba(62, 92, 62, 0.12)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.tech-tags-toggle:hover {
+  background: rgba(62, 92, 62, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(62, 92, 62, 0.1);
+  color: var(--pine-dark);
+  border-color: rgba(62, 92, 62, 0.2);
+}
+
+.tech-tags-toggle:hover::before {
+  opacity: 1;
+}
+
+.tech-tags-toggle:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(62, 92, 62, 0.12);
+}
+
+.tech-tags-toggle .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+  height: 1em;
+  width: 1em;
+  position: relative;
+  top: 1px;
+}
+
+.tech-tags-toggle.expanded .icon {
+  transform: rotate(180deg);
+}
+
+[data-theme="dark"] .tech-tags-toggle {
+  background: rgba(125, 168, 125, 0.07);
+  color: rgba(180, 220, 180, 0.9);
+  border-color: rgba(125, 168, 125, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .tech-tags-toggle::before {
+  background: linear-gradient(
+    45deg,
+    rgba(125, 168, 125, 0.05),
+    rgba(125, 168, 125, 0.1)
+  );
+}
+
+[data-theme="dark"] .tech-tags-toggle:hover {
+  background: rgba(125, 168, 125, 0.12);
+  color: rgba(200, 240, 200, 1);
+  border-color: rgba(125, 168, 125, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* 加载状态动画 */
@@ -3369,6 +3507,26 @@ blockquote p:last-child {
   .tech-filter-container {
     padding: 1rem;
   }
+
+  .tech-tag-filters {
+    max-height: 2.5rem; /* 稍微调整移动端的高度 */
+  }
+
+  .tech-tag-filters-inner {
+    gap: 0.6rem; /* 移动端标签间距略微减小 */
+  }
+
+  .tech-tag-filter {
+    padding: 0.35rem 0.9rem; /* 移动端按钮稍微小一点 */
+    font-size: 0.85rem;
+  }
+
+  .tech-tags-toggle {
+    margin-top: 1rem;
+    align-self: center;
+    min-width: 120px;
+    padding: 0.35rem 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -3378,6 +3536,35 @@ blockquote p:last-child {
 
   .tech-header h1 {
     font-size: 2rem;
+  }
+
+  .tech-filter-container {
+    flex-direction: column;
+  }
+
+  .tech-search-input {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .tech-tag-filters {
+    width: 100%;
+  }
+
+  .tech-tag-filters-inner {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tech-tags-toggle {
+    align-self: center;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+    justify-content: center;
+    padding: 0.45rem 1.2rem;
+    font-size: 0.95rem;
   }
 }
 
@@ -4419,4 +4606,16 @@ pre:hover .tech-copy-btn {
   background-color: rgba(8, 12, 18, 0.95) !important;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .tech-tag-filter.active {
+  background: rgba(125, 168, 125, 0.25);
+  color: rgb(200, 240, 200);
+  border-color: rgba(125, 168, 125, 0.5);
+  box-shadow: 0 4px 12px rgba(62, 92, 62, 0.3);
+}
+
+[data-theme="dark"] .tech-tag-filter.active::after {
+  background: rgb(150, 200, 150);
+  opacity: 0.8;
 }
