@@ -2497,10 +2497,11 @@ pre[class*="language-"] .ink-decoration {
 
 #modalContent img {
   max-width: 500px;
-  margin: 1.5rem auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   display: block;
   cursor: pointer;
-  transition: var(--transition-medium);
+  transition: all 0.3s ease;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
@@ -2508,6 +2509,7 @@ pre[class*="language-"] .ink-decoration {
 #modalContent img:hover {
   transform: scale(1.02);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 /* Image Lightbox */
@@ -3016,7 +3018,7 @@ blockquote p:last-child {
   max-width: 500px;
   display: block;
   cursor: pointer;
-  transition: var(--transition-medium);
+  transition: all 0.3s ease;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
@@ -3217,6 +3219,8 @@ blockquote p:last-child {
   padding-right: 20px;
   transition: var(--transition-medium);
   font-family: var(--font-calligraphy-4);
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
 }
 
 .tech-card:hover .tech-card-header h2 {
