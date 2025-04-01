@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     constructor(x, y) {
       this.x = x;
       this.y = y;
-      this.size = Math.random() * 3 + 1;
+      this.size = Math.max(0.1, Math.random() * 3 + 1);
       this.speedX = Math.random() * 0.5 - 0.25;
       this.speedY = Math.random() * 0.5 - 0.25;
       this.opacity = Math.random() * 0.5 + 0.3;
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 墨点有特殊的参数
       if (this.isInkDrop) {
-        this.size = Math.random() * 5 + 3;
+        this.size = Math.max(0.1, Math.random() * 5 + 3);
         this.opacity = Math.random() * 0.4 + 0.2;
         this.speedX = Math.random() * 0.2 - 0.1;
         this.speedY = Math.random() * 0.2 - 0.1;
@@ -80,7 +80,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 墨点尺寸随时间轻微波动，模拟墨滴扩散效果
       if (this.isInkDrop) {
-        this.size = this.size + Math.sin(Date.now() / 1000) * 0.1;
+        // 添加波动但确保尺寸始终为正数
+        const sizeVariation = Math.sin(Date.now() / 1000) * 0.1;
+        this.size = Math.max(0.1, this.size + sizeVariation);
       }
     }
 
@@ -90,24 +92,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 墨点使用特殊的绘制方式，模拟水墨晕开的效果
       if (this.isInkDrop) {
+        // 确保半径始终为正数
+        const safeSize = Math.max(0.1, this.size);
+
         const gradient = ctx.createRadialGradient(
           this.x,
           this.y,
           0,
           this.x,
           this.y,
-          this.size
+          safeSize
         );
         gradient.addColorStop(0, `${this.color}`);
         gradient.addColorStop(1, `${this.color}00`);
 
         ctx.fillStyle = gradient;
-        ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, safeSize * 2, 0, Math.PI * 2);
       } else {
-        ctx.fillStyle = `${this.color}${Math.floor(this.opacity * 255)
+        // 确保透明度值有效
+        const alpha = Math.floor(Math.max(0, Math.min(255, this.opacity * 255)))
           .toString(16)
-          .padStart(2, "0")}`;
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          .padStart(2, "0");
+        ctx.fillStyle = `${this.color}${alpha}`;
+
+        // 确保尺寸为正数
+        const safeSize = Math.max(0.1, this.size);
+        ctx.arc(this.x, this.y, safeSize, 0, Math.PI * 2);
       }
 
       ctx.fill();
@@ -126,18 +136,29 @@ document.addEventListener("DOMContentLoaded", function () {
         // 如果距离小于最大连接距离，绘制连接线
         if (distance < this.maxConnectDist) {
           // 基于距离计算线的透明度
-          const opacity = 1 - distance / this.maxConnectDist;
+          const opacity = Math.max(
+            0,
+            Math.min(1, 1 - distance / this.maxConnectDist)
+          );
 
           // 如果两个粒子都是墨点，使用更明显的连接线
           if (this.isInkDrop && particle.isInkDrop) {
-            ctx.strokeStyle = `${this.color}${Math.floor(opacity * 0.7 * 255)
+            // 确保十六进制值有效
+            const alpha = Math.floor(
+              Math.max(0, Math.min(255, opacity * 0.7 * 255))
+            )
               .toString(16)
-              .padStart(2, "0")}`;
+              .padStart(2, "0");
+            ctx.strokeStyle = `${this.color}${alpha}`;
             ctx.lineWidth = 0.8;
           } else {
-            ctx.strokeStyle = `${this.color}${Math.floor(opacity * 0.3 * 255)
+            // 确保十六进制值有效
+            const alpha = Math.floor(
+              Math.max(0, Math.min(255, opacity * 0.3 * 255))
+            )
               .toString(16)
-              .padStart(2, "0")}`;
+              .padStart(2, "0");
+            ctx.strokeStyle = `${this.color}${alpha}`;
             ctx.lineWidth = 0.5;
           }
 

@@ -57,9 +57,6 @@ async function initializeApp() {
   cardTitles.forEach((title) => {
     title.setAttribute("title", title.textContent);
   });
-
-  // 初始收集图片
-  collectImagesInModal();
 }
 
 // Fetch Cards Data
@@ -552,9 +549,16 @@ function initImageLightbox() {
   let images = [];
   let currentIndex = 0;
 
+  // 检查是否存在 modalContent 元素
+  const modalContentExists = !!document.getElementById("modalContent");
+
   // Collect all images when a modal is opened
   function collectImagesInModal() {
+    if (!modalContentExists) return;
+
+    const modalContent = document.getElementById("modalContent");
     if (!modalContent) return;
+
     images = Array.from(modalContent.querySelectorAll("img"));
 
     // Hide navigation if there's only one image
@@ -570,16 +574,19 @@ function initImageLightbox() {
   }
 
   // Observer to watch for changes in the modal content
-  if (modalContent) {
-    // 移除可能存在的旧观察器
-    if (window.modalImagesObserver) {
-      window.modalImagesObserver.disconnect();
-    }
+  if (modalContentExists) {
+    const modalContent = document.getElementById("modalContent");
+    if (modalContent) {
+      // 移除可能存在的旧观察器
+      if (window.modalImagesObserver) {
+        window.modalImagesObserver.disconnect();
+      }
 
-    // 创建新的观察器
-    const observer = new MutationObserver(collectImagesInModal);
-    observer.observe(modalContent, { childList: true, subtree: true });
-    window.modalImagesObserver = observer;
+      // 创建新的观察器
+      const observer = new MutationObserver(collectImagesInModal);
+      observer.observe(modalContent, { childList: true, subtree: true });
+      window.modalImagesObserver = observer;
+    }
   }
 
   // 移除之前可能添加的事件监听器，避免重复绑定
@@ -676,8 +683,10 @@ function initImageLightbox() {
     }
   }
 
-  // 初始收集图片
-  collectImagesInModal();
+  // 如果模态内容存在，则收集图片
+  if (modalContentExists) {
+    collectImagesInModal();
+  }
 }
 
 // Initialize image lightbox when DOM is loaded
