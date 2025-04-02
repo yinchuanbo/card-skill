@@ -24,35 +24,131 @@
     <meta name="theme-color" content="#3e5c3e" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- Load external styles first so our custom styles can override them -->
     <link rel="stylesheet" href="/css/styles.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&family=ZCOOL+KuaiLe&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Critical styles with !important to override external CSS -->
+    <style id="critical-styles">
+      .audio-list-page .tech-header .tech-header-content .tech-header-text h1,
+      .tech-header .tech-header-content .tech-header-text h1,
+      body .tech-header .tech-header-content .tech-header-text h1 {
+        color: white !important;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+        font-family: "ZCOOL KuaiLe", cursive !important;
+      }
+
+      .audio-list-page
+        .tech-header
+        .tech-header-content
+        .tech-header-text
+        .subtitle,
+      .tech-header .tech-header-content .tech-header-text .subtitle,
+      body .tech-header .tech-header-content .tech-header-text .subtitle {
+        color: #f0d9b5 !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        font-family: "ZCOOL KuaiLe", cursive !important;
+      }
+
+      .tech-avatar-container {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        background-color: #f9f5ec !important;
+      }
+
+      .tech-avatar {
+        object-fit: cover !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
+
     <style>
-      /* 音频列表专用样式 */
-      .audio-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-        width: 100%;
-        max-width: 100%;
-        margin: 2rem auto 3rem;
+      /* 全局样式优化 */
+      :root {
+        /* 颜色变量 */
+        --color-primary: #3e5c3e;
+        --color-secondary: #2a472a;
+        --color-accent: #ca8548;
+        --color-accent-light: #e9be84;
+        --color-text: #333;
+        --color-text-light: #666;
+        --color-background: #f9f5ec;
+        --color-card: #fff;
+        --color-border: rgba(202, 133, 72, 0.5);
+
+        /* 字体变量 */
+        --font-main: "ZCOOL KuaiLe", cursive;
+        --font-accent: "ZCOOL KuaiLe", cursive;
+        --font-mono: "ZCOOL KuaiLe", cursive;
+
+        /* 阴影变量 */
+        --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.06);
+        --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.12);
+        --transition-smooth: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+
+      body {
+        background-color: var(--color-background);
+        color: var(--color-text);
+        font-family: var(--font-main);
+        line-height: 1.6;
+        overflow-x: hidden;
+        background-image: radial-gradient(
+            circle at 92% 8%,
+            rgba(62, 92, 62, 0.03) 0%,
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 8% 80%,
+            rgba(62, 92, 62, 0.03) 0%,
+            transparent 30%
+          );
+      }
+
+      [data-theme="dark"] body {
+        background-color: #121a22;
+        color: var(--color-text-light);
+        background-image: radial-gradient(
+            circle at 92% 8%,
+            rgba(212, 183, 143, 0.03) 0%,
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 8% 80%,
+            rgba(212, 183, 143, 0.03) 0%,
+            transparent 30%
+          );
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
       }
 
       /* 顶部音频风格头部 */
       .tech-header {
-        padding: 1.8rem 1.5rem;
+        padding: 2.5rem 2rem;
         position: relative;
         background: linear-gradient(
           135deg,
-          rgba(62, 92, 62, 0.8),
-          rgba(42, 71, 42, 0.9)
+          rgba(62, 92, 62, 0.95),
+          rgba(42, 71, 42, 0.97)
         );
         overflow: hidden;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-strong);
       }
 
       .tech-header::before {
@@ -62,50 +158,22 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q25,30 40,50 T70,50 T100,50' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,60 Q15,40 30,60 T60,60 T90,60' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,40 Q15,20 30,40 T60,40 T90,40' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,75 Q15,55 30,75 T60,75 T90,75' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,25 Q15,5 30,25 T60,25 T90,25' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q25,30 40,50 T70,50 T100,50' stroke='rgba(212, 183, 143, 0.12)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,60 Q15,40 30,60 T60,60 T90,60' stroke='rgba(212, 183, 143, 0.09)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,40 Q15,20 30,40 T60,40 T90,40' stroke='rgba(212, 183, 143, 0.09)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,75 Q15,55 30,75 T60,75 T90,75' stroke='rgba(212, 183, 143, 0.07)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,25 Q15,5 30,25 T60,25 T90,25' stroke='rgba(212, 183, 143, 0.07)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
         background-repeat: repeat-x;
-        opacity: 0.5;
-        animation: waveAnimation 20s linear infinite;
+        opacity: 0.7;
+        animation: waveAnimation 30s linear infinite;
       }
 
-      @keyframes waveAnimation {
-        0% {
-          background-position: 0 0;
-        }
-        100% {
-          background-position: 1000px 0;
-        }
-      }
-
-      .audio-wave-container {
+      /* 为头部添加装饰元素 */
+      .tech-header::after {
+        content: "";
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
-        right: 0;
-        height: 30px;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding: 0 10%;
-      }
-
-      .audio-wave-bar {
-        width: 3px;
-        background-color: rgba(255, 255, 255, 0.4);
-        border-radius: 3px;
-        margin: 0 2px;
-        height: 5px;
-        animation: audioWave 1.5s ease-in-out infinite;
-      }
-
-      @keyframes audioWave {
-        0%,
-        100% {
-          height: 5px;
-        }
-        50% {
-          height: 15px;
-        }
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4b78f' fill-opacity='0.05'%3E%3Cpath d='M0 0h20L0 20z'/%3E%3Cpath d='M20 0v20H0z' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
       }
 
       .tech-header-content {
@@ -118,68 +186,308 @@
 
       .tech-header-text {
         position: relative;
+        max-width: 70%;
       }
 
-      .tech-header-text h1 {
-        font-size: 2rem;
-        color: white;
-        margin: 0 0 0.3rem 0;
+      .tech-header .tech-header-content .tech-header-text h1 {
+        font-size: 2.4rem;
+        color: white !important;
+        margin: 0 0 0.5rem 0;
         display: flex;
         align-items: center;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        font-family: var(--font-accent);
+        letter-spacing: 0.03em;
+        position: relative;
       }
 
-      .tech-header-text h1::before {
-        content: "🎵";
-        margin-right: 0.75rem;
-        font-size: 1.8rem;
-        animation: pulse 2s infinite;
+      .tech-header .tech-header-content .tech-header-text h1::before {
+        content: "";
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin-right: 0.85rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f0d9b5'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+        animation: gentlePulse 3s infinite;
       }
 
-      .subtitle {
-        color: rgba(255, 255, 255, 0.85);
+      @keyframes gentlePulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.9;
+        }
+      }
+
+      .tech-header .tech-header-content .tech-header-text .subtitle {
+        color: #f0d9b5 !important;
         margin: 0;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         display: flex;
         align-items: center;
+        font-weight: 300;
+        letter-spacing: 0.05em;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
       }
 
-      .subtitle::before {
-        content: "🎧";
-        margin-right: 0.5rem;
+      .tech-header .tech-header-content .tech-header-text .subtitle::before {
+        content: "";
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        margin-right: 0.6rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f0d9b5'%3E%3Cpath d='M12 3a9 9 0 0 0-9 9h6a3 3 0 0 1 3-3V3zm0 18a9 9 0 0 0 9-9h-6a3 3 0 0 1-3 3v6zm-9-9a9 9 0 0 0 9 9v-6a3 3 0 0 1-3-3H3zm9-9a9 9 0 0 0-9 9h6a3 3 0 0 1 3-3V3z' opacity='0.9'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+      }
+
+      /* Dark mode adjustments */
+      [data-theme="dark"]
+        .tech-header
+        .tech-header-content
+        .tech-header-text
+        h1 {
+        text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+        color: white !important;
+      }
+
+      [data-theme="dark"]
+        .tech-header
+        .tech-header-content
+        .tech-header-text
+        .subtitle {
+        color: #f0d9b5 !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      /* 页面标题和头部样式 */
+      .page-header {
+        margin: 2.5rem 0 1.5rem;
+        text-align: center;
+      }
+
+      .page-title {
+        font-family: var(--font-accent);
+        font-size: 2.8rem;
+        color: var(--color-primary);
+        margin-bottom: 0.8rem;
+        letter-spacing: 0.05em;
+        position: relative;
+        display: inline-block;
+      }
+
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 2px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--color-accent),
+          transparent
+        );
+      }
+
+      [data-theme="dark"] .page-title {
+        color: var(--color-accent-light);
+      }
+
+      .page-description {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 1.5rem auto;
+        color: var(--color-text-light);
+        line-height: 1.7;
+      }
+
+      /* 返回按钮样式升级 */
+      .return-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.9rem 1.8rem;
+        background-color: rgba(255, 255, 255, 0.7);
+        border: none;
+        border-radius: 8px;
+        color: var(--color-text);
         font-size: 1rem;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .return-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(212, 183, 143, 0) 0%,
+          rgba(212, 183, 143, 0.1) 50%,
+          rgba(212, 183, 143, 0) 100%
+        );
+        transform: translateX(-100%);
+        transition: var(--transition-smooth);
+      }
+
+      .return-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .return-button:hover::before {
+        transform: translateX(100%);
+      }
+
+      [data-theme="dark"] .return-button {
+        background-color: rgba(40, 50, 60, 0.7);
+        border: 1px solid rgba(212, 183, 143, 0.1);
+        color: var(--color-text-light);
+      }
+
+      [data-theme="dark"] .return-button:hover {
+        background-color: rgba(40, 50, 60, 0.9);
+      }
+
+      /* 主题切换按钮 */
+      .theme-toggle {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 100;
+        font-size: 1.3rem;
+        transition: var(--transition-smooth);
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-3px) rotate(15deg);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      [data-theme="dark"] .theme-toggle {
+        background: rgba(30, 40, 50, 0.9);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 音频列表专用样式 */
+      .audio-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 100%;
+        margin: 2rem auto 3rem;
+      }
+
+      .audio-wave-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0 10%;
+        z-index: 2;
+      }
+
+      .audio-wave-bar {
+        width: 4px;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 4px;
+        margin: 0 3px;
+        height: 5px;
+        animation: audioWave 1.5s ease-in-out infinite;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+      }
+
+      @keyframes audioWave {
+        0%,
+        100% {
+          height: 5px;
+        }
+        50% {
+          height: 20px;
+        }
+      }
+
+      @keyframes waveAnimation {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
       }
 
       .tech-avatar-container {
         position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+        border: 2px solid rgba(240, 217, 181, 0.7);
+        background-color: #f9f5ec;
       }
 
       .tech-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.7);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
       }
 
       .tech-avatar:hover {
         transform: scale(1.1);
-        border-color: white;
       }
 
       .audio-card {
         position: relative;
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08),
-          0 3px 6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(62, 92, 62, 0.1);
-        padding: 1.5rem;
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06),
+          0 0 0 1px rgba(62, 92, 62, 0.05);
+        padding: 1.8rem;
         height: 100%;
         display: flex;
         flex-direction: column;
-        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        transition: var(--transition-smooth);
         overflow: hidden;
         cursor: pointer;
       }
@@ -187,53 +495,66 @@
       .audio-card::before {
         content: "";
         position: absolute;
-        top: -2px;
-        right: -2px;
-        width: 12px;
-        height: 12px;
-        border-top: 2px solid var(--mountain-green);
-        border-right: 2px solid var(--mountain-green);
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(
+          135deg,
+          transparent 50%,
+          rgba(212, 183, 143, 0.08) 50%
+        );
+        border-radius: 0 0 0 100%;
         opacity: 0;
-        transition: all 0.3s ease;
+        transition: var(--transition-smooth);
       }
 
       .audio-card::after {
-        content: "";
+        content: "♪";
         position: absolute;
-        bottom: -2px;
-        left: -2px;
-        width: 12px;
-        height: 12px;
-        border-bottom: 2px solid var(--mountain-green);
-        border-left: 2px solid var(--mountain-green);
+        top: 12px;
+        right: 12px;
+        font-size: 16px;
+        color: var(--color-accent);
         opacity: 0;
-        transition: all 0.3s ease;
+        transform: translateY(-5px);
+        transition: var(--transition-smooth);
       }
 
-      .audio-card:hover::before,
+      .audio-card:hover::before {
+        opacity: 1;
+      }
+
       .audio-card:hover::after {
         opacity: 1;
-        width: 25px;
-        height: 25px;
+        transform: translateY(0);
       }
 
       .audio-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1),
-          0 5px 15px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(62, 92, 62, 0.15);
-        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08),
+          0 5px 15px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(62, 92, 62, 0.08);
+        background: rgba(255, 255, 255, 0.95);
       }
 
       .audio-card.playing {
-        background-color: rgba(62, 92, 62, 0.1);
-        border: 1px solid rgba(62, 92, 62, 0.2);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.9),
+          rgba(244, 247, 244, 0.9)
+        );
+        border: 1px solid rgba(62, 92, 62, 0.1);
+        box-shadow: 0 10px 30px rgba(62, 92, 62, 0.1),
+          0 0 0 1px rgba(62, 92, 62, 0.08);
       }
 
-      .audio-card.playing::before,
-      .audio-card.playing::after {
+      .audio-card.playing::before {
         opacity: 1;
-        width: 18px;
-        height: 18px;
+        background: linear-gradient(
+          135deg,
+          transparent 50%,
+          rgba(62, 92, 62, 0.08) 50%
+        );
       }
 
       .audio-card.playing .play-indicator {
@@ -241,105 +562,165 @@
         position: absolute;
         top: 1.5rem;
         right: 1.5rem;
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background-color: var(--mountain-green);
+        background-color: var(--color-primary);
         animation: pulse 1.5s infinite;
+        box-shadow: 0 0 0 4px rgba(62, 92, 62, 0.1);
       }
 
       .audio-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: 500;
-        margin-bottom: 0.75rem;
-        color: var(--text-dark);
+        margin-bottom: 0.85rem;
+        color: var(--color-text);
         position: relative;
-        padding-left: 2rem;
+        padding-left: 2.2rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         line-height: 1.4;
+        font-family: var(--font-accent);
+        letter-spacing: 0.02em;
       }
 
       .audio-title::before {
-        content: "♪";
+        content: "";
         position: absolute;
         left: 0;
-        color: var(--mountain-green);
-        font-size: 1.4rem;
-        top: -0.2rem;
+        top: 0.15rem;
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233e5c3e'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.85;
       }
 
       .audio-meta {
         display: flex;
         align-items: center;
-        gap: 1.2rem;
+        gap: 1.4rem;
         font-size: 0.9rem;
-        color: var(--text-medium);
-        margin-bottom: 1rem;
+        color: var(--color-text-light);
+        margin-bottom: 1.2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(62, 92, 62, 0.08);
       }
 
       .audio-duration {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.4rem;
       }
 
       .audio-duration::before {
-        content: "⏱";
-        font-size: 0.9rem;
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233e5c3e' opacity='0.7'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3Cpath d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
       }
 
       .audio-date {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.4rem;
       }
 
       .audio-date::before {
-        content: "📅";
-        font-size: 0.9rem;
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233e5c3e' opacity='0.7'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
       }
 
       .audio-description {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: var(--text-medium);
-        margin-bottom: 1.2rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--color-text-light);
+        margin-bottom: 1.6rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         flex-grow: 1;
+        position: relative;
+        padding-left: 2px;
+      }
+
+      .audio-description::first-letter {
+        font-size: 1.2em;
+        color: var(--color-primary);
+        font-weight: 500;
       }
 
       .audio-controls {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 1.2rem;
         margin-top: auto;
+        background: rgba(62, 92, 62, 0.03);
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        transition: var(--transition-smooth);
+      }
+
+      .audio-card:hover .audio-controls {
+        background: rgba(62, 92, 62, 0.05);
       }
 
       .play-button {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        background-color: var(--mountain-green);
+        background: linear-gradient(
+          135deg,
+          var(--color-primary),
+          var(--color-secondary)
+        );
         color: white;
         border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: var(--transition-smooth);
         font-size: 1.2rem;
-        box-shadow: 0 3px 10px rgba(62, 92, 62, 0.3);
+        box-shadow: 0 4px 10px rgba(62, 92, 62, 0.25);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .play-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          rgba(255, 255, 255, 0.15),
+          rgba(255, 255, 255, 0)
+        );
+        opacity: 0;
+        transition: var(--transition-smooth);
       }
 
       .play-button:hover {
-        background-color: var(--pine-dark);
-        transform: scale(1.1);
+        transform: scale(1.08);
+        box-shadow: 0 6px 15px rgba(62, 92, 62, 0.3);
+      }
+
+      .play-button:hover::before {
+        opacity: 1;
       }
 
       .audio-progress {
@@ -350,93 +731,139 @@
         overflow: hidden;
         position: relative;
         cursor: pointer;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
       }
 
       .progress-bar {
         height: 100%;
-        background-color: var(--mountain-green);
+        background: linear-gradient(
+          90deg,
+          var(--color-primary),
+          var(--color-accent)
+        );
         width: 0%;
         transition: width 0.1s linear;
         border-radius: 3px;
+        position: relative;
+      }
+
+      .progress-bar::after {
+        content: "";
+        position: absolute;
+        right: -4px;
+        top: 50%;
+        transform: translateY(-50%) scale(0);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .audio-progress:hover .progress-bar::after {
+        transform: translateY(-50%) scale(1);
       }
 
       .audio-time {
         min-width: 60px;
         text-align: right;
-        font-family: "JetBrains Mono", monospace;
+        font-family: var(--font-mono);
         font-size: 0.85rem;
-        color: var(--text-medium);
+        color: var(--color-text-light);
+        letter-spacing: -0.02em;
       }
 
-      @keyframes pulse {
-        0% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(62, 92, 62, 0.5);
-        }
-        70% {
-          transform: scale(1);
-          box-shadow: 0 0 0 6px rgba(62, 92, 62, 0);
-        }
-        100% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(62, 92, 62, 0);
-        }
-      }
-
+      /* 暗色模式卡片适配 */
       [data-theme="dark"] .audio-card {
-        background-color: rgba(30, 40, 50, 0.75);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25),
-          0 0 0 1px rgba(255, 255, 255, 0.08);
+        background-color: rgba(30, 40, 50, 0.7);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+          0 0 0 1px rgba(255, 255, 255, 0.05);
       }
 
       [data-theme="dark"] .audio-card:hover {
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3),
-          0 0 0 1px rgba(255, 255, 255, 0.12);
+        background-color: rgba(35, 45, 55, 0.8);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
+          0 0 0 1px rgba(255, 255, 255, 0.08);
       }
 
-      [data-theme="dark"] .audio-card.playing {
-        background-color: rgba(62, 92, 62, 0.2);
-        border: 1px solid rgba(125, 168, 125, 0.3);
+      [data-theme="dark"] .audio-card::before {
+        background: linear-gradient(
+          135deg,
+          transparent 50%,
+          rgba(212, 183, 143, 0.05) 50%
+        );
+      }
+
+      [data-theme="dark"] .audio-card::after {
+        color: rgba(212, 183, 143, 0.7);
+      }
+
+      [data-theme="dark"] .audio-title {
+        color: var(--color-text-light);
+      }
+
+      [data-theme="dark"] .audio-title::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b78f'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+        opacity: 0.9;
+      }
+
+      [data-theme="dark"] .audio-meta {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      [data-theme="dark"] .audio-duration::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b78f' opacity='0.7'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3Cpath d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'/%3E%3C/svg%3E");
+      }
+
+      [data-theme="dark"] .audio-date::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b78f' opacity='0.7'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/%3E%3C/svg%3E");
+      }
+
+      [data-theme="dark"] .audio-description::first-letter {
+        color: var(--color-accent-light);
+      }
+
+      [data-theme="dark"] .audio-controls {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      [data-theme="dark"] .audio-card:hover .audio-controls {
+        background: rgba(255, 255, 255, 0.08);
       }
 
       [data-theme="dark"] .play-button {
-        background-color: rgba(62, 92, 62, 0.9);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(
+          135deg,
+          rgba(62, 92, 62, 0.9),
+          rgba(42, 71, 42, 0.95)
+        );
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
 
       [data-theme="dark"] .play-button:hover {
-        background-color: var(--mountain-green);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
       }
 
-      .return-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.8rem 1.5rem;
-        background-color: rgba(255, 255, 255, 0.8);
+      [data-theme="dark"] .progress-bar {
+        background: linear-gradient(
+          90deg,
+          var(--color-accent),
+          rgba(112, 145, 112, 0.8)
+        );
+      }
+
+      [data-theme="dark"] .audio-card.playing {
+        background: linear-gradient(
+          135deg,
+          rgba(35, 45, 55, 0.95),
+          rgba(30, 40, 50, 0.9)
+        );
         border: 1px solid rgba(62, 92, 62, 0.2);
-        border-radius: 6px;
-        color: var(--text-dark);
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        margin-bottom: 2rem;
       }
 
-      .return-button:hover {
-        background-color: rgba(62, 92, 62, 0.1);
-        transform: translateY(-2px);
-      }
-
-      [data-theme="dark"] .return-button {
-        background-color: rgba(30, 40, 50, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-      }
-
-      [data-theme="dark"] .return-button:hover {
-        background-color: rgba(62, 92, 62, 0.2);
+      [data-theme="dark"] .audio-card.playing .play-indicator {
+        box-shadow: 0 0 0 4px rgba(212, 183, 143, 0.1);
       }
 
       .audio-card.loading .play-button {
@@ -491,6 +918,12 @@
         .subtitle {
           font-size: 0.95rem;
         }
+
+        .footer-links {
+          gap: 1.5rem;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
       }
 
       @media (max-width: 480px) {
@@ -521,23 +954,52 @@
           width: 40px;
           height: 40px;
         }
+
+        .footer-content {
+          gap: 1rem;
+        }
+
+        .footer-links {
+          gap: 1rem;
+        }
+
+        .logo-text {
+          font-size: 1.6rem;
+        }
       }
 
       /* 适配暗色模式 */
       [data-theme="dark"] .tech-header {
         background: linear-gradient(
           135deg,
-          rgba(62, 92, 62, 0.6),
-          rgba(42, 71, 42, 0.7)
+          rgba(42, 71, 42, 0.75),
+          rgba(32, 51, 32, 0.85)
         );
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
       }
 
       [data-theme="dark"] .tech-header::before {
-        opacity: 0.3;
+        opacity: 0.5;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q25,30 40,50 T70,50 T100,50' stroke='rgba(240, 217, 181, 0.12)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,60 Q15,40 30,60 T60,60 T90,60' stroke='rgba(240, 217, 181, 0.09)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,40 Q15,20 30,40 T60,40 T90,40' stroke='rgba(240, 217, 181, 0.09)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,75 Q15,55 30,75 T60,75 T90,75' stroke='rgba(240, 217, 181, 0.07)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,25 Q15,5 30,25 T60,25 T90,25' stroke='rgba(240, 217, 181, 0.07)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+      }
+
+      [data-theme="dark"] .tech-header-text h1 {
+        text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      [data-theme="dark"] .subtitle {
+        color: #f0d9b5;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      [data-theme="dark"] .tech-avatar-container {
+        border-color: rgba(240, 217, 181, 0.5);
+        background-color: #1e2830;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
       }
 
       [data-theme="dark"] .audio-wave-bar {
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(240, 217, 181, 0.4);
       }
 
       /* 音频详情弹窗样式 */
@@ -689,7 +1151,7 @@
       .audio-modal-description {
         font-size: 1.05rem;
         line-height: 1.7;
-        color: var(--text-medium);
+        color: var(--color-text-light);
         margin-bottom: 2rem;
       }
 
@@ -712,7 +1174,7 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: var(--mountain-green);
+        background: var(--color-primary);
         color: white;
         border: none;
         display: flex;
@@ -725,7 +1187,7 @@
       }
 
       .audio-modal-play:hover {
-        background: var(--pine-dark);
+        background: var(--color-secondary);
         transform: scale(1.08);
       }
 
@@ -752,7 +1214,7 @@
 
       .audio-modal-progress-bar {
         height: 100%;
-        background: var(--mountain-green);
+        background: var(--color-primary);
         width: 0%;
         transition: width 0.1s linear;
         border-radius: 4px;
@@ -768,7 +1230,7 @@
         height: 12px;
         border-radius: 50%;
         background: white;
-        border: 2px solid var(--mountain-green);
+        border: 2px solid var(--color-primary);
         transform: translateY(-50%) scale(0);
         transition: transform 0.2s ease;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -783,7 +1245,7 @@
         justify-content: space-between;
         font-family: var(--font-mono, "JetBrains Mono", monospace);
         font-size: 0.85rem;
-        color: var(--text-medium);
+        color: var(--color-text-light);
       }
 
       .audio-modal-volume-container {
@@ -793,7 +1255,7 @@
       }
 
       .audio-modal-volume-icon {
-        color: var(--text-medium);
+        color: var(--color-text-light);
         font-size: 1.2rem;
         cursor: pointer;
       }
@@ -810,7 +1272,7 @@
 
       .audio-modal-volume-level {
         height: 100%;
-        background: var(--mountain-green);
+        background: var(--color-primary);
         width: 80%;
         border-radius: 2.5px;
       }
@@ -829,7 +1291,7 @@
       .visualizer-bar {
         width: 4px;
         height: 3px;
-        background: var(--mountain-green);
+        background: var(--color-primary);
         border-radius: 2px;
         transition: height 0.2s ease;
       }
@@ -858,7 +1320,7 @@
       }
 
       [data-theme="dark"] .audio-modal-description {
-        color: var(--text-light);
+        color: var(--color-text-light);
       }
 
       [data-theme="dark"] .audio-modal-player {
@@ -871,7 +1333,7 @@
       }
 
       [data-theme="dark"] .audio-modal-play:hover {
-        background: var(--mountain-green);
+        background: var(--color-primary);
       }
 
       [data-theme="dark"] .audio-modal-progress,
@@ -932,6 +1394,207 @@
           display: none;
         }
       }
+
+      /* 页脚样式 */
+      .main-footer {
+        margin-top: 4rem;
+        padding: 2.5rem 0;
+        border-top: 1px solid rgba(62, 92, 62, 0.1);
+        position: relative;
+      }
+
+      .main-footer::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--color-accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .footer-logo {
+        margin-bottom: 0.5rem;
+      }
+
+      .logo-text {
+        font-family: var(--font-accent);
+        font-size: 1.8rem;
+        color: var(--color-primary);
+        position: relative;
+        letter-spacing: 0.1em;
+      }
+
+      .logo-text::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--color-accent),
+          transparent
+        );
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+        margin: 0.5rem 0;
+      }
+
+      .footer-links a {
+        color: var(--color-text-light);
+        text-decoration: none;
+        font-size: 0.95rem;
+        position: relative;
+        transition: var(--transition-smooth);
+      }
+
+      .footer-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: var(--color-accent);
+        transition: var(--transition-smooth);
+      }
+
+      .footer-links a:hover {
+        color: var(--color-primary);
+      }
+
+      .footer-links a:hover::after {
+        width: 100%;
+      }
+
+      .footer-copyright {
+        font-size: 0.9rem;
+        color: var(--color-text-light);
+        opacity: 0.8;
+        text-align: center;
+      }
+
+      [data-theme="dark"] .main-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      [data-theme="dark"] .logo-text {
+        color: var(--color-accent-light);
+      }
+
+      [data-theme="dark"] .footer-links a {
+        color: var(--color-text-light);
+        opacity: 0.8;
+      }
+
+      [data-theme="dark"] .footer-links a:hover {
+        color: var(--color-accent-light);
+        opacity: 1;
+      }
+
+      [data-theme="dark"] .footer-copyright {
+        color: var(--color-text-light);
+        opacity: 0.7;
+      }
+
+      /* 添加细腻背景纹理 */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 2.828 17.272 15.556l-1.414-1.414L28 1.172 40.728 13.9l1.414-1.414L30 0h2zm-4.343 0L0 27.657l1.414 1.414L29.172 0h-1.515zm8.657 0l28.657 28.657-1.414 1.414L35.172 0h1.142zM0 0l.828.828L0 2.243V0h.828L0 .828V0zm60 0L59.172.828 60 2.243V0h-.828L60 .828V0zm0 60l-.826-.826.826-.83V60h-.828L60 59.174V60zm-60 0l.83-.828L0 57.758V60h.828L0 59.174V60z' fill='%233e5c3e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E"),
+          radial-gradient(
+            circle at 92% 8%,
+            rgba(62, 92, 62, 0.03) 0%,
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 8% 80%,
+            rgba(62, 92, 62, 0.03) 0%,
+            transparent 30%
+          );
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      [data-theme="dark"] body::before {
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 2.828 17.272 15.556l-1.414-1.414L28 1.172 40.728 13.9l1.414-1.414L30 0h2zm-4.343 0L0 27.657l1.414 1.414L29.172 0h-1.515zm8.657 0l28.657 28.657-1.414 1.414L35.172 0h1.142zM0 0l.828.828L0 2.243V0h.828L0 .828V0zm60 0L59.172.828 60 2.243V0h-.828L60 .828V0zm0 60l-.826-.826.826-.83V60h-.828L60 59.174V60zm-60 0l.83-.828L0 57.758V60h.828L0 59.174V60z' fill='%23d4b78f' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E"),
+          radial-gradient(
+            circle at 92% 8%,
+            rgba(212, 183, 143, 0.03) 0%,
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 8% 80%,
+            rgba(212, 183, 143, 0.03) 0%,
+            transparent 30%
+          );
+      }
+
+      /* Additional background styles for better contrast */
+      .tech-header {
+        position: relative !important;
+        background: linear-gradient(
+          to bottom,
+          rgba(32, 51, 32, 0.95),
+          rgba(22, 33, 22, 0.95)
+        ) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+        z-index: 10 !important;
+      }
+
+      /* Global font setting for all text elements */
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      span,
+      div,
+      button,
+      input,
+      select,
+      textarea,
+      a {
+        font-family: "ZCOOL KuaiLe", cursive !important;
+      }
+
+      .tech-header::before {
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background-color: rgba(0, 0, 0, 0.15) !important;
+        z-index: -1 !important;
+      }
     </style>
   </head>
   <body>
@@ -941,13 +1604,79 @@
         <a href="/" class="return-button"> <span>←</span> 返回首页 </a>
       </div>
 
+      <!-- 顶部精美头部 -->
+      <div class="tech-header">
+        <div class="tech-header-content">
+          <div class="tech-header-text">
+            <h1
+              style="
+                color: white !important;
+                font-family: 'ZCOOL KuaiLe', cursive !important;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+              "
+            >
+              墨境智库音频馆
+            </h1>
+            <p
+              class="subtitle"
+              style="
+                color: #f0d9b5 !important;
+                font-family: 'ZCOOL KuaiLe', cursive !important;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+              "
+            >
+              优雅聆听，智慧相伴
+            </p>
+          </div>
+          <div
+            class="tech-avatar-container"
+            style="
+              background-color: #f9f5ec !important;
+              border: 2px solid rgba(240, 217, 181, 0.5) !important;
+              display: none;
+            "
+          >
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDQ5NWUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItbXVzaWMiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBmaWxsPSIjZjlmNWVjIi8+PHBhdGggZD0iTTkgMTh2LTEzIGwxMiAtMiB2MTMiPjwvcGF0aD48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjMiIGZpbGw9IiNmMGQ5YjUiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE4IiBjeT0iMTYiIHI9IjMiIGZpbGw9IiNmMGQ5YjUiPjwvY2lyY2xlPjwvc3ZnPg=="
+              alt="墨境智库"
+              class="tech-avatar"
+              style="
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+              "
+            />
+          </div>
+        </div>
+
+        <div class="audio-wave-container">
+          <div class="audio-wave-bar" style="animation-delay: 0.1s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.2s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.3s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.4s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.5s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.6s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.7s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.8s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 0.9s"></div>
+          <div class="audio-wave-bar" style="animation-delay: 1s"></div>
+        </div>
+      </div>
+
       <!-- 音频列表 -->
       <div class="audio-list" id="audioList">
         <!-- 音频列表将由JavaScript动态生成 -->
       </div>
 
       <footer class="main-footer">
-        <p>&copy; 2025 墨境智库</p>
+        <div class="footer-content">
+          <div class="footer-logo">
+            <span class="logo-text">墨境智库</span>
+          </div>
+          <div class="footer-copyright">
+            <p>&copy; 2025 墨境智库 - 智慧的声音，思想的盛宴</p>
+          </div>
+        </div>
       </footer>
     </div>
 
@@ -1014,19 +1743,6 @@
               <div class="visualizer-bar"></div>
               <div class="visualizer-bar"></div>
               <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
             </div>
           </div>
         </div>
@@ -1059,6 +1775,14 @@
           date: "2025-04-02",
           description: `杨柳青青江水平，闻郎江上唱歌声。东边日出西边雨，道是无晴却有晴。`,
           audioUrl: "audio/zhu-zhi-ci.mp3", // 占位符URL
+        },
+        {
+          id: 4,
+          title: "震撼灵魂深处的六字大明咒",
+          duration: "05:05",
+          date: "2025-04-02",
+          description: `六字大明咒"唵嘛呢叭咪吽（OM MANI PADME HUM）是大慈大悲观世音菩萨咒，源于梵文，象征一切诸菩萨的慈悲与加持。六字大明咒是"唵啊吽"三字的扩展，其内涵异常丰富、奥妙无穷、至高无上，蕴藏了宇宙中的大能力、大智慧、大慈悲。此咒即是观世音菩萨的微妙本心，久远劫前，观音菩萨自己就是持此咒而修行成佛的，佛名正法明如来。`,
+          audioUrl: "audio/damingzhou.mp3", // 占位符URL
         },
       ];
 
