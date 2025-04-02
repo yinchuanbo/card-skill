@@ -987,9 +987,9 @@ function updateThemeIcon() {
 }
 
 // 在DOM加载完成后初始化主题切换
-document.addEventListener("DOMContentLoaded", function () {
-  initThemeToggle();
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   initThemeToggle();
+// });
 
 // 添加模态窗口导航功能
 function addModalNavigation() {
