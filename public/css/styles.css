@@ -153,11 +153,13 @@
 
 /* 暗色主题下的模态窗口调整 */
 [data-theme="dark"] #modalContent {
-  background-color: var(--modal-bg);
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23202833' fill-opacity='0.3' d='M0 0h100v50H50v50H0z'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Cpath d='M20,760 Q100,720 200,760 T400,760 Q500,740 600,760 T800,760' stroke='%238db98d' stroke-width='1' stroke-opacity='0.1' fill='none'/%3E%3C/svg%3E");
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(16, 24, 32, 0.95);
+  border-color: rgba(62, 92, 62, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(62, 92, 62, 0.15);
+
+  /* 深色主题下的网格背景 */
+  background-image: linear-gradient(rgba(62, 92, 62, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 92, 62, 0.05) 1px, transparent 1px);
 }
 
 /* 暗色主题下的代码块调整 */
@@ -684,15 +686,17 @@ body.loaded {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  backdrop-filter: blur(8px);
+  transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1),
+    visibility 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .modal-overlay.active {
@@ -703,20 +707,20 @@ body.loaded {
 /* 高科技风格模态内容 */
 #modalContent {
   position: relative;
-  width: 90%;
-  max-width: 1000px;
-  max-height: 85vh;
+  width: 60%;
+  height: calc(100% - 2rem);
+  max-width: 1200px;
   background: var(--paper);
-  border-radius: 6px;
+  border-radius: 10px;
   overflow-y: auto;
   transform: scale(0.95);
   opacity: 0;
   transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1),
     opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 0 30px rgba(62, 92, 62, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(62, 92, 62, 0.1);
 
   /* 高科技边框效果 */
-  border: 1px solid rgba(62, 92, 62, 0.2);
+  border: 1px solid rgba(62, 92, 62, 0.15);
 
   /* 添加网格背景 */
   background-image: linear-gradient(rgba(62, 92, 62, 0.03) 1px, transparent 1px),
@@ -725,6 +729,8 @@ body.loaded {
 
   /* 装饰性条纹 */
   padding-top: 6px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 顶部科技装饰条 */
@@ -744,6 +750,7 @@ body.loaded {
   z-index: 10;
   background-size: 200% 100%;
   animation: modalGradientShift 5s ease infinite;
+  border-radius: 10px 10px 0 0;
 }
 
 @keyframes modalGradientShift {
@@ -793,13 +800,14 @@ body.loaded {
 /* 模态框内容头部 */
 #modalContent header {
   position: relative;
-  padding: 2.5rem 3rem 1.5rem;
+  padding: 1.5rem 3rem 1rem;
   background: linear-gradient(
     180deg,
     rgba(62, 92, 62, 0.08) 0%,
     rgba(62, 92, 62, 0.02) 100%
   );
   border-bottom: 1px solid rgba(62, 92, 62, 0.1);
+  flex-shrink: 0;
 }
 
 /* 模态框内容头部装饰线 */
@@ -820,10 +828,10 @@ body.loaded {
 
 /* 模态框标题 */
 #modalContent h1 {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 500;
   color: var(--text-dark);
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
   position: relative;
   display: inline-block;
 }
@@ -832,10 +840,10 @@ body.loaded {
 #modalContent h1::before {
   content: "";
   position: absolute;
-  left: -1.5rem;
-  top: 0.7rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  left: -1.2rem;
+  top: 0.6rem;
+  width: 0.7rem;
+  height: 0.7rem;
   border: 2px solid var(--mountain-green);
   opacity: 0.7;
   transform: rotate(45deg);
@@ -861,8 +869,8 @@ body.loaded {
 #modalContent .meta {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
 /* 模态框时间显示 */
@@ -887,9 +895,12 @@ body.loaded {
 
 /* 模态框内容区域 */
 #modalContent .content {
-  padding: 2rem 3rem 3rem;
-  line-height: 1.7;
-  position: relative;
+  padding: 1.5rem 3rem 3rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--text-dark);
 }
 
 /* 模态框内容区域背景发光效果 */
@@ -911,32 +922,32 @@ body.loaded {
 
 /* 模态框内容区域滚动条 */
 #modalContent::-webkit-scrollbar {
-  width: 10px;
-  background: transparent;
+  width: 8px;
+  height: 8px;
 }
 
 #modalContent::-webkit-scrollbar-track {
   background: rgba(62, 92, 62, 0.05);
-  border-radius: 0 6px 6px 0;
+  border-radius: 4px;
 }
 
 #modalContent::-webkit-scrollbar-thumb {
   background: linear-gradient(
-    to bottom,
-    rgba(62, 92, 62, 0.3),
-    rgba(62, 92, 62, 0.5)
+    180deg,
+    rgba(62, 92, 62, 0.5),
+    rgba(62, 92, 62, 0.3)
   );
-  border-radius: 5px;
-  border: 3px solid transparent;
+  border-radius: 4px;
+  border: 2px solid transparent;
   background-clip: content-box;
   transition: all 0.3s ease;
 }
 
 #modalContent::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
-    to bottom,
-    rgba(62, 92, 62, 0.5),
-    rgba(62, 92, 62, 0.7)
+    180deg,
+    var(--mountain-green),
+    rgba(62, 92, 62, 0.6)
   );
   border: 2px solid transparent;
   background-clip: content-box;
@@ -945,31 +956,32 @@ body.loaded {
 /* 模态框关闭按钮 */
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
+  top: 1.2rem;
+  right: 1.5rem;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: transparent;
-  border: 2px solid rgba(62, 92, 62, 0.3);
-  color: var(--text-medium);
-  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(62, 92, 62, 0.1);
+  color: var(--text-dark);
+  font-size: 1.6rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 1001;
-  transform: scale(0.9);
-  opacity: 0.7;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .modal-close:hover {
-  background: rgba(62, 92, 62, 0.1);
-  color: var(--text-dark);
-  transform: scale(1);
-  opacity: 1;
-  border-color: rgba(62, 92, 62, 0.5);
+  background: var(--mountain-green);
+  color: white;
+  transform: rotate(90deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* 标签样式 */
@@ -2096,11 +2108,11 @@ pre[class*="language-"] *::selection {
   }
 
   #modalContent header {
-    padding: 3.5rem 2.5rem 2rem;
+    padding: 1.5rem 2rem 1rem;
   }
 
   #modalContent .content {
-    padding: 2rem 2.5rem 4rem;
+    padding: 1.5rem 3rem 3rem;
   }
 
   #modalContent h1 {
@@ -2165,7 +2177,7 @@ pre[class*="language-"] *::selection {
 
   .card-content .content,
   #modalContent .content {
-    padding: 1.5rem;
+    padding: 1rem 1.5rem 2rem;
     font-size: 0.95rem;
   }
 
@@ -2191,11 +2203,11 @@ pre[class*="language-"] *::selection {
   }
 
   #modalContent header {
-    padding: 3rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 0.8rem;
   }
 
   #modalContent .content {
-    padding: 1.5rem 1.5rem 3rem;
+    padding: 1rem 1.5rem 2rem;
   }
 
   #modalContent h1 {
@@ -2213,15 +2225,13 @@ pre[class*="language-"] *::selection {
 
 /* 代码块精致样式 - 山水风格优化 */
 pre[class*="language-"] {
-  /* background: linear-gradient(135deg, rgba(30, 35, 42, 0.98), rgba(25, 30, 36, 0.99)); */
   border-radius: 15px;
   margin: 2.2rem 0;
   padding: 1.5rem 1.8rem;
   overflow: auto;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05),
     0 0 0 1px rgba(220, 225, 230, 0.1);
-  /* border-left: 3px solid var(--mountain-green); */
-  background-color: #f7f5f0 !important;
+  background-color: #f5f1e8 !important; /* 更深的背景色，增加对比度 */
   background-image: linear-gradient(
       135deg,
       rgba(245, 242, 235, 0.97),
@@ -2233,20 +2243,127 @@ pre[class*="language-"] {
   position: relative;
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   scroll-padding: 1rem;
-  border: 1px solid rgba(62, 92, 62, 0.1);
+  border: 1px solid rgba(62, 92, 62, 0.2); /* 加深边框 */
 }
 
 code[class*="language-"],
 pre[class*="language-"] {
   font-family: var(--font-code) !important;
-  font-style: italic;
-  color: #333;
+  font-style: normal; /* 改为正常字体，提高可读性 */
+  color: #222; /* 更深的文本颜色 */
+  font-size: 0.95rem; /* 稍微调大字体 */
+  line-height: 1.5; /* 调整行高 */
+  text-shadow: none; /* 移除文字阴影 */
 }
 
-pre[class*="language-"]:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.05),
+/* 特别为 HTML 设置更清晰的样式 */
+pre.language-html {
+  background-color: #f0ebe0 !important; /* HTML 代码块使用更明显的背景色 */
+  border-left: 3px solid var(--mountain-green); /* 左侧添加明显的边框 */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(62, 92, 62, 0.15);
-  border-left-color: var(--rust-red);
+}
+
+pre.language-html code {
+  color: #111; /* 更深的文本颜色 */
+}
+
+/* 优化语法高亮颜色，使其更契合山水主题 - 浅色背景 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #527852; /* 加深注释颜色 */
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #4a5a6a; /* 加深标点符号颜色 */
+  font-weight: 500; /* 加粗标点 */
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #a04941; /* 加深标签颜色 */
+  font-weight: 600; /* 加粗标签 */
+}
+
+.token.boolean,
+.token.number {
+  color: #8d6528; /* 加深数值颜色 */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #2a442a; /* 加深属性名颜色 */
+  font-weight: 500; /* 加粗属性名 */
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #5a5a5a; /* 加深操作符颜色 */
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #2f4570; /* 加深关键字颜色 */
+  font-weight: 500; /* 加粗关键字 */
+}
+
+.token.function,
+.token.class-name {
+  color: #7a5d20; /* 加深函数名颜色 */
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #934c18; /* 加深变量颜色 */
+}
+
+/* HTML 特定的标记样式增强 */
+.language-html .token.tag {
+  color: #a04941; /* 更明显的标签颜色 */
+  font-weight: 600;
+}
+
+.language-html .token.attr-name {
+  color: #2f5f2f; /* 更明显的属性名颜色 */
+}
+
+.language-html .token.attr-value {
+  color: #7a5d20; /* 更明显的属性值颜色 */
+}
+
+.language-html .token.punctuation {
+  color: #4a5a6a; /* 明显的标点颜色 */
+}
+
+/* 代码块内部引用样式 */
+blockquote code,
+li code,
+p code {
+  background: rgba(30, 35, 42, 0.08); /* 加深内联代码背景 */
+  color: #a04941; /* 加深内联代码颜色 */
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 0, 0, 0.08); /* 加深边框 */
+  text-shadow: none;
+  font-style: normal; /* 使用正常字体 */
 }
 
 pre[class*="language-"]::before {
@@ -2268,140 +2385,10 @@ pre[class*="language-"]::before {
   z-index: 1;
 }
 
-/* 优化语法高亮颜色，使其更契合山水主题 - 浅色背景 */
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #6a7c6a;
-  font-style: italic;
-}
-
-.token.punctuation {
-  color: #6b7a8a;
-}
-
-.token.property,
-.token.tag,
-.token.constant,
-.token.symbol,
-.token.deleted {
-  color: #b15a4e;
-}
-
-.token.boolean,
-.token.number {
-  color: #ad7f31;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-  color: #3e5c3e;
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string {
-  color: #7a7a7a;
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-  color: #456189;
-}
-
-.token.function,
-.token.class-name {
-  color: #9a7930;
-}
-
-.token.regex,
-.token.important,
-.token.variable {
-  color: #b55f25;
-}
-
-/* 代码块内行高亮效果 */
-.line-highlight {
-  background: linear-gradient(
-    to right,
-    rgba(62, 92, 62, 0.08) 0%,
-    rgba(62, 92, 62, 0.05) 100%
-  );
-  margin-top: 0.5em;
-  border-left: 3px solid rgba(62, 92, 62, 0.5);
-}
-
-/* 代码行被标记 */
-.line-highlight:before,
-.line-highlight[data-end]:after {
-  content: attr(data-start);
-  position: absolute;
-  top: 0.3em;
-  left: 0.6em;
-  min-width: 1em;
-  padding: 0.1em 0.5em;
-  background-color: rgba(62, 92, 62, 0.4);
-  color: #f4f1e8;
-  font: bold 65%/1.5 sans-serif;
-  text-align: center;
-  vertical-align: 0.3em;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  text-shadow: none;
-}
-
-/* 代码块内行内高亮 */
-.token.highlight-line {
-  background: rgba(62, 92, 62, 0.1);
-  box-shadow: inset 3px 0 0 rgba(62, 92, 62, 0.6);
-}
-
-/* 代码块内部引用样式 */
-blockquote code,
-li code,
-p code {
-  background: rgba(30, 35, 42, 0.06);
-  color: var(--rust-red);
-  padding: 0.15em 0.4em;
-  border-radius: 3px;
-  font-size: 0.9em;
-  font-weight: 500;
-  white-space: nowrap;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  text-shadow: none;
-  font-style: italic;
-}
-
-/* 代码块加载动画 */
-@keyframes codePulse {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-pre.loading {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 35, 42, 0.95),
-    rgba(40, 45, 52, 0.95),
-    rgba(30, 35, 42, 0.95)
-  );
-  background-size: 200% 100%;
-  animation: codePulse 2s ease infinite;
+pre[class*="language-"]:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(62, 92, 62, 0.15);
+  border-left-color: var(--rust-red);
 }
 
 /* 为代码块添加一个复制按钮 */
@@ -2511,8 +2498,7 @@ pre[class*="language-"] .ink-decoration {
 
 #modalContent img {
   max-width: 500px;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem auto;
   display: block;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -2547,6 +2533,11 @@ pre[class*="language-"] .ink-decoration {
 .image-lightbox.active {
   opacity: 1;
   visibility: visible;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  font-style: italic;
 }
 
 .lightbox-content {
@@ -2755,8 +2746,9 @@ body.modal-open {
 
 /* 暗色主题下的模态覆盖层调整 */
 [data-theme="dark"] .modal-overlay {
-  background-color: rgba(10, 15, 20, 0.95);
+  background-color: rgba(10, 15, 20, 0.85);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
 /* 暗色主题下的滚动指示器调整 */
@@ -4737,4 +4729,138 @@ pre:hover .tech-copy-btn {
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* 响应式调整 - 平板 */
+@media (max-width: 1024px) {
+  #modalContent {
+    width: 75%;
+  }
+}
+
+/* 响应式调整 - 移动设备 */
+@media (max-width: 768px) {
+  #modalContent {
+    width: 85%;
+    height: calc(100% - 2rem);
+    padding-top: 6px;
+  }
+
+  #modalContent header {
+    padding: 1.5rem 2rem 1rem;
+  }
+
+  #modalContent .content {
+    padding: 1.2rem 2rem 2.5rem;
+  }
+
+  .modal-close {
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 32px;
+    height: 32px;
+    font-size: 1.5rem;
+  }
+}
+
+/* 响应式调整 - 小屏幕移动设备 */
+@media (max-width: 480px) {
+  #modalContent {
+    width: 95%;
+    height: calc(100% - 1rem);
+  }
+
+  #modalContent header {
+    padding: 1.3rem 1.5rem 0.8rem;
+  }
+
+  #modalContent .content {
+    padding: 1rem 1.5rem 2rem;
+  }
+
+  .modal-close {
+    top: 1rem;
+    right: 1rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1.4rem;
+  }
+}
+
+/* HTML 特定的标记样式增强 */
+.language-html .token.tag {
+  color: #a04941; /* 更明显的标签颜色 */
+  font-weight: 600;
+}
+
+.language-html .token.attr-name {
+  color: #2f5f2f; /* 更明显的属性名颜色 */
+}
+
+.language-html .token.attr-value {
+  color: #7a5d20; /* 更明显的属性值颜色 */
+}
+
+.language-html .token.punctuation {
+  color: #4a5a6a; /* 明显的标点颜色 */
+}
+
+/* 代码块内行高亮效果 */
+.line-highlight {
+  background: linear-gradient(
+    to right,
+    rgba(62, 92, 62, 0.08) 0%,
+    rgba(62, 92, 62, 0.05) 100%
+  );
+  margin-top: 0.5em;
+  border-left: 3px solid rgba(62, 92, 62, 0.5);
+}
+
+/* 代码行被标记 */
+.line-highlight:before,
+.line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: 0.3em;
+  left: 0.6em;
+  min-width: 1em;
+  padding: 0.1em 0.5em;
+  background-color: rgba(62, 92, 62, 0.4);
+  color: #f4f1e8;
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: 0.3em;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: none;
+}
+
+/* 代码块内行内高亮 */
+.token.highlight-line {
+  background: rgba(62, 92, 62, 0.1);
+  box-shadow: inset 3px 0 0 rgba(62, 92, 62, 0.6);
+}
+
+/* 代码块加载动画 */
+@keyframes codePulse {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+pre.loading {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 35, 42, 0.95),
+    rgba(40, 45, 52, 0.95),
+    rgba(30, 35, 42, 0.95)
+  );
+  background-size: 200% 100%;
+  animation: codePulse 2s ease infinite;
 }
