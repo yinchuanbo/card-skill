@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>墨境智库 - 音频列表</title>
+
+    <!-- SEO Metadata -->
+    <meta
+      name="description"
+      content="墨境智库音频列表，提供优质的音频内容，支持点击播放。"
+    />
+    <meta name="keywords" content="墨境智库,音频,知识管理,学习方法" />
+    <meta name="author" content="墨境智库" />
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="/images/icons/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="alternate icon"
+      href="/images/icons/favicon.ico.svg"
+      type="image/svg+xml"
+    />
+    <link rel="apple-touch-icon" href="/images/icons/icon-192.png" />
+    <meta name="theme-color" content="#3e5c3e" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* 音频列表专用样式 */
+      .audio-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 100%;
+        margin: 2rem auto 3rem;
+      }
+
+      /* 顶部音频风格头部 */
+      .tech-header {
+        padding: 1.8rem 1.5rem;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(62, 92, 62, 0.8),
+          rgba(42, 71, 42, 0.9)
+        );
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+
+      .tech-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q25,30 40,50 T70,50 T100,50' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,60 Q15,40 30,60 T60,60 T90,60' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,40 Q15,20 30,40 T60,40 T90,40' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,75 Q15,55 30,75 T60,75 T90,75' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,25 Q15,5 30,25 T60,25 T90,25' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        opacity: 0.5;
+        animation: waveAnimation 20s linear infinite;
+      }
+
+      @keyframes waveAnimation {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
+      }
+
+      .audio-wave-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0 10%;
+      }
+
+      .audio-wave-bar {
+        width: 3px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 3px;
+        margin: 0 2px;
+        height: 5px;
+        animation: audioWave 1.5s ease-in-out infinite;
+      }
+
+      @keyframes audioWave {
+        0%,
+        100% {
+          height: 5px;
+        }
+        50% {
+          height: 15px;
+        }
+      }
+
+      .tech-header-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .tech-header-text {
+        position: relative;
+      }
+
+      .tech-header-text h1 {
+        font-size: 2rem;
+        color: white;
+        margin: 0 0 0.3rem 0;
+        display: flex;
+        align-items: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .tech-header-text h1::before {
+        content: "🎵";
+        margin-right: 0.75rem;
+        font-size: 1.8rem;
+        animation: pulse 2s infinite;
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .subtitle::before {
+        content: "🎧";
+        margin-right: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .tech-avatar-container {
+        position: relative;
+      }
+
+      .tech-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .tech-avatar:hover {
+        transform: scale(1.1);
+        border-color: white;
+      }
+
+      .audio-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08),
+          0 3px 6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(62, 92, 62, 0.1);
+        padding: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .audio-card::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 12px;
+        height: 12px;
+        border-top: 2px solid var(--mountain-green);
+        border-right: 2px solid var(--mountain-green);
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .audio-card::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: -2px;
+        width: 12px;
+        height: 12px;
+        border-bottom: 2px solid var(--mountain-green);
+        border-left: 2px solid var(--mountain-green);
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .audio-card:hover::before,
+      .audio-card:hover::after {
+        opacity: 1;
+        width: 25px;
+        height: 25px;
+      }
+
+      .audio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1),
+          0 5px 15px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(62, 92, 62, 0.15);
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .audio-card.playing {
+        background-color: rgba(62, 92, 62, 0.1);
+        border: 1px solid rgba(62, 92, 62, 0.2);
+      }
+
+      .audio-card.playing::before,
+      .audio-card.playing::after {
+        opacity: 1;
+        width: 18px;
+        height: 18px;
+      }
+
+      .audio-card.playing .play-indicator {
+        content: "";
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--mountain-green);
+        animation: pulse 1.5s infinite;
+      }
+
+      .audio-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+        color: var(--text-dark);
+        position: relative;
+        padding-left: 2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+      }
+
+      .audio-title::before {
+        content: "♪";
+        position: absolute;
+        left: 0;
+        color: var(--mountain-green);
+        font-size: 1.4rem;
+        top: -0.2rem;
+      }
+
+      .audio-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        margin-bottom: 1rem;
+      }
+
+      .audio-duration {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .audio-duration::before {
+        content: "⏱";
+        font-size: 0.9rem;
+      }
+
+      .audio-date {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .audio-date::before {
+        content: "📅";
+        font-size: 0.9rem;
+      }
+
+      .audio-description {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--text-medium);
+        margin-bottom: 1.2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex-grow: 1;
+      }
+
+      .audio-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: auto;
+      }
+
+      .play-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--mountain-green);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+        box-shadow: 0 3px 10px rgba(62, 92, 62, 0.3);
+      }
+
+      .play-button:hover {
+        background-color: var(--pine-dark);
+        transform: scale(1.1);
+      }
+
+      .audio-progress {
+        flex: 1;
+        height: 6px;
+        background-color: rgba(62, 92, 62, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: var(--mountain-green);
+        width: 0%;
+        transition: width 0.1s linear;
+        border-radius: 3px;
+      }
+
+      .audio-time {
+        min-width: 60px;
+        text-align: right;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        color: var(--text-medium);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(62, 92, 62, 0.5);
+        }
+        70% {
+          transform: scale(1);
+          box-shadow: 0 0 0 6px rgba(62, 92, 62, 0);
+        }
+        100% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(62, 92, 62, 0);
+        }
+      }
+
+      [data-theme="dark"] .audio-card {
+        background-color: rgba(30, 40, 50, 0.75);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25),
+          0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      [data-theme="dark"] .audio-card:hover {
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.12);
+      }
+
+      [data-theme="dark"] .audio-card.playing {
+        background-color: rgba(62, 92, 62, 0.2);
+        border: 1px solid rgba(125, 168, 125, 0.3);
+      }
+
+      [data-theme="dark"] .play-button {
+        background-color: rgba(62, 92, 62, 0.9);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      [data-theme="dark"] .play-button:hover {
+        background-color: var(--mountain-green);
+      }
+
+      .return-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(62, 92, 62, 0.2);
+        border-radius: 6px;
+        color: var(--text-dark);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin-bottom: 2rem;
+      }
+
+      .return-button:hover {
+        background-color: rgba(62, 92, 62, 0.1);
+        transform: translateY(-2px);
+      }
+
+      [data-theme="dark"] .return-button {
+        background-color: rgba(30, 40, 50, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+      }
+
+      [data-theme="dark"] .return-button:hover {
+        background-color: rgba(62, 92, 62, 0.2);
+      }
+
+      .audio-card.loading .play-button {
+        animation: spin 1.2s linear infinite;
+      }
+
+      .audio-card.loading {
+        background-color: rgba(62, 92, 62, 0.05);
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 1440px) {
+        .audio-list {
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .audio-list {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .audio-list {
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 1rem;
+          padding: 0 1rem;
+        }
+
+        .tech-header {
+          padding: 1.5rem 1rem;
+        }
+
+        .tech-header-text h1 {
+          font-size: 1.6rem;
+        }
+
+        .tech-header-text h1::before {
+          font-size: 1.4rem;
+        }
+
+        .subtitle {
+          font-size: 0.95rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .audio-list {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 0.75rem;
+          padding: 0 0.75rem;
+        }
+
+        .tech-header {
+          padding: 1.2rem 0.75rem;
+        }
+
+        .tech-header-text h1 {
+          font-size: 1.4rem;
+        }
+
+        .tech-header-text h1::before {
+          font-size: 1.2rem;
+          margin-right: 0.5rem;
+        }
+
+        .subtitle {
+          font-size: 0.85rem;
+        }
+
+        .tech-avatar {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      /* 适配暗色模式 */
+      [data-theme="dark"] .tech-header {
+        background: linear-gradient(
+          135deg,
+          rgba(62, 92, 62, 0.6),
+          rgba(42, 71, 42, 0.7)
+        );
+      }
+
+      [data-theme="dark"] .tech-header::before {
+        opacity: 0.3;
+      }
+
+      [data-theme="dark"] .audio-wave-bar {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* 音频详情弹窗样式 */
+      .audio-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+
+      .audio-modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .audio-modal {
+        width: 90%;
+        max-width: 700px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        transform: translateY(20px) scale(0.98);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .audio-modal-overlay.active .audio-modal {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      .audio-modal-header {
+        padding: 2rem 2.5rem;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(62, 92, 62, 0.8),
+          rgba(42, 71, 42, 0.9)
+        );
+        color: white;
+      }
+
+      .audio-modal-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q25,30 40,50 T70,50 T100,50' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,60 Q15,40 30,60 T60,60 T90,60' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,40 Q15,20 30,40 T60,40 T90,40' stroke='rgba(255,255,255,0.07)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,75 Q15,55 30,75 T60,75 T90,75' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,25 Q15,5 30,25 T60,25 T90,25' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        opacity: 0.5;
+        z-index: 0;
+      }
+
+      .audio-modal-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        z-index: 5;
+        transition: all 0.3s ease;
+      }
+
+      .audio-modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+      }
+
+      .audio-modal-title {
+        font-size: 1.8rem;
+        margin: 0 0 0.8rem 0;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .audio-modal-title::before {
+        content: "♪";
+        font-size: 1.6rem;
+        margin-right: 0.75rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .audio-modal-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .audio-modal-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+
+      .audio-modal-content {
+        padding: 2rem 2.5rem;
+        flex-grow: 1;
+        position: relative;
+      }
+
+      .audio-modal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 2.5rem;
+        right: 2.5rem;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(62, 92, 62, 0.2),
+          transparent
+        );
+      }
+
+      .audio-modal-description {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--text-medium);
+        margin-bottom: 2rem;
+      }
+
+      .audio-modal-player {
+        background: rgba(62, 92, 62, 0.05);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        position: relative;
+      }
+
+      .audio-modal-controls {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .audio-modal-play {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--mountain-green);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.4rem;
+        box-shadow: 0 3px 10px rgba(62, 92, 62, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .audio-modal-play:hover {
+        background: var(--pine-dark);
+        transform: scale(1.08);
+      }
+
+      .audio-modal-play.loading {
+        animation: spin 1.2s linear infinite;
+      }
+
+      .audio-modal-progress-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .audio-modal-progress {
+        width: 100%;
+        height: 8px;
+        background: rgba(62, 92, 62, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .audio-modal-progress-bar {
+        height: 100%;
+        background: var(--mountain-green);
+        width: 0%;
+        transition: width 0.1s linear;
+        border-radius: 4px;
+        position: relative;
+      }
+
+      .audio-modal-progress-bar::after {
+        content: "";
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid var(--mountain-green);
+        transform: translateY(-50%) scale(0);
+        transition: transform 0.2s ease;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .audio-modal-progress:hover .audio-modal-progress-bar::after {
+        transform: translateY(-50%) scale(1);
+      }
+
+      .audio-modal-time-container {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono, "JetBrains Mono", monospace);
+        font-size: 0.85rem;
+        color: var(--text-medium);
+      }
+
+      .audio-modal-volume-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .audio-modal-volume-icon {
+        color: var(--text-medium);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .audio-modal-volume {
+        width: 100px;
+        height: 5px;
+        background: rgba(62, 92, 62, 0.1);
+        border-radius: 2.5px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .audio-modal-volume-level {
+        height: 100%;
+        background: var(--mountain-green);
+        width: 80%;
+        border-radius: 2.5px;
+      }
+
+      /* 波形可视化 */
+      .audio-modal-visualizer {
+        height: 60px;
+        width: 100%;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      .visualizer-bar {
+        width: 4px;
+        height: 3px;
+        background: var(--mountain-green);
+        border-radius: 2px;
+        transition: height 0.2s ease;
+      }
+
+      /* 暗色模式适配 */
+      [data-theme="dark"] .audio-modal {
+        background: rgba(30, 40, 50, 0.95);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      [data-theme="dark"] .audio-modal-header {
+        background: linear-gradient(
+          135deg,
+          rgba(42, 71, 42, 0.9),
+          rgba(32, 51, 32, 0.95)
+        );
+      }
+
+      [data-theme="dark"] .audio-modal-content::before {
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(125, 168, 125, 0.2),
+          transparent
+        );
+      }
+
+      [data-theme="dark"] .audio-modal-description {
+        color: var(--text-light);
+      }
+
+      [data-theme="dark"] .audio-modal-player {
+        background: rgba(125, 168, 125, 0.1);
+      }
+
+      [data-theme="dark"] .audio-modal-play {
+        background: rgba(125, 168, 125, 0.8);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      [data-theme="dark"] .audio-modal-play:hover {
+        background: var(--mountain-green);
+      }
+
+      [data-theme="dark"] .audio-modal-progress,
+      [data-theme="dark"] .audio-modal-volume {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        .audio-modal-header {
+          padding: 1.5rem 1.75rem;
+        }
+
+        .audio-modal-content {
+          padding: 1.5rem 1.75rem;
+        }
+
+        .audio-modal-title {
+          font-size: 1.5rem;
+        }
+
+        .audio-modal-play {
+          width: 45px;
+          height: 45px;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .audio-modal-header {
+          padding: 1.25rem 1.5rem;
+        }
+
+        .audio-modal-content {
+          padding: 1.25rem 1.5rem;
+        }
+
+        .audio-modal-title {
+          font-size: 1.3rem;
+        }
+
+        .audio-modal-meta {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .audio-modal-controls {
+          gap: 1rem;
+        }
+
+        .audio-modal-play {
+          width: 40px;
+          height: 40px;
+          font-size: 1.1rem;
+        }
+
+        .audio-modal-volume-container {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 返回按钮 -->
+      <div style="text-align: left; margin-top: 2rem">
+        <a href="/" class="return-button"> <span>←</span> 返回首页 </a>
+      </div>
+
+      <!-- 音频列表 -->
+      <div class="audio-list" id="audioList">
+        <!-- 音频列表将由JavaScript动态生成 -->
+      </div>
+
+      <footer class="main-footer">
+        <p>&copy; 2025 墨境智库</p>
+      </footer>
+    </div>
+
+    <!-- 音频播放器（隐藏元素，用于实际播放） -->
+    <audio id="audioPlayer" style="display: none"></audio>
+
+    <!-- 音频详情弹窗 -->
+    <div class="audio-modal-overlay" id="audioModal">
+      <div class="audio-modal">
+        <div class="audio-modal-header">
+          <h2 class="audio-modal-title" id="modalTitle"></h2>
+          <div class="audio-modal-meta">
+            <span id="modalDuration"
+              ><i class="modal-icon">⏱</i> <span id="modalDurationText"></span
+            ></span>
+            <span id="modalDate"
+              ><i class="modal-icon">📅</i> <span id="modalDateText"></span
+            ></span>
+          </div>
+          <button class="audio-modal-close" id="modalClose">×</button>
+        </div>
+        <div class="audio-modal-content">
+          <div class="audio-modal-description" id="modalDescription"></div>
+          <div class="audio-modal-player">
+            <div class="audio-modal-controls">
+              <button class="audio-modal-play" id="modalPlayBtn">▶</button>
+              <div class="audio-modal-progress-container">
+                <div class="audio-modal-progress" id="modalProgress">
+                  <div
+                    class="audio-modal-progress-bar"
+                    id="modalProgressBar"
+                  ></div>
+                </div>
+                <div class="audio-modal-time-container">
+                  <span id="modalCurrentTime">00:00</span>
+                  <span id="modalTotalTime">00:00</span>
+                </div>
+              </div>
+              <div class="audio-modal-volume-container">
+                <span class="audio-modal-volume-icon">🔊</span>
+                <div class="audio-modal-volume">
+                  <div class="audio-modal-volume-level"></div>
+                </div>
+              </div>
+            </div>
+            <!-- 音频可视化器 -->
+            <div class="audio-modal-visualizer" id="audioVisualizer">
+              <!-- 生成30个波形条 -->
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 音频数据
+      const audioData = [
+        {
+          id: 1,
+          title: "《金刚经》",
+          duration: "35:51",
+          date: "2025-04-02",
+          description: `《金刚经》全称《金刚般若波罗蜜经》，是大乘佛教的核心经典之一，以"缘起性空"为思想根基，通过佛陀与弟子须菩提的对话，阐发"应无所住而生其心"的般若智慧，强调破除一切执着相，达到对实相的认知。其名"金刚"喻指般若智慧如金刚般能断一切烦恼，而"波罗蜜"则意为"到彼岸"，指引众生超越分别执着，抵达解脱自在的彼岸。`,
+          audioUrl: "audio/jingangjing.mp3", // 占位符URL
+        },
+        {
+          id: 2,
+          title: "《观音心经》",
+          duration: "06:20",
+          date: "2025-04-02",
+          description: `《心经》全称《般若波罗蜜多心经》，是大乘佛教的核心经典之一，以"色即是空，空即是色"为核心思想，浓缩了般若智慧的精华，阐述万法皆空、无执无碍的究竟真理，指引众生破除执着、证得自在解脱。`,
+          audioUrl: "audio/xinjing.mp3", // 占位符URL
+        },
+        {
+          id: 3,
+          title: "《竹枝词二首·其一》",
+          duration: "00:23",
+          date: "2025-04-02",
+          description: `杨柳青青江水平，闻郎江上唱歌声。东边日出西边雨，道是无晴却有晴。`,
+          audioUrl: "audio/zhu-zhi-ci.mp3", // 占位符URL
+        },
+      ];
+
+      // DOM 元素
+      const audioPlayer = document.getElementById("audioPlayer");
+      const audioList = document.getElementById("audioList");
+
+      // 音频弹窗元素
+      const audioModal = document.getElementById("audioModal");
+      const modalClose = document.getElementById("modalClose");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDurationText = document.getElementById("modalDurationText");
+      const modalDateText = document.getElementById("modalDateText");
+      const modalDescription = document.getElementById("modalDescription");
+      const modalPlayBtn = document.getElementById("modalPlayBtn");
+      const modalProgress = document.getElementById("modalProgress");
+      const modalProgressBar = document.getElementById("modalProgressBar");
+      const modalCurrentTime = document.getElementById("modalCurrentTime");
+      const modalTotalTime = document.getElementById("modalTotalTime");
+      const audioVisualizer = document.getElementById("audioVisualizer");
+      const visualizerBars =
+        audioVisualizer.querySelectorAll(".visualizer-bar");
+
+      // 音量控制元素
+      const modalVolumeContainer = document.querySelector(
+        ".audio-modal-volume-container"
+      );
+      const modalVolumeIcon = document.querySelector(
+        ".audio-modal-volume-icon"
+      );
+      const modalVolume = document.querySelector(".audio-modal-volume");
+      const modalVolumeLevel = document.querySelector(
+        ".audio-modal-volume-level"
+      );
+
+      // 当前播放的音频卡片和弹窗状态
+      let currentPlayingCard = null;
+      let isPlaying = false;
+      let currentAudioData = null;
+      let isModalOpen = false;
+      let isMuted = false;
+      let currentVolume = 0.8; // 默认音量为80%
+
+      // 渲染音频列表
+      function renderAudioList() {
+        audioList.innerHTML = "";
+
+        audioData.forEach((audio) => {
+          const audioCard = document.createElement("div");
+          audioCard.className = "audio-card";
+          audioCard.dataset.id = audio.id;
+          audioCard.dataset.url = audio.audioUrl;
+
+          audioCard.innerHTML = `
+            <h3 class="audio-title">${audio.title}</h3>
+            <div class="audio-meta">
+              <span class="audio-duration">${audio.duration}</span>
+              <span class="audio-date">${audio.date}</span>
+            </div>
+            <p class="audio-description">${audio.description}</p>
+            <div class="audio-controls">
+              <button class="play-button">▶</button>
+              <div class="audio-progress">
+                <div class="progress-bar"></div>
+              </div>
+              <div class="audio-time">00:00</div>
+            </div>
+            <div class="play-indicator"></div>
+          `;
+
+          audioList.appendChild(audioCard);
+
+          // 添加点击事件 - 打开详情弹窗
+          audioCard.addEventListener("click", () => {
+            openAudioModal(audio);
+          });
+
+          // 播放按钮点击事件 - 直接播放而不打开弹窗
+          const playButton = audioCard.querySelector(".play-button");
+          const progressBar = audioCard.querySelector(".progress-bar");
+          const audioProgress = audioCard.querySelector(".audio-progress");
+          const audioTime = audioCard.querySelector(".audio-time");
+
+          playButton.addEventListener("click", (e) => {
+            e.stopPropagation(); // 阻止冒泡，不打开弹窗
+            togglePlay(
+              audioCard,
+              audio.audioUrl,
+              playButton,
+              progressBar,
+              audioTime
+            );
+          });
+
+          // 进度条点击事件
+          audioProgress.addEventListener("click", (e) => {
+            e.stopPropagation(); // 阻止冒泡，不打开弹窗
+            if (
+              currentPlayingCard &&
+              currentPlayingCard.dataset.id === audioCard.dataset.id
+            ) {
+              const rect = audioProgress.getBoundingClientRect();
+              const clickPositionRatio = (e.clientX - rect.left) / rect.width;
+              const newTime = clickPositionRatio * audioPlayer.duration;
+              audioPlayer.currentTime = newTime;
+              progressBar.style.width = `${clickPositionRatio * 100}%`;
+
+              // 如果弹窗打开，同步弹窗进度条
+              if (
+                isModalOpen &&
+                currentAudioData &&
+                currentAudioData.id == audio.id
+              ) {
+                modalProgressBar.style.width = `${clickPositionRatio * 100}%`;
+                modalCurrentTime.textContent = formatTime(newTime);
+              }
+            }
+          });
+        });
+      }
+
+      // 打开音频详情弹窗
+      function openAudioModal(audio) {
+        // 设置弹窗内容
+        modalTitle.textContent = audio.title;
+        modalDurationText.textContent = audio.duration;
+        modalDateText.textContent = audio.date;
+        modalDescription.textContent = audio.description;
+
+        // 设置总时长
+        const [minutes, seconds] = audio.duration
+          .split(":")
+          .map((num) => parseInt(num));
+        const totalSeconds = minutes * 60 + seconds;
+        modalTotalTime.textContent = audio.duration;
+
+        // 保存当前音频数据
+        currentAudioData = audio;
+
+        // 如果当前有音频在播放，且是当前选中的音频，则同步播放状态
+        if (
+          currentPlayingCard &&
+          currentPlayingCard.dataset.id == audio.id &&
+          isPlaying
+        ) {
+          modalPlayBtn.textContent = "❚❚";
+          updateModalProgress(); // 立即更新一次进度条
+        } else {
+          modalPlayBtn.textContent = "▶";
+          modalProgressBar.style.width = "0%";
+          modalCurrentTime.textContent = "00:00";
+        }
+
+        // 打开弹窗
+        audioModal.classList.add("active");
+        isModalOpen = true;
+
+        // 模拟音频可视化效果
+        if (
+          isPlaying &&
+          currentPlayingCard &&
+          currentPlayingCard.dataset.id == audio.id
+        ) {
+          startVisualizer();
+        } else {
+          resetVisualizer();
+        }
+
+        // 防止页面滚动
+        document.body.style.overflow = "hidden";
+
+        // 设置音量控制初始状态
+        updateVolumeUI();
+      }
+
+      // 关闭音频详情弹窗
+      function closeAudioModal() {
+        audioModal.classList.remove("active");
+        isModalOpen = false;
+        document.body.style.overflow = "";
+      }
+
+      // 弹窗中切换播放状态
+      function toggleModalPlay() {
+        if (!currentAudioData) return;
+
+        if (
+          isPlaying &&
+          currentPlayingCard &&
+          currentPlayingCard.dataset.id == currentAudioData.id
+        ) {
+          // 正在播放当前音频，暂停它
+          audioPlayer.pause();
+          modalPlayBtn.textContent = "▶";
+          isPlaying = false;
+
+          // 同步列表视图
+          if (currentPlayingCard) {
+            const cardPlayButton =
+              currentPlayingCard.querySelector(".play-button");
+            cardPlayButton.textContent = "▶";
+            currentPlayingCard.classList.remove("playing");
+          }
+
+          // 停止可视化
+          resetVisualizer();
+        } else {
+          // 不是播放当前音频，开始播放
+
+          // 如果已经有其他音频在播放，停止它
+          if (currentPlayingCard) {
+            const oldCardPlayButton =
+              currentPlayingCard.querySelector(".play-button");
+            oldCardPlayButton.textContent = "▶";
+            currentPlayingCard.classList.remove("playing");
+          }
+
+          // 找到对应的卡片元素
+          const targetCard = document.querySelector(
+            `.audio-card[data-id="${currentAudioData.id}"]`
+          );
+
+          if (targetCard) {
+            // 设置新音频并播放
+            audioPlayer.src = currentAudioData.audioUrl;
+
+            // 显示加载状态
+            modalPlayBtn.textContent = "⏳";
+            modalPlayBtn.classList.add("loading");
+
+            // 尝试播放音频
+            audioPlayer
+              .play()
+              .then(() => {
+                modalPlayBtn.textContent = "❚❚";
+                modalPlayBtn.classList.remove("loading");
+                isPlaying = true;
+
+                // 同步列表视图
+                const cardPlayButton = targetCard.querySelector(".play-button");
+                cardPlayButton.textContent = "❚❚";
+                targetCard.classList.add("playing");
+                targetCard.classList.remove("loading");
+                currentPlayingCard = targetCard;
+
+                // 重置进度条
+                modalProgressBar.style.width = "0%";
+                modalCurrentTime.textContent = "00:00";
+
+                // 开始可视化
+                startVisualizer();
+              })
+              .catch((error) => {
+                console.error("弹窗播放失败:", error);
+                modalPlayBtn.textContent = "▶";
+                modalPlayBtn.classList.remove("loading");
+                showAudioError(targetCard);
+              });
+          }
+        }
+      }
+
+      // 更新弹窗进度条
+      function updateModalProgress() {
+        if (!isModalOpen || !isPlaying || !currentAudioData) return;
+
+        const currentTime = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+
+        // 计算进度百分比
+        const progressPercent = (currentTime / duration) * 100;
+        modalProgressBar.style.width = `${progressPercent}%`;
+
+        // 更新当前时间
+        modalCurrentTime.textContent = formatTime(currentTime);
+
+        // 如果到达结束，重置
+        if (currentTime >= duration) {
+          modalPlayBtn.textContent = "▶";
+          modalProgressBar.style.width = "0%";
+          modalCurrentTime.textContent = "00:00";
+          resetVisualizer();
+        }
+      }
+
+      // 模拟音频可视化效果
+      function startVisualizer() {
+        // 随机设置每个条的高度
+        function animateVisualizer() {
+          if (!isPlaying || !isModalOpen) return;
+
+          visualizerBars.forEach((bar) => {
+            const height = Math.floor(Math.random() * 40) + 5; // 5px到45px之间的随机高度
+            bar.style.height = `${height}px`;
+          });
+
+          // 每100ms更新一次
+          setTimeout(animateVisualizer, 100);
+        }
+
+        // 开始动画
+        animateVisualizer();
+      }
+
+      // 重置可视化器
+      function resetVisualizer() {
+        visualizerBars.forEach((bar) => {
+          bar.style.height = "3px";
+        });
+      }
+
+      // 弹窗进度条点击事件
+      modalProgress.addEventListener("click", (e) => {
+        if (!isModalOpen || !currentAudioData || !audioPlayer.duration) return;
+
+        const rect = modalProgress.getBoundingClientRect();
+        const clickPositionRatio = (e.clientX - rect.left) / rect.width;
+        const newTime = clickPositionRatio * audioPlayer.duration;
+
+        // 设置新时间
+        audioPlayer.currentTime = newTime;
+        modalProgressBar.style.width = `${clickPositionRatio * 100}%`;
+        modalCurrentTime.textContent = formatTime(newTime);
+
+        // 同步列表视图
+        if (currentPlayingCard) {
+          const listProgressBar =
+            currentPlayingCard.querySelector(".progress-bar");
+          const listAudioTime = currentPlayingCard.querySelector(".audio-time");
+
+          listProgressBar.style.width = `${clickPositionRatio * 100}%`;
+          listAudioTime.textContent = formatTime(newTime);
+        }
+      });
+
+      // 弹窗播放按钮点击事件
+      modalPlayBtn.addEventListener("click", toggleModalPlay);
+
+      // 关闭弹窗按钮
+      modalClose.addEventListener("click", closeAudioModal);
+
+      // 点击弹窗背景关闭
+      audioModal.addEventListener("click", (e) => {
+        if (e.target === audioModal) {
+          closeAudioModal();
+        }
+      });
+
+      // ESC键关闭弹窗
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isModalOpen) {
+          closeAudioModal();
+        }
+      });
+
+      // 切换播放状态
+      function togglePlay(
+        audioCard,
+        audioUrl,
+        playButton,
+        progressBar,
+        audioTime
+      ) {
+        // 如果点击的是当前正在播放的卡片，则暂停/播放
+        if (currentPlayingCard === audioCard) {
+          if (isPlaying) {
+            audioPlayer.pause();
+            playButton.textContent = "▶";
+            isPlaying = false;
+            audioCard.classList.remove("playing");
+
+            // 如果弹窗打开，同步状态
+            if (
+              isModalOpen &&
+              currentAudioData &&
+              currentAudioData.id == audioCard.dataset.id
+            ) {
+              modalPlayBtn.textContent = "▶";
+              resetVisualizer();
+            }
+          } else {
+            audioPlayer.play().catch((error) => {
+              console.error("恢复播放失败:", error);
+              showAudioError(audioCard);
+            });
+            playButton.textContent = "❚❚";
+            isPlaying = true;
+            audioCard.classList.add("playing");
+
+            // 如果弹窗打开，同步状态
+            if (
+              isModalOpen &&
+              currentAudioData &&
+              currentAudioData.id == audioCard.dataset.id
+            ) {
+              modalPlayBtn.textContent = "❚❚";
+              startVisualizer();
+            }
+          }
+          return;
+        }
+
+        // 如果有其他音频正在播放，停止它
+        if (currentPlayingCard) {
+          const oldPlayButton =
+            currentPlayingCard.querySelector(".play-button");
+          oldPlayButton.textContent = "▶";
+          currentPlayingCard.classList.remove("playing");
+        }
+
+        // 设置新的音频源并播放
+        audioPlayer.src = audioUrl;
+
+        // 显示加载中状态
+        playButton.textContent = "⏳";
+        audioCard.classList.add("loading");
+
+        // 如果弹窗打开且是当前音频，同步状态
+        if (
+          isModalOpen &&
+          currentAudioData &&
+          currentAudioData.id == audioCard.dataset.id
+        ) {
+          modalPlayBtn.textContent = "⏳";
+          modalPlayBtn.classList.add("loading");
+        }
+
+        audioPlayer
+          .play()
+          .then(() => {
+            playButton.textContent = "❚❚";
+            isPlaying = true;
+            audioCard.classList.add("playing");
+            audioCard.classList.remove("loading");
+            currentPlayingCard = audioCard;
+
+            // 重置进度条
+            progressBar.style.width = "0%";
+            audioTime.textContent = "00:00";
+
+            // 如果弹窗打开且是当前音频，同步状态
+            if (
+              isModalOpen &&
+              currentAudioData &&
+              currentAudioData.id == audioCard.dataset.id
+            ) {
+              modalPlayBtn.textContent = "❚❚";
+              modalPlayBtn.classList.remove("loading");
+              modalProgressBar.style.width = "0%";
+              modalCurrentTime.textContent = "00:00";
+              startVisualizer();
+            }
+          })
+          .catch((error) => {
+            console.error("播放失败:", error);
+            playButton.textContent = "▶";
+            audioCard.classList.remove("loading");
+            showAudioError(audioCard);
+
+            // 如果弹窗打开且是当前音频，同步状态
+            if (
+              isModalOpen &&
+              currentAudioData &&
+              currentAudioData.id == audioCard.dataset.id
+            ) {
+              modalPlayBtn.textContent = "▶";
+              modalPlayBtn.classList.remove("loading");
+              resetVisualizer();
+            }
+          });
+      }
+
+      // 更新进度条和时间显示
+      function updateProgress() {
+        if (!currentPlayingCard || !isPlaying) return;
+
+        const progressBar = currentPlayingCard.querySelector(".progress-bar");
+        const audioTime = currentPlayingCard.querySelector(".audio-time");
+
+        const currentTime = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+
+        // 计算进度百分比
+        const progressPercent = (currentTime / duration) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+
+        // 格式化时间显示
+        const formattedTime = formatTime(currentTime);
+        audioTime.textContent = formattedTime;
+
+        // 如果弹窗打开且是当前音频，同步状态
+        if (
+          isModalOpen &&
+          currentAudioData &&
+          currentPlayingCard.dataset.id == currentAudioData.id
+        ) {
+          updateModalProgress();
+        }
+      }
+
+      // 格式化时间显示 (秒 -> MM:SS)
+      function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+          .toString()
+          .padStart(2, "0")}`;
+      }
+
+      // 音频事件监听
+      audioPlayer.addEventListener("timeupdate", updateProgress);
+
+      audioPlayer.addEventListener("ended", () => {
+        if (currentPlayingCard) {
+          const playButton = currentPlayingCard.querySelector(".play-button");
+          playButton.textContent = "▶";
+          currentPlayingCard.classList.remove("playing");
+          isPlaying = false;
+          // 重置进度条
+          const progressBar = currentPlayingCard.querySelector(".progress-bar");
+          progressBar.style.width = "0%";
+        }
+      });
+
+      // 音量控制事件监听
+      modalVolume.addEventListener("click", (e) => {
+        const rect = modalVolume.getBoundingClientRect();
+        const clickPositionRatio = (e.clientX - rect.left) / rect.width;
+        setVolume(clickPositionRatio);
+      });
+
+      // 音量图标点击事件 - 静音/取消静音
+      modalVolumeIcon.addEventListener("click", () => {
+        toggleMute();
+      });
+
+      // 设置音量
+      function setVolume(volumeLevel) {
+        // 确保音量在0-1范围内
+        volumeLevel = Math.max(0, Math.min(1, volumeLevel));
+
+        // 保存当前音量值以便从静音恢复
+        currentVolume = volumeLevel;
+
+        // 设置音频播放器音量
+        audioPlayer.volume = volumeLevel;
+
+        // 如果音量为0，显示为静音
+        isMuted = volumeLevel === 0;
+
+        // 更新UI
+        updateVolumeUI();
+      }
+
+      // 切换静音状态
+      function toggleMute() {
+        if (isMuted) {
+          // 恢复之前的音量
+          audioPlayer.volume = currentVolume;
+          isMuted = false;
+        } else {
+          // 静音但保存当前音量值
+          audioPlayer.volume = 0;
+          isMuted = true;
+        }
+
+        // 更新UI
+        updateVolumeUI();
+      }
+
+      // 更新音量控制UI
+      function updateVolumeUI() {
+        if (isMuted) {
+          modalVolumeIcon.textContent = "🔇";
+          modalVolumeLevel.style.width = "0%";
+        } else {
+          // 根据音量大小显示不同图标
+          if (audioPlayer.volume > 0.6) {
+            modalVolumeIcon.textContent = "🔊";
+          } else if (audioPlayer.volume > 0.2) {
+            modalVolumeIcon.textContent = "🔉";
+          } else {
+            modalVolumeIcon.textContent = "🔈";
+          }
+
+          // 更新音量条
+          modalVolumeLevel.style.width = `${audioPlayer.volume * 100}%`;
+        }
+      }
+
+      // 初始化音频播放器音量
+      audioPlayer.volume = currentVolume;
+
+      // 初始化
+      document.addEventListener("DOMContentLoaded", () => {
+        renderAudioList();
+        // 初始化主题切换功能
+        initThemeToggle();
+        // 初始化音量控制
+        updateVolumeUI();
+      });
+
+      /**
+       * 初始化主题切换功能
+       */
+      function initThemeToggle() {
+        // 创建主题切换按钮
+        const themeToggle = document.createElement("button");
+        themeToggle.className = "theme-toggle";
+        themeToggle.innerHTML = "🌓"; // 初始值将被updateThemeIcon()更新
+        themeToggle.setAttribute("aria-label", "Toggle dark mode");
+        themeToggle.setAttribute("title", "Toggle dark mode");
+        document.body.appendChild(themeToggle);
+
+        // 检查本地存储中的主题偏好
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        } else if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          // 如果用户系统偏好暗色主题，则自动应用
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+
+        // 更新按钮图标
+        updateThemeIcon();
+
+        // 添加点击事件
+        themeToggle.addEventListener("click", toggleTheme);
+      }
+
+      /**
+       * 切换主题
+       */
+      function toggleTheme() {
+        const themeToggle = document.querySelector(".theme-toggle");
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        // 添加动画效果
+        if (themeToggle) {
+          // 添加旋转动画类
+          themeToggle.classList.add("theme-switching");
+
+          // 创建一个动画效果
+          themeToggle.style.transform = "scale(0.8) rotate(180deg)";
+          themeToggle.style.opacity = "0.5";
+
+          // 设置延迟以便动画完成
+          setTimeout(() => {
+            // 设置新主题
+            document.documentElement.setAttribute("data-theme", newTheme);
+
+            // 保存到本地存储
+            localStorage.setItem("theme", newTheme);
+
+            // 更新按钮图标
+            updateThemeIcon();
+
+            // 恢复按钮样式
+            setTimeout(() => {
+              themeToggle.style.transform = "";
+              themeToggle.style.opacity = "";
+              themeToggle.classList.remove("theme-switching");
+            }, 150);
+          }, 150);
+        } else {
+          // 如果按钮不存在，直接切换主题
+          document.documentElement.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        }
+      }
+
+      /**
+       * 更新主题切换按钮图标
+       */
+      function updateThemeIcon() {
+        const themeToggle = document.querySelector(".theme-toggle");
+        if (!themeToggle) return;
+
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+
+        // 使用更多元素组合来增强视觉效果
+        if (currentTheme === "dark") {
+          // 深色模式使用太阳图标
+          themeToggle.innerHTML = `<span style="display:inline-block;filter:drop-shadow(0 0 3px rgba(255,255,255,0.7));">☀️</span>`;
+          themeToggle.style.transform = "rotate(0deg)"; // 确保旋转重置
+        } else {
+          // 浅色模式使用月亮图标
+          themeToggle.innerHTML = `<span style="display:inline-block;">🌙</span>`;
+          themeToggle.style.transform = "rotate(0deg)"; // 确保旋转重置
+        }
+
+        // 更新按钮的aria标签和提示信息
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+        themeToggle.setAttribute("title", `Switch to ${nextTheme} mode`);
+      }
+
+      // 添加粒子效果
+      document.addEventListener("DOMContentLoaded", function () {
+        const canvas = document.getElementById("particleCanvas");
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+
+        // 设置Canvas大小
+        function setCanvasSize() {
+          const header = document.querySelector(".tech-header");
+          if (header) {
+            canvas.width = header.offsetWidth;
+            canvas.height = header.offsetHeight;
+          }
+        }
+
+        setCanvasSize();
+        window.addEventListener("resize", setCanvasSize);
+
+        // 粒子效果
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+            this.color = "rgba(62, 92, 62, 0.3)";
+          }
+
+          update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+          }
+
+          draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        const particles = [];
+        for (let i = 0; i < 50; i++) {
+          particles.push(new Particle());
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          particles.forEach((particle) => {
+            particle.update();
+            particle.draw();
+          });
+
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+      });
+
+      // 显示音频错误提示
+      function showAudioError(audioCard) {
+        // 检查是否已有错误提示
+        if (audioCard.querySelector(".audio-error-message")) {
+          return;
+        }
+
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "audio-error-message";
+        errorMessage.style.color = "#a04941";
+        errorMessage.style.fontSize = "0.9rem";
+        errorMessage.style.marginTop = "0.8rem";
+        errorMessage.style.padding = "0.5rem";
+        errorMessage.style.backgroundColor = "rgba(160, 73, 65, 0.1)";
+        errorMessage.style.borderRadius = "4px";
+        errorMessage.style.animation = "fadeIn 0.3s ease";
+
+        errorMessage.innerHTML = `
+          <p style="margin: 0 0 0.5rem 0;"><strong>⚠️ 无法播放此音频</strong></p>
+          <p style="margin: 0; font-size: 0.85rem;">这是一个示例页面，实际的音频文件 <code>${audioCard.dataset.url}</code> 不存在。请添加真实的音频文件，或修改 audioData 数组中的 URL。</p>
+        `;
+
+        // 添加样式
+        const style = document.createElement("style");
+        if (!document.head.querySelector("#audioErrorStyle")) {
+          style.id = "audioErrorStyle";
+          style.textContent = `
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(-10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+
+            .audio-error-message {
+              position: relative;
+              overflow: hidden;
+            }
+
+            .audio-error-message::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 4px;
+              height: 100%;
+              background-color: #a04941;
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        // 添加到卡片
+        const controlsElement = audioCard.querySelector(".audio-controls");
+        controlsElement.parentNode.insertBefore(
+          errorMessage,
+          controlsElement.nextSibling
+        );
+
+        // 5秒后自动移除错误信息
+        setTimeout(() => {
+          errorMessage.style.opacity = "0";
+          errorMessage.style.transform = "translateY(-10px)";
+          errorMessage.style.transition =
+            "opacity 0.3s ease, transform 0.3s ease";
+
+          setTimeout(() => {
+            if (errorMessage.parentNode) {
+              errorMessage.parentNode.removeChild(errorMessage);
+            }
+          }, 300);
+        }, 8000);
+      }
+    </script>
+  </body>
+</html>
