@@ -362,5 +362,105 @@
         */
       });
     </script>
+
+    <!-- 代码块增强脚本 -->
+    <script>
+      // 增强无语言代码块显示
+      document.addEventListener("DOMContentLoaded", function () {
+        // 处理所有代码块
+        function enhanceCodeBlocks() {
+          // 处理无语言指定的代码块
+          const plainCodeBlocks = document.querySelectorAll("pre.language-");
+          plainCodeBlocks.forEach((block) => {
+            // 避免重复处理
+            if (!block.classList.contains("enhanced")) {
+              // 添加纯文本标签
+              const codeTypeLabel = document.createElement("div");
+              codeTypeLabel.className = "code-type";
+              codeTypeLabel.textContent = "纯文本";
+              block.appendChild(codeTypeLabel);
+
+              // 标记为已处理
+              block.classList.add("enhanced");
+            }
+          });
+
+          // 处理有语言指定的代码块
+          const codeBlocks = document.querySelectorAll(
+            'pre[class*="language-"]:not(.language-):not(.enhanced)'
+          );
+          codeBlocks.forEach((block) => {
+            // 获取语言类名
+            const classList = Array.from(block.classList);
+            const langClass = classList.find(
+              (cls) => cls.startsWith("language-") && cls !== "language-"
+            );
+
+            if (langClass) {
+              const lang = langClass.replace("language-", "");
+
+              // 添加语言标签
+              const codeTypeLabel = document.createElement("div");
+              codeTypeLabel.className = "code-type";
+              codeTypeLabel.textContent = lang.toUpperCase();
+              block.appendChild(codeTypeLabel);
+
+              // 标记为已处理
+              block.classList.add("enhanced");
+            }
+          });
+        }
+
+        // 初始处理
+        enhanceCodeBlocks();
+
+        // 处理动态加载的内容
+        // 使用MutationObserver监听DOM变化
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+              // 检查是否有代码块被添加
+              let hasCodeBlock = false;
+
+              mutation.addedNodes.forEach((node) => {
+                // 检查节点本身是否是代码块
+                if (node.nodeType === 1 && node.tagName === "PRE") {
+                  hasCodeBlock = true;
+                }
+
+                // 检查子节点中是否有代码块
+                if (node.nodeType === 1 && node.querySelector("pre")) {
+                  hasCodeBlock = true;
+                }
+              });
+
+              if (hasCodeBlock) {
+                // 处理新添加的代码块
+                setTimeout(enhanceCodeBlocks, 100);
+              }
+            }
+          });
+        });
+
+        // 观察整个文档的变化
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+
+        // 特别处理模态框内容加载
+        const modalContent = document.getElementById("modalContent");
+        if (modalContent) {
+          const modalObserver = new MutationObserver(function () {
+            setTimeout(enhanceCodeBlocks, 100);
+          });
+
+          modalObserver.observe(modalContent, {
+            childList: true,
+            subtree: true,
+          });
+        }
+      });
+    </script>
   </body>
 </html>
