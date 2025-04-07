@@ -1750,6 +1750,23 @@
       </div>
     </div>
 
+    <!-- 模态窗口 -->
+    <div
+      class="modal-overlay"
+      id="modalOverlay"
+      style="display: flex; align-items: center; justify-content: center"
+    >
+      <div
+        id="modalContent"
+        style="
+          max-width: 900px !important;
+          max-height: 600px !important;
+          width: 60%;
+        "
+      ></div>
+      <button id="modalClose" class="modal-close">×</button>
+    </div>
+
     <script>
       // 音频数据
       let audioData = [
