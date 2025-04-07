@@ -684,9 +684,9 @@ body.loaded {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -695,8 +695,6 @@ body.loaded {
   visibility: hidden;
   transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1),
     visibility 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .modal-overlay.active {
@@ -712,26 +710,25 @@ body.loaded {
   max-width: 900px !important;
   max-height: 700px !important;
   background: #ffffff;
-  border-radius: 10px;
-  overflow-y: auto; /* 保持滚动功能 */
+  border-radius: 12px;
+  overflow-y: auto;
   transform: scale(0.95);
   opacity: 0;
   transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1),
     opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-
-  /* 高科技边框效果 */
-  border: 1px solid rgba(62, 92, 62, 0.15);
-
-  /* 添加网格背景 */
-  background-image: linear-gradient(rgba(62, 92, 62, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(62, 92, 62, 0.03) 1px, transparent 1px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(62, 92, 62, 0.1);
+  background-image: linear-gradient(rgba(62, 92, 62, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 92, 62, 0.02) 1px, transparent 1px);
   background-size: 20px 20px;
-
-  /* 装饰性条纹 */
   padding-top: 0;
-  /* 改用标准流布局，确保所有内容可滚动 */
-  display: block; /* 从flex改为block */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-overlay.active #modalContent {
+  transform: scale(1);
+  opacity: 1;
 }
 
 /* 顶部科技装饰条 */
@@ -751,11 +748,6 @@ body.loaded {
   }
 }
 
-.modal-overlay.active #modalContent {
-  transform: scale(1);
-  opacity: 1;
-}
-
 /* 模态框角落装饰 */
 #modalContent::after {
   display: none;
@@ -768,9 +760,10 @@ body.loaded {
 
 /* 模态框内容头部 */
 #modalContent header {
-  padding: 1rem 2rem;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid rgba(62, 92, 62, 0.1);
+  padding: 1.5rem 2rem;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(62, 92, 62, 0.08);
   /* 确保header随内容滚动 */
   position: relative;
   width: auto;
@@ -788,12 +781,12 @@ body.loaded {
 /* 模态框标题 */
 #modalContent h1 {
   font-family: var(--font-accent);
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
   color: var(--ink-dark);
   font-weight: 500;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 /* 模态框标题装饰 */
@@ -812,20 +805,20 @@ body.loaded {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
 /* 模态框时间显示 */
 #modalContent .meta time {
-  font-size: 0.75rem;
-  background: rgba(62, 92, 62, 0.1);
-  color: var(--text-dark);
-  padding: 0.2rem 0.5rem;
+  font-size: 0.85rem;
+  background: rgba(62, 92, 62, 0.05);
+  color: var(--text-medium);
+  padding: 0.25rem 0.7rem;
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(62, 92, 62, 0.1);
+  border: 1px solid rgba(62, 92, 62, 0.08);
 }
 
 /* 添加时间图标 */
@@ -835,9 +828,11 @@ body.loaded {
 
 /* 模态框内容区域 */
 #modalContent .content {
-  padding: 1rem 2rem 2rem;
+  padding: 1.5rem 2.5rem 2.5rem;
   position: relative;
   overflow-x: hidden;
+  color: var(--text-dark);
+  line-height: 1.7;
 }
 
 /* 模态框内容区域背景发光效果 */
@@ -881,27 +876,28 @@ body.loaded {
 /* 模态框关闭按钮 */
 .modal-close {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 30px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(62, 92, 62, 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1;
-  color: #555;
+  color: var(--text-medium);
   transition: all 0.2s ease;
 }
 
 .modal-close:hover {
-  background: rgba(255, 255, 255, 0.9);
-  color: #000;
+  background: rgba(62, 92, 62, 0.1);
+  color: var(--text-dark);
+  transform: rotate(90deg);
 }
 
 [data-theme="dark"] .modal-close {
@@ -920,20 +916,21 @@ body.loaded {
   display: flex;
   gap: 0.7rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
 #modalContent .tags .tag {
   font-size: 0.85rem;
   color: var(--text-medium);
-  background: rgba(62, 92, 62, 0.1);
-  padding: 0.2rem 0.8rem;
+  background: rgba(62, 92, 62, 0.05);
+  padding: 0.25rem 0.8rem;
   border-radius: 4px;
   transition: all 0.3s ease;
-  border: 1px solid rgba(62, 92, 62, 0.15);
+  border: 1px solid rgba(62, 92, 62, 0.08);
 }
 
 #modalContent .tags .tag:hover {
-  background: rgba(62, 92, 62, 0.2);
+  background: rgba(62, 92, 62, 0.1);
   color: var(--text-dark);
   transform: translateY(-2px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -941,14 +938,13 @@ body.loaded {
 
 /* 模态框中的二级标题 */
 #modalContent .content h2 {
-  position: relative;
-  font-size: 1.5rem;
+  font-family: var(--font-accent);
   font-weight: 500;
+  font-size: 1.4rem;
   color: var(--text-dark);
-  margin: 2rem 0 1rem;
   padding-bottom: 0.5rem;
-  padding-left: 1.2rem;
-  border-bottom: 1px solid rgba(62, 92, 62, 0.1);
+  margin: 2rem 0 1rem;
+  border-bottom: 1px solid rgba(62, 92, 62, 0.08);
 }
 
 /* 二级标题前装饰 */
@@ -958,12 +954,11 @@ body.loaded {
 
 /* 三级标题样式 */
 #modalContent .content h3 {
-  font-size: 1.25rem;
+  font-family: var(--font-accent);
   font-weight: 500;
+  font-size: 1.2rem;
   color: var(--text-dark);
-  margin: 1.5rem 0 1rem;
-  position: relative;
-  padding-left: 1rem;
+  margin: 1.5rem 0 0.8rem;
 }
 
 /* 三级标题装饰 */
@@ -974,9 +969,7 @@ body.loaded {
 /* 模态框正文段落 */
 #modalContent .content p {
   margin-bottom: 1.2rem;
-  font-size: 1rem;
-  color: var(--text-dark);
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
 /* 链接样式 */
@@ -986,7 +979,6 @@ body.loaded {
   position: relative;
   transition: all 0.3s ease;
   font-weight: 500;
-  padding: 0 2px;
 }
 
 #modalContent .content a::after {
@@ -2257,7 +2249,7 @@ p code {
   font-style: normal; /* 使用正常字体 */
 }
 
-pre[class*="language-"]::before {
+/* pre[class*="language-"]::before {
   content: attr(data-language);
   font-family: var(--font-accent);
   position: absolute;
@@ -2274,7 +2266,7 @@ pre[class*="language-"]::before {
   opacity: 0.9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.2);
   z-index: 1;
-}
+} */
 
 pre[class*="language-"]:hover {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.05),
@@ -3227,72 +3219,120 @@ blockquote p:last-child {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  margin-top: 1rem;
-  max-height: 2.8rem; /* 初始只显示一行标签 */
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0.8rem;
+  max-height: none; /* 始终显示所有标签 */
+  overflow: visible;
   position: relative;
-  z-index: 11; /* 确保有足够的z-index使得内部元素可点击 */
-  padding-top: 5px;
+  z-index: 11;
+  padding-right: 5px; /* 为滚动条预留空间 */
 }
 
-.tech-tag-filters.expanded {
-  max-height: 300px; /* 展开后的最大高度，足够容纳多行标签 */
-  overflow-y: visible; /* 确保展开时能够正确点击所有元素 */
-}
-
-/* 添加新的内部容器样式 */
 .tech-tag-filters-inner {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
+  flex-direction: column; /* 列布局 */
+  gap: 0.6rem;
   width: 100%;
-  pointer-events: auto; /* 确保事件能够传递 */
 }
 
 .tech-tag-filter {
-  display: inline-flex;
+  width: 100%; /* 使标签占满整个宽度 */
+  display: flex;
+  justify-content: space-between; /* 标签文本和计数两端对齐 */
   align-items: center;
-  padding: 0.4rem 1rem;
-  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   font-size: 0.9rem;
   background: rgba(62, 92, 62, 0.05);
   color: var(--text-medium);
   cursor: pointer;
-  transition: var(--transition-medium);
+  transition: all 0.25s ease;
   border: 1px solid transparent;
   user-select: none;
-  position: relative; /* 确保定位上下文 */
-  z-index: 5; /* 确保标签可点击 */
-  pointer-events: auto; /* 明确指定接收点击事件 */
 }
 
 .tech-tag-filter:hover {
   background: rgba(62, 92, 62, 0.1);
   transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(62, 92, 62, 0.1);
+  color: var(--text-dark);
 }
 
+/* 改进选中标签的高亮效果 */
 .tech-tag-filter.active {
-  background: var(--mountain-green-light);
+  background: rgba(62, 92, 62, 0.15);
   color: var(--mountain-green);
-  border-color: var(--mountain-green);
+  border-color: rgba(62, 92, 62, 0.3);
   font-weight: 600;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(62, 92, 62, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(62, 92, 62, 0.15);
   position: relative;
-  z-index: 6; /* 提高选中标签的层级 */
 }
 
-.tech-tag-filter.active::after {
+.tech-tag-filter.active::before {
   content: "";
   position: absolute;
-  bottom: -2px;
-  left: 10%;
-  width: 80%;
-  height: 2px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
   background: var(--mountain-green);
-  border-radius: 2px;
-  opacity: 0.7;
+  border-radius: 4px 0 0 4px;
+}
+
+/* 侧边栏内的标签计数 */
+.tag-count {
+  font-size: 0.8rem;
+  background: rgba(62, 92, 62, 0.1);
+  border-radius: 10px;
+  padding: 0.1rem 0.5rem;
+  color: var(--text-medium);
+  transition: all 0.25s ease;
+}
+
+.tech-tag-filter:hover .tag-count {
+  background: rgba(62, 92, 62, 0.15);
+}
+
+.tech-tag-filter.active .tag-count {
+  background: rgba(62, 92, 62, 0.2);
+  color: var(--mountain-green);
+}
+
+/* 暗色主题下的标签样式 */
+[data-theme="dark"] .tech-tag-filter {
+  background: rgba(177, 167, 212, 0.05);
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .tech-tag-filter:hover {
+  background: rgba(177, 167, 212, 0.1);
+  color: var(--text-medium);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .tech-tag-filter.active {
+  background: rgba(177, 167, 212, 0.15);
+  color: var(--water-blue);
+  border-color: rgba(177, 167, 212, 0.3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .tech-tag-filter.active::before {
+  background: var(--water-blue);
+}
+
+[data-theme="dark"] .tag-count {
+  background: rgba(177, 167, 212, 0.1);
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .tech-tag-filter:hover .tag-count {
+  background: rgba(177, 167, 212, 0.15);
+}
+
+[data-theme="dark"] .tech-tag-filter.active .tag-count {
+  background: rgba(177, 167, 212, 0.2);
+  color: var(--water-blue);
 }
 
 .tech-tags-toggle {
@@ -3317,6 +3357,7 @@ blockquote p:last-child {
   z-index: 15; /* 确保按钮有合适的z-index层级 */
   align-self: flex-start; /* 让按钮与标签对齐 */
   pointer-events: auto; /* 明确指定接收点击事件 */
+  display: none;
 }
 
 .tech-tags-toggle::before {
@@ -4765,4 +4806,297 @@ pre.loading {
 #modalContent .content a:hover {
   color: #004499;
   border-bottom-color: rgba(0, 68, 153, 0.5);
+}
+
+/* 科技感过滤器容器 - 侧边栏版本 */
+.tech-filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: rgba(249, 246, 240, 0.95);
+  border-radius: 0 10px 10px 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(62, 92, 62, 0.1);
+  border-left: none;
+  position: fixed;
+  left: -320px; /* 默认隐藏在左侧 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000; /* 确保在其他内容之上 */
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.tech-filter-container.active {
+  left: 0; /* 显示时移动到视口内 */
+}
+
+.tech-filter-container:hover {
+  background: rgba(249, 246, 240, 0.98);
+}
+
+/* 侧边栏切换按钮 */
+.sidebar-toggle {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: var(--mountain-green);
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  transition: all 0.3s ease;
+  border: none;
+  color: white;
+  font-size: 20px;
+}
+
+.sidebar-toggle:hover {
+  width: 55px;
+  background: var(--pine-dark);
+}
+
+.sidebar-toggle .icon {
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+.sidebar-toggle.active .icon {
+  transform: rotate(-90deg) scale(0.8);
+}
+
+/* 侧边栏打开时的背景遮罩 */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 科技感搜索输入适应侧边栏 */
+.tech-search-input {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgba(62, 92, 62, 0.1);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-dark);
+  transition: var(--transition-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 1rem;
+}
+
+/* 标签过滤器修改，适应侧边栏 */
+.tech-tag-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  max-height: none; /* 在侧边栏中始终显示所有标签 */
+  overflow: visible;
+  position: relative;
+  z-index: 11;
+}
+
+.tech-tag-filters-inner {
+  display: flex;
+  flex-direction: column; /* 改为列布局 */
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.tech-tag-filter {
+  width: 100%; /* 使标签占满整个宽度 */
+  justify-content: flex-start; /* 左对齐文本 */
+  padding: 0.5rem 1rem;
+}
+
+/* 暗色主题下的侧边栏 */
+[data-theme="dark"] .tech-filter-container {
+  background: rgba(34, 30, 56, 0.95);
+  border-color: rgba(177, 167, 212, 0.15);
+}
+
+[data-theme="dark"] .tech-filter-container:hover {
+  background: rgba(38, 34, 62, 0.98);
+}
+
+[data-theme="dark"] .sidebar-toggle {
+  background: var(--water-blue);
+  color: var(--paper-dark);
+}
+
+[data-theme="dark"] .sidebar-toggle:hover {
+  background: var(--accent);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .tech-filter-container {
+    width: 280px;
+    left: -280px;
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-filter-container {
+    width: 260px;
+    left: -260px;
+    padding: 1rem;
+  }
+}
+
+/* 主内容区域调整，配合侧边栏 */
+.tech-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 侧边栏打开时内容区域调整 */
+.sidebar-active .tech-card-grid {
+  margin-left: 0; /* 不需要额外的边距，因为有遮罩层 */
+}
+
+/* 侧边栏标题 */
+.sidebar-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  color: var(--text-dark);
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.sidebar-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 1px;
+  background: rgba(62, 92, 62, 0.2);
+}
+
+[data-theme="dark"] .sidebar-title {
+  color: var(--text-medium);
+}
+
+[data-theme="dark"] .sidebar-title::after {
+  background: rgba(177, 167, 212, 0.2);
+}
+
+/* 完善侧边栏样式细节 */
+.tech-filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: rgba(249, 246, 240, 0.95);
+  border-radius: 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(62, 92, 62, 0.1);
+  border-left: none;
+  position: fixed;
+  left: -320px; /* 默认隐藏在左侧 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000; /* 确保在其他内容之上 */
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+  /* 美化滚动条 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(62, 92, 62, 0.3) rgba(62, 92, 62, 0.1);
+}
+
+.tech-filter-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tech-filter-container::-webkit-scrollbar-track {
+  background: rgba(62, 92, 62, 0.05);
+  border-radius: 3px;
+}
+
+.tech-filter-container::-webkit-scrollbar-thumb {
+  background: rgba(62, 92, 62, 0.2);
+  border-radius: 3px;
+}
+
+.tech-filter-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(62, 92, 62, 0.3);
+}
+
+/* 暗色主题滚动条 */
+[data-theme="dark"] .tech-filter-container::-webkit-scrollbar-track {
+  background: rgba(177, 167, 212, 0.05);
+}
+
+[data-theme="dark"] .tech-filter-container::-webkit-scrollbar-thumb {
+  background: rgba(177, 167, 212, 0.15);
+}
+
+[data-theme="dark"] .tech-filter-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(177, 167, 212, 0.25);
+}
+
+/* 侧边栏内的标签计数 */
+.tag-count {
+  margin-left: auto;
+  font-size: 0.8rem;
+  background: rgba(62, 92, 62, 0.1);
+  border-radius: 10px;
+  padding: 0.1rem 0.5rem;
+  color: var(--text-medium);
+}
+
+.tech-tag-filter:hover .tag-count {
+  background: rgba(62, 92, 62, 0.2);
+}
+
+.tech-tag-filter.active .tag-count {
+  background: rgba(62, 92, 62, 0.25);
+  color: var(--mountain-green);
+}
+
+[data-theme="dark"] .tag-count {
+  background: rgba(177, 167, 212, 0.1);
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .tech-tag-filter:hover .tag-count {
+  background: rgba(177, 167, 212, 0.15);
+}
+
+[data-theme="dark"] .tech-tag-filter.active .tag-count {
+  background: rgba(177, 167, 212, 0.2);
+  color: var(--ink-medium);
 }

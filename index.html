@@ -177,8 +177,17 @@
         </div>
       </header>
 
+      <!-- 侧边栏切换按钮 -->
+      <button class="sidebar-toggle" id="sidebarToggle">
+        <span class="icon">&#128269;</span>
+      </button>
+
+      <!-- 背景遮罩，用于关闭侧边栏 -->
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
       <!-- 高科技风格过滤器容器 -->
-      <div class="tech-filter-container">
+      <div class="tech-filter-container" id="filterSidebar">
+        <h3 class="sidebar-title">知识卡片筛选</h3>
         <input
           type="text"
           id="searchInput"
@@ -228,5 +237,130 @@
 
     <!-- 添加粒子效果脚本 -->
     <script src="/js/particle-effects.js"></script>
+
+    <!-- 侧边栏控制脚本 -->
+    <script>
+      // 侧边栏控制
+      document.addEventListener("DOMContentLoaded", function () {
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const filterSidebar = document.getElementById("filterSidebar");
+        const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+        const bodyElement = document.body;
+        const cardGrid = document.getElementById("cardGrid");
+
+        // 切换侧边栏
+        sidebarToggle.addEventListener("click", function () {
+          filterSidebar.classList.toggle("active");
+          sidebarToggle.classList.toggle("active");
+          sidebarBackdrop.classList.toggle("active");
+          bodyElement.classList.toggle("sidebar-active");
+
+          // 更新 aria-expanded 状态以提高可访问性
+          const isExpanded = filterSidebar.classList.contains("active");
+          sidebarToggle.setAttribute(
+            "aria-expanded",
+            isExpanded ? "true" : "false"
+          );
+          sidebarToggle.setAttribute(
+            "aria-label",
+            isExpanded ? "关闭筛选菜单" : "打开筛选菜单"
+          );
+        });
+
+        // 点击背景遮罩关闭侧边栏
+        sidebarBackdrop.addEventListener("click", function () {
+          filterSidebar.classList.remove("active");
+          sidebarToggle.classList.remove("active");
+          sidebarBackdrop.classList.remove("active");
+          bodyElement.classList.remove("sidebar-active");
+          sidebarToggle.setAttribute("aria-expanded", "false");
+          sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+        });
+
+        // 添加键盘可访问性
+        document.addEventListener("keydown", function (e) {
+          if (
+            e.key === "Escape" &&
+            filterSidebar.classList.contains("active")
+          ) {
+            filterSidebar.classList.remove("active");
+            sidebarToggle.classList.remove("active");
+            sidebarBackdrop.classList.remove("active");
+            bodyElement.classList.remove("sidebar-active");
+            sidebarToggle.setAttribute("aria-expanded", "false");
+            sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+          }
+        });
+
+        // 标签生成和点击逻辑
+        const updateTagFilters = function (tags, counts) {
+          const tagFilters = document.getElementById("tagFilters");
+          if (!tagFilters) return;
+
+          // 创建标签容器
+          const tagsInner = document.createElement("div");
+          tagsInner.className = "tech-tag-filters-inner";
+
+          // 添加所有标签（无需"查看更多"功能）
+          tags.forEach((tag) => {
+            const tagFilter = document.createElement("div");
+            tagFilter.className = "tech-tag-filter";
+            tagFilter.dataset.tag = tag;
+
+            // 创建标签文本
+            const tagText = document.createTextNode(tag);
+            tagFilter.appendChild(tagText);
+
+            // 添加标签计数（如果可用）
+            if (counts && counts[tag]) {
+              const countSpan = document.createElement("span");
+              countSpan.className = "tag-count";
+              countSpan.textContent = counts[tag];
+              tagFilter.appendChild(countSpan);
+            }
+
+            // 添加点击事件处理
+            tagFilter.addEventListener("click", function () {
+              // 切换选中状态
+              this.classList.toggle("active");
+
+              // 这里可以添加筛选卡片的逻辑
+              // filterCards();
+            });
+
+            tagsInner.appendChild(tagFilter);
+          });
+
+          // 清空并添加新标签
+          tagFilters.innerHTML = "";
+          tagFilters.appendChild(tagsInner);
+        };
+
+        // 设置按钮初始可访问性属性
+        sidebarToggle.setAttribute("aria-expanded", "false");
+        sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+        sidebarToggle.setAttribute("aria-controls", "filterSidebar");
+
+        // 如果有需要，可以在这里初始化标签
+        // 示例数据
+        /*
+        const demoTags = ["JavaScript", "CSS", "HTML", "React", "Vue", "Angular", "Node.js", "Python", "Java", "PHP", "Go"];
+        const demoCounts = {
+          "JavaScript": 12,
+          "CSS": 8,
+          "HTML": 6,
+          "React": 5,
+          "Vue": 4,
+          "Angular": 3,
+          "Node.js": 7,
+          "Python": 9,
+          "Java": 4,
+          "PHP": 2,
+          "Go": 3
+        };
+        updateTagFilters(demoTags, demoCounts);
+        */
+      });
+    </script>
   </body>
 </html>
