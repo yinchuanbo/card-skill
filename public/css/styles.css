@@ -996,10 +996,10 @@ body.loaded {
 /* 代码块样式 */
 #modalContent pre[class*="language-"] {
   margin: 1.5rem 0;
-  border-radius: 6px;
+  border-radius: 0;
   background: #2d2d2d;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+  box-shadow: none;
 }
 
 /* 行内代码样式 */
@@ -2869,7 +2869,11 @@ blockquote p {
 }
 
 blockquote p:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0!important;
+}
+
+.code-type {
+  display: none;
 }
 
 /* 暗色主题下的引用块调整增强 */
@@ -4575,7 +4579,7 @@ pre:hover .tech-copy-btn {
     var(--mountain-green),
     var(--pine-dark)
   );
-  border-radius: 3px 0 0 3px;
+  border-radius: 0;
 }
 
 /* 暗黑模式适配 */
