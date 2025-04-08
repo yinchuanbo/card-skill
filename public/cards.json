@@ -316,5 +316,17 @@
     "summary": "\r\n## 项目概述\r\n\r\nGitDiagram 是一款革命性的开源工具，能够在几秒钟内将任何 GitHub 存储库转换为精美的**可视化交互式图表**。由开发者 Ahmed Khaleel 创建，该项目完美结合了 AI 技术与现代 Web 开发栈，为开发者提供了一种全新的代码库探索方式。\r\n\r\n##...",
     "type": "default",
     "url": "/doc/30.html"
+  },
+  {
+    "id": "31",
+    "title": "JS 原生深拷贝 structuredClone",
+    "tags": [
+      "structuredClone",
+      "深拷贝"
+    ],
+    "createdAt": "2025-04-08T21:10:33.000Z",
+    "summary": "\r\n过去要进行对象深拷贝，往往需要 JSON 转换或第三方库。如今，现代 JavaScript 内置了 structuredClone，可直接生成对象的深层副本。\r\n\r\n```js\r\nconst deploymentConfig = {\r\n  provider: \"Sevalla\",\r\n  regi...",
+    "type": "default",
+    "url": "/doc/31.html"
   }
 ]

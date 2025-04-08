@@ -1,0 +1,47 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>JS 原生深拷贝 structuredClone</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>JS 原生深拷贝 structuredClone</h1>
+                        <div class="meta">
+                            <time datetime="Wed Apr 09 2025 05:10:33 GMT+0800 (中国标准时间)">2025/4/9</time>
+                            <div class="tags">
+                                <span class="tag">structuredClone</span><span class="tag">深拷贝</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>过去要进行对象深拷贝，往往需要 JSON 转换或第三方库。如今，现代 JavaScript 内置了 structuredClone，可直接生成对象的深层副本。</p>
+<pre><code class="language-js">const deploymentConfig = {
+  provider: &quot;Sevalla&quot;,
+  region: &quot;us-central1&quot;,
+  features: [&quot;CI/CD&quot;, &quot;Preview Apps&quot;, &quot;Auto Deployments&quot;],
+  metadata: {
+    createdAt: new Data(),
+    version: 2,
+  },
+};
+
+const clonedConfig = structuredClone(deploymentConfig);
+
+clonedConfig.metadata.version = 2.0;
+clonedConfig.features.push(&quot;Custom Domains&quot;);
+
+console.log(deploymentConfig.metadata.version); // 1.2
+console.log(clonedConfig.metadata.version); // 2.0
+</code></pre>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
