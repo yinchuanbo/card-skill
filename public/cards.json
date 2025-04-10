@@ -328,5 +328,16 @@
     "summary": "\r\n过去要进行对象深拷贝，往往需要 JSON 转换或第三方库。如今，现代 JavaScript 内置了 structuredClone，可直接生成对象的深层副本。\r\n\r\n```js\r\nconst deploymentConfig = {\r\n  provider: \"Sevalla\",\r\n  regi...",
     "type": "default",
     "url": "/doc/31.html"
+  },
+  {
+    "id": "32",
+    "title": "停止过度使用Console.log",
+    "tags": [
+      "Console.log"
+    ],
+    "createdAt": "2025-04-10T21:06:03.000Z",
+    "summary": "\r\n作为开发人员，过度使用 console.log()来快速调试代码是很诱人的。虽然这似乎是诊断问题的最快方法，但从长远来看，它可能会减慢您的速度、使您的代码混乱并限制您的见解。好消息是，JavaScript 的 console 对象提供了许多比 console.log()  更强大的方法，它们可以...",
+    "type": "default",
+    "url": "/doc/32.html"
   }
 ]
