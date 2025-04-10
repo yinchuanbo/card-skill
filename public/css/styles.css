@@ -2523,6 +2523,7 @@ body.modal-open {
   background-size: 50px 50px, 100% auto;
   background-position: center center, bottom center;
   background-repeat: repeat, no-repeat;
+  border-radius: 20px;
 }
 
 /* 暗色主题下的过滤器容器调整 */
@@ -2732,6 +2733,10 @@ body.modal-open {
   color: var(--text-dark);
 }
 
+#modalContent .content>*:last-child {
+  margin-bottom: 0;
+}
+
 /* 调整模态窗口内段落的间距 */
 #modalContent .content p {
   margin-bottom: 1.5rem;
@@ -2869,7 +2874,7 @@ blockquote p {
 }
 
 blockquote p:last-child {
-  margin-bottom: 0!important;
+  margin-bottom: 0 !important;
 }
 
 .code-type {
