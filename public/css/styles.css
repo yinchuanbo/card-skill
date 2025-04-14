@@ -1584,7 +1584,7 @@ html {
   right: 40px;
   width: 50px;
   height: 50px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%233e5c3e' stroke-width='1' stroke-opacity='0.2'/%3E%3Cpath d='M30,40 L50,60 L70,40' fill='none' stroke='%233e5c3e' stroke-width='1.5' stroke-opacity='0.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%233e5c3e' stroke-width='1' stroke-opacity='0.2'/%3E%3Cpath d='M30,60 L50,40 L70,60' fill='none' stroke='%233e5c3e' stroke-width='1.5' stroke-opacity='0.3' stroke-linecap='round'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
@@ -1616,7 +1616,7 @@ html {
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='rgba(255, 255, 255, 0.6)' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.8'/%3E%3Cpath d='M30,40 L50,60 L70,40' fill='none' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.9' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='rgba(255, 255, 255, 0.6)' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.8'/%3E%3Cpath d='M30,60 L50,40 L70,60' fill='none' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.9' stroke-linecap='round'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
@@ -1649,7 +1649,7 @@ html {
 [data-theme="dark"] .scroll-indicator {
   background-color: rgba(40, 50, 60, 0.85);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='rgba(30, 40, 50, 0.5)' stroke='%237da87d' stroke-width='2.5' stroke-opacity='0.9'/%3E%3Cpath d='M30,40 L50,60 L70,40' fill='none' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.95' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='rgba(30, 40, 50, 0.5)' stroke='%237da87d' stroke-width='2.5' stroke-opacity='0.9'/%3E%3Cpath d='M30,60 L50,40 L70,60' fill='none' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.95' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-theme="dark"] .scroll-indicator:hover {
@@ -1707,23 +1707,23 @@ html {
   transform: translateX(-50%);
   width: 40px;
   height: 40px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,35 L50,55 L70,35' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,50 L50,70 L70,50' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.15' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,55 L50,35 L70,55' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,70 L50,50 L70,70' stroke='%233e5c3e' stroke-width='2' stroke-opacity='0.15' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.7;
-  animation: pulseDown 2s infinite ease-in-out;
+  animation: pulseUp 2s infinite ease-in-out;
   pointer-events: none;
   display: none;
 }
 
-@keyframes pulseDown {
+@keyframes pulseUp {
   0%,
   100% {
     transform: translateX(-50%) translateY(0);
     opacity: 0.7;
   }
   50% {
-    transform: translateX(-50%) translateY(10px);
+    transform: translateX(-50%) translateY(-10px);
     opacity: 0.4;
   }
 }
@@ -1739,11 +1739,11 @@ html {
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,35 L50,55 L70,35' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.8' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,50 L50,70 L70,50' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,55 L50,35 L70,55' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.8' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,70 L50,50 L70,70' stroke='%233e5c3e' stroke-width='3' stroke-opacity='0.6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.85;
-  animation: pulseDown 2s infinite ease-in-out;
+  animation: pulseUp 2s infinite ease-in-out;
   pointer-events: none;
 }
 
@@ -1755,7 +1755,7 @@ html {
 [data-theme="dark"] .scroll-arrow {
   background-color: rgba(40, 50, 60, 0.7);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,35 L50,55 L70,35' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.9' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,50 L50,70 L70,50' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.7' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M30,55 L50,35 L70,55' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.9' stroke-linecap='round' fill='none'/%3E%3Cpath d='M30,70 L50,50 L70,70' stroke='%237da87d' stroke-width='3.5' stroke-opacity='0.7' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
   opacity: 0.9;
 }
 
