@@ -2444,7 +2444,7 @@ pre[class*="language-"] .ink-decoration {
   margin: 1.5rem auto;
   display: block;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease !important;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
