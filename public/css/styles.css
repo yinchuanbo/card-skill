@@ -3577,21 +3577,32 @@ blockquote p:last-child {
 
 /* 加载状态动画 */
 .tech-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
   text-align: center;
   color: var(--text-medium);
-  height: 300px;
+}
+
+/* 深色模式下的加载状态 */
+[data-theme="dark"] .tech-loading {
+  background-color: rgba(8, 8, 8, 0.95);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .tech-loading-spinner {
   position: relative;
-  width: 60px;
-  height: 60px;
-  margin-bottom: 1rem;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 1.5rem;
 }
 
 .tech-loading-spinner:before,
@@ -3761,7 +3772,7 @@ blockquote p:last-child {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-[data-theme="dark"] .tech-article-content pre {
+[data-theme="dark"] pre {
   background-color: #000000;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -4051,19 +4062,6 @@ blockquote p:last-child {
   text-overflow: ellipsis;
 }
 
-/* 文章内容容器 */
-.tech-article-content {
-  position: relative;
-  background: var(--tech-bg);
-  border-radius: 12px;
-  padding: 3rem;
-  margin-bottom: 3rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--tech-border);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
 /* 角落装饰 */
 .tech-article-decoration {
   position: absolute;
@@ -4131,7 +4129,7 @@ blockquote p:last-child {
 }
 
 /* 内容样式增强 */
-.tech-article-content .content h2 {
+.content h2 {
   position: relative;
   font-size: 2rem;
   margin: 2.5rem 0 1.5rem;
@@ -4140,11 +4138,11 @@ blockquote p:last-child {
   font-family: var(--font-calligraphy-13) !important;
 }
 
-.tech-article-content .content h2::before {
+.content h2::before {
   display: none;
 }
 
-.tech-article-content .content h2::after {
+.content h2::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -4160,7 +4158,7 @@ blockquote p:last-child {
   opacity: 0.3;
 }
 
-.tech-article-content .content h3 {
+.content h3 {
   font-size: 1.6rem;
   margin: 2rem 0 1.2rem;
   color: var(--tech-text);
@@ -4168,17 +4166,17 @@ blockquote p:last-child {
   display: inline-block;
 }
 
-.tech-article-content .content h3::after {
+.content h3::after {
   display: none;
 }
 
-.tech-article-content .content p {
+.content p {
   margin-bottom: 1.5rem;
   line-height: 1.8;
   color: var(--tech-text);
 }
 
-.tech-article-content .content a {
+.content a {
   color: var(--tech-accent);
   text-decoration: none;
   position: relative;
@@ -4186,15 +4184,15 @@ blockquote p:last-child {
   font-weight: 500;
 }
 
-.tech-article-content .content a::after {
+.content a::after {
   display: none;
 }
 
-.tech-article-content .content a:hover {
+.content a:hover {
   color: var(--tech-accent-dark);
 }
 
-.tech-article-content .content a:hover::after {
+.content a:hover::after {
   display: none;
 }
 
@@ -4292,7 +4290,7 @@ blockquote p:last-child {
 }
 
 /* 代码块增强样式 */
-.tech-article-content pre {
+pre {
   position: relative;
   border-radius: 10px;
   margin: 2rem 0;
@@ -4303,7 +4301,7 @@ blockquote p:last-child {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="dark"] .tech-article-content pre {
+[data-theme="dark"] pre {
   background: rgba(18, 25, 32, 0.97) !important;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -4366,7 +4364,7 @@ pre:hover .tech-copy-btn {
 }
 
 /* 图片放大效果 */
-.tech-article-content .content img {
+.content img {
   max-width: 100%;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -4374,7 +4372,7 @@ pre:hover .tech-copy-btn {
   cursor: pointer;
 }
 
-.tech-article-content .content img:hover {
+.content img:hover {
   transform: scale(1.02);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -4414,7 +4412,7 @@ pre:hover .tech-copy-btn {
 }
 
 /* 表格增强 */
-.tech-article-content table {
+table {
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
@@ -4424,7 +4422,7 @@ pre:hover .tech-copy-btn {
   border: 1px solid var(--tech-border);
 }
 
-.tech-article-content th {
+th {
   background: rgba(62, 92, 62, 0.1);
   color: var(--tech-text);
   font-weight: 600;
@@ -4434,22 +4432,22 @@ pre:hover .tech-copy-btn {
   border-bottom: 2px solid var(--tech-border);
 }
 
-.tech-article-content td {
+td {
   padding: 1rem;
   border-bottom: 1px solid var(--tech-border);
   color: var(--tech-text);
 }
 
-.tech-article-content tr:last-child td {
+tr:last-child td {
   border-bottom: none;
 }
 
-.tech-article-content tr:hover td {
+tr:hover td {
   background: rgba(62, 92, 62, 0.03);
 }
 
 /* 引用块增强 */
-.tech-article-content blockquote {
+blockquote {
   margin: 2rem 0;
   padding: 1.5rem 2rem 1.5rem 2.5rem;
   background: rgba(62, 92, 62, 0.05);
@@ -4461,7 +4459,7 @@ pre:hover .tech-copy-btn {
   font-style: italic;
 }
 
-.tech-article-content blockquote::before {
+blockquote::before {
   content: "\201C";
   position: absolute;
   top: 10px;
@@ -4474,19 +4472,19 @@ pre:hover .tech-copy-btn {
 }
 
 /* 列表增强 */
-.tech-article-content ul,
-.tech-article-content ol {
+ul,
+ol {
   margin-bottom: 1.5rem;
   padding-left: 1.5rem;
 }
 
-.tech-article-content li {
+li {
   margin-bottom: 0.8rem;
   position: relative;
   color: var(--tech-text);
 }
 
-.tech-article-content ul li::marker {
+ul li::marker {
   color: var(--tech-accent);
 }
 
@@ -4504,15 +4502,11 @@ pre:hover .tech-copy-btn {
     font-size: 2.2rem;
   }
 
-  .tech-article-content {
-    padding: 2.5rem 2rem;
-  }
-
-  .tech-article-content .content h2 {
+  .content h2 {
     font-size: 1.8rem;
   }
 
-  .tech-article-content .content h3 {
+  .content h3 {
     font-size: 1.4rem;
   }
 }
@@ -5172,5 +5166,24 @@ pre.loading {
     min-width: 16px;
     height: 16px;
     font-size: 0.7rem;
+  }
+}
+
+.tech-loading p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  font-family: var(--font-accent);
+  animation: fadeInOut 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
