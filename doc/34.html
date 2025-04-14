@@ -1,0 +1,116 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>7 个代替 setTimeout 的方案，让定时任务更可靠</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>7 个代替 setTimeout 的方案，让定时任务更可靠</h1>
+                        <div class="meta">
+                            <time datetime="Mon Apr 14 2025 22:41:03 GMT+0800 (中国标准时间)">2025/4/14</time>
+                            <div class="tags">
+                                <span class="tag">定时器</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p><code>setTimeout</code>是我们经常使用的定时器 API，它允许我们延迟执行代码。但在实际应用中，<code>setTimeout</code>存在一些局限性和潜在问题，比如精度不高、在页面不活跃时可能被节流等。分享 7 种替代方案，让我们的定时任务更加可靠和高效。</p>
+<h2 id="1-requestanimationframe">1. requestAnimationFrame</h2>
+<p><code>requestAnimationFrame</code>主要用于执行动画，它会在浏览器下一次重绘之前调用指定的回调函数。</p>
+<pre><code class="language-js">function animateWithRAF(timestamp) {
+  // 执行动画逻辑
+  requestAnimationFrame(animateWithRAF);
+}
+requestAnimationFrame(animateWithRAF);
+</code></pre>
+<p>优点：</p>
+<ul>
+<li>与显示器刷新率同步，通常为 60fps</li>
+<li>在不可见标签页中会暂停，节省资源</li>
+<li>动画更平滑</li>
+</ul>
+<h2 id="2-setinterval--clearinterval">2. setInterval + clearInterval</h2>
+<p>对于需要重复执行的任务，<code>setInterval</code>比多个<code>setTimeout</code>更合适。</p>
+<pre><code class="language-js">const intervalId = setInterval(() =&gt; {
+  console.log(&quot;每秒执行一次&quot;);
+}, 1000);
+
+// 停止定时器
+// clearInterval(intervalId);
+</code></pre>
+<p>优点：</p>
+<ul>
+<li>代码更简洁</li>
+<li>更适合固定间隔的重复任务</li>
+</ul>
+<h2 id="3-requestidlecallback">3. requestIdleCallback</h2>
+<p>当浏览器空闲时执行低优先级任务，避免影响关键操作。</p>
+<img src="/images/66.webp">
+
+<p>优点：</p>
+<ul>
+<li>充分利用浏览器空闲时间</li>
+<li>可以设置超时保证任务最终会执行</li>
+<li>不阻塞主线程关键操作</li>
+</ul>
+<h2 id="4-web-workers">4. Web Workers</h2>
+<p>将耗时任务移至后台线程，避免阻塞主线程。</p>
+<img src="/images/67.webp">
+
+<p>优点：</p>
+<ul>
+<li>不阻塞 UI 线程</li>
+<li>即使页面不活跃也能继续执行</li>
+<li>适合计算密集型任务</li>
+</ul>
+<h2 id="5-promise--asyncawait">5. Promise + async/await</h2>
+<p>用 Promise 包装 setTimeout，结合 async/await 使异步代码更清晰。</p>
+<img src="/images/68.webp">
+
+<p>优点：</p>
+<ul>
+<li>代码更清晰，避免回调地狱</li>
+<li>更好的错误处理</li>
+<li>便于链式组合多个异步操作</li>
+</ul>
+<h2 id="6-web-animations-api">6. Web Animations API</h2>
+<p>对于动画效果，Web Animations API 提供了更高级的控制。</p>
+<img src="/images/69.webp">
+
+<p>优点：</p>
+<ul>
+<li>声明式 API，更易于理解</li>
+<li>内置的暂停、恢复和控制功能</li>
+<li>比 CSS 动画和 setTimeout 更精确</li>
+</ul>
+<h2 id="7-intersection-observer">7. Intersection Observer</h2>
+<p>当元素进入视口时执行代码，比如延迟加载资源或触发动画。</p>
+<pre><code class="language-js">const observer = new IntersectionObserver((entries) =&gt; {
+  entries.forEach((entry) =&gt; {
+    if (entry.isIntersecting) {
+      console.log(&quot;元素进入视口&quot;);
+      // 执行需要的操作
+    }
+  });
+});
+
+observer.observe(document.querySelector(&quot;.lazy-load&quot;));
+</code></pre>
+<p>优点：</p>
+<ul>
+<li>无需手动计算元素位置</li>
+<li>性能更好，避免滚动事件中大量计算</li>
+<li>适合实现&quot;按需执行&quot;的场景</li>
+</ul>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -339,5 +339,28 @@
     "summary": "\r\n作为开发人员，过度使用 console.log()来快速调试代码是很诱人的。虽然这似乎是诊断问题的最快方法，但从长远来看，它可能会减慢您的速度、使您的代码混乱并限制您的见解。好消息是，JavaScript 的 console 对象提供了许多比 console.log()  更强大的方法，它们可以...",
     "type": "default",
     "url": "/doc/32.html"
+  },
+  {
+    "id": "33",
+    "title": "前端利器 Dinero.js：彻底告别 0.1+0.2 精度噩梦，优雅处理多币种",
+    "tags": [
+      "Dinero.js",
+      "货币计算"
+    ],
+    "createdAt": "2025-04-14T14:22:03.000Z",
+    "summary": "\r\n大家有没有在开发中，有没有遇到过 `0.1 + 0.2` 结果不是 `0.3` 这种“灵异事件”时，尤其是在需要精确到分的金融或电商场景，麻烦就来了。支付金额算错、优惠券对不上、财务对账抓狂……这些都可能是 JavaScript 数字类型的“天生缺陷”。\r\n\r\n**为什么 JavaScript ...",
+    "type": "default",
+    "url": "/doc/33.html"
+  },
+  {
+    "id": "34",
+    "title": "7 个代替 setTimeout 的方案，让定时任务更可靠",
+    "tags": [
+      "定时器"
+    ],
+    "createdAt": "2025-04-14T14:41:03.000Z",
+    "summary": "\r\n`setTimeout`是我们经常使用的定时器 API，它允许我们延迟执行代码。但在实际应用中，`setTimeout`存在一些局限性和潜在问题，比如精度不高、在页面不活跃时可能被节流等。分享 7 种替代方案，让我们的定时任务更加可靠和高效。\r\n\r\n## 1\\. requestAnimation...",
+    "type": "default",
+    "url": "/doc/34.html"
   }
 ]
