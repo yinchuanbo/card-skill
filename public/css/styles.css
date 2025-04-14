@@ -1,6 +1,11 @@
 /* Global Styles and Variables - 中国山水画风格 */
 @import url("https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap");
 
+@font-face {
+  font-family: "myfont";
+  src: url("https://yinchuanbo.github.io/fonts/myfont.ttf");
+}
+
 :root {
   /* 水墨色彩 - 优化对比度和饱和度 */
   --ink-dark: #0e1621;
@@ -35,8 +40,8 @@
   --transition-fast: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
   /* 字体系统 - 简化为只使用所需字体 */
-  --font-code: "JetBrains Mono"; /* 代码字体 */
-  --font-calligraphy-13: "Zhi Mang Xing", cursive; /* 主要字体 - 志莽行书风格 */
+  --font-code: myfont; /* 代码字体 */
+  --font-calligraphy-13: myfont; /* 主要字体 - 志莽行书风格 */
 
   /* 为确保向后兼容，将所有字体变量指向同一个字体 */
   --font-accent: var(--font-calligraphy-13);
@@ -1068,7 +1073,6 @@ body.loaded {
   padding: 0.2em 0.4em;
   border-radius: 3px;
   border: 1px solid rgba(62, 92, 62, 0.1);
-  font-style: italic;
 }
 
 /* 列表样式 */
@@ -2460,7 +2464,7 @@ pre[class*="language-"] .ink-decoration {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
-  z-index: 2000;
+  z-index: 20006;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2472,11 +2476,6 @@ pre[class*="language-"] .ink-decoration {
 .image-lightbox.active {
   opacity: 1;
   visibility: visible;
-}
-
-code[class*="language-"],
-pre[class*="language-"] {
-  font-style: italic;
 }
 
 .lightbox-content {
