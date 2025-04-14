@@ -139,6 +139,11 @@
 
       <!-- 高科技风格过滤器容器 -->
       <div class="tech-filter-container" id="filterSidebar">
+        <button
+          class="filter-close-btn"
+          id="filterCloseBtn"
+          aria-label="关闭筛选菜单"
+        ></button>
         <h3 class="sidebar-title">知识卡片筛选</h3>
         <input
           type="text"
@@ -197,6 +202,7 @@
         const sidebarToggle = document.getElementById("sidebarToggle");
         const filterSidebar = document.getElementById("filterSidebar");
         const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+        const filterCloseBtn = document.getElementById("filterCloseBtn");
         const bodyElement = document.body;
         const cardGrid = document.getElementById("cardGrid");
 
@@ -222,14 +228,14 @@
           );
         });
 
+        // 关闭按钮点击事件
+        filterCloseBtn.addEventListener("click", function () {
+          closeSidebar();
+        });
+
         // 点击背景遮罩关闭侧边栏
         sidebarBackdrop.addEventListener("click", function () {
-          filterSidebar.classList.remove("active");
-          sidebarToggle.classList.remove("active");
-          sidebarBackdrop.classList.remove("active");
-          bodyElement.classList.remove("sidebar-active");
-          sidebarToggle.setAttribute("aria-expanded", "false");
-          sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+          closeSidebar();
         });
 
         // 添加键盘可访问性
@@ -238,14 +244,19 @@
             e.key === "Escape" &&
             filterSidebar.classList.contains("active")
           ) {
-            filterSidebar.classList.remove("active");
-            sidebarToggle.classList.remove("active");
-            sidebarBackdrop.classList.remove("active");
-            bodyElement.classList.remove("sidebar-active");
-            sidebarToggle.setAttribute("aria-expanded", "false");
-            sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+            closeSidebar();
           }
         });
+
+        // 关闭侧边栏的函数
+        function closeSidebar() {
+          filterSidebar.classList.remove("active");
+          sidebarToggle.classList.remove("active");
+          sidebarBackdrop.classList.remove("active");
+          bodyElement.classList.remove("sidebar-active");
+          sidebarToggle.setAttribute("aria-expanded", "false");
+          sidebarToggle.setAttribute("aria-label", "打开筛选菜单");
+        }
 
         // 标签生成和点击逻辑
         const updateTagFilters = function (tags, counts) {

@@ -472,6 +472,10 @@ body.loaded {
   box-shadow: var(--shadow-subtle);
 }
 
+body:has(.sidebar-backdrop.active) {
+  overflow: hidden;
+}
+
 #searchInput {
   padding: 1.2rem 1.8rem;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -484,6 +488,7 @@ body.loaded {
   transition: var(--transition-medium);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
   letter-spacing: 0.03em;
+  margin-top: 10px;
 }
 
 #searchInput:focus {
@@ -3238,22 +3243,94 @@ blockquote p:last-child {
 
 /* 科技感过滤器容器 */
 .tech-filter-container {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100vh;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+  transition: left 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  background: rgba(249, 246, 240, 0.8);
-  border-radius: 10px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(62, 92, 62, 0.1);
-  position: relative;
-  z-index: 20; /* 确保容器有足够的z-index层级 */
-  transition: var(--transition-medium);
+}
+
+.tech-filter-container.active {
+  left: 0;
 }
 
 .tech-filter-container:hover {
-  background: rgba(249, 246, 240, 0.95);
-  box-shadow: 0 4px 15px rgba(62, 92, 62, 0.08);
+  background-color: rgba(255, 255, 255, 0.98);
+}
+
+/* 添加关闭按钮样式 */
+.filter-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1001;
+}
+
+.filter-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: rotate(90deg);
+}
+
+.filter-close-btn:before,
+.filter-close-btn:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 1px;
+}
+
+.filter-close-btn:before {
+  transform: rotate(45deg);
+}
+
+.filter-close-btn:after {
+  transform: rotate(-45deg);
+}
+
+/* 深色模式关闭按钮 */
+[data-theme="dark"] .filter-close-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .filter-close-btn:before,
+[data-theme="dark"] .filter-close-btn:after {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 为移动设备调整样式 */
+@media (max-width: 768px) {
+  .tech-filter-container {
+    padding: 20px;
+  }
+
+  .filter-close-btn {
+    top: 10px;
+    right: 10px;
+  }
 }
 
 /* 科技感搜索输入 */
@@ -3281,56 +3358,50 @@ blockquote p:last-child {
 
 /* 科技感标签过滤器 */
 .tech-tag-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-top: 0.8rem;
-  max-height: none; /* 始终显示所有标签 */
-  overflow: visible;
+  margin-top: 20px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
   position: relative;
-  z-index: 11;
-  padding-right: 5px; /* 为滚动条预留空间 */
+  padding-right: 10px;
 }
 
 .tech-tag-filters-inner {
   display: flex;
-  flex-direction: column; /* 列布局 */
-  gap: 0.6rem;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .tech-tag-filter {
-  width: 100%; /* 使标签占满整个宽度 */
-  display: flex;
-  justify-content: space-between; /* 标签文本和计数两端对齐 */
+  display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   font-size: 0.9rem;
-  background: rgba(62, 92, 62, 0.05);
-  color: var(--text-medium);
   cursor: pointer;
-  transition: all 0.25s ease;
-  border: 1px solid transparent;
-  user-select: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  margin-bottom: 0;
 }
 
 .tech-tag-filter:hover {
-  background: rgba(62, 92, 62, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 6px rgba(62, 92, 62, 0.1);
-  color: var(--text-dark);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 /* 改进选中标签的高亮效果 */
 .tech-tag-filter.active {
-  background: rgba(62, 92, 62, 0.15);
-  color: var(--mountain-green);
-  border-color: rgba(62, 92, 62, 0.3);
-  font-weight: 600;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(62, 92, 62, 0.15);
-  position: relative;
+  background: rgba(62, 92, 62, 0.8);
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(62, 92, 62, 0.2);
+  transform: translateY(-1px);
 }
 
 .tech-tag-filter.active::before {
@@ -3346,12 +3417,17 @@ blockquote p:last-child {
 
 /* 侧边栏内的标签计数 */
 .tag-count {
-  font-size: 0.8rem;
-  background: rgba(62, 92, 62, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
   border-radius: 10px;
-  padding: 0.1rem 0.5rem;
-  color: var(--text-medium);
-  transition: all 0.25s ease;
+  background: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+  margin-left: 8px;
+  min-width: 18px;
+  height: 18px;
+  transition: all 0.2s ease;
 }
 
 .tech-tag-filter:hover .tag-count {
@@ -3365,21 +3441,20 @@ blockquote p:last-child {
 
 /* 暗色主题下的标签样式 */
 [data-theme="dark"] .tech-tag-filter {
-  background: rgba(177, 167, 212, 0.05);
-  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 [data-theme="dark"] .tech-tag-filter:hover {
-  background: rgba(177, 167, 212, 0.1);
-  color: var(--text-medium);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="dark"] .tech-tag-filter.active {
-  background: rgba(177, 167, 212, 0.15);
-  color: var(--water-blue);
-  border-color: rgba(177, 167, 212, 0.3);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  background: rgba(100, 150, 100, 0.6);
+  color: white;
+  border-color: rgba(100, 150, 100, 0.8);
 }
 
 [data-theme="dark"] .tech-tag-filter.active::before {
@@ -3387,8 +3462,8 @@ blockquote p:last-child {
 }
 
 [data-theme="dark"] .tag-count {
-  background: rgba(177, 167, 212, 0.1);
-  color: var(--text-light);
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 [data-theme="dark"] .tech-tag-filter:hover .tag-count {
@@ -3671,8 +3746,8 @@ blockquote p:last-child {
 }
 
 [data-theme="dark"] .tech-filter-container {
-  background-color: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(10, 10, 10, 0.95);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .tech-search-input {
@@ -4857,36 +4932,6 @@ pre.loading {
   border-bottom-color: rgba(0, 68, 153, 0.5);
 }
 
-/* 科技感过滤器容器 - 侧边栏版本 */
-.tech-filter-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  background: rgba(249, 246, 240, 0.95);
-  border-radius: 0 10px 10px 0;
-  padding: 1.5rem;
-  border: 1px solid rgba(62, 92, 62, 0.1);
-  border-left: none;
-  position: fixed;
-  left: -320px; /* 默认隐藏在左侧 */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 320px;
-  max-height: 90vh;
-  overflow-y: auto;
-  z-index: 1000; /* 确保在其他内容之上 */
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.tech-filter-container.active {
-  left: 0; /* 显示时移动到视口内 */
-}
-
-.tech-filter-container:hover {
-  background: rgba(249, 246, 240, 0.98);
-}
-
 /* 侧边栏切换按钮 */
 .sidebar-toggle {
   position: fixed;
@@ -5091,4 +5136,41 @@ pre.loading {
 .font-calligraphy-13-sample,
 .font-calligraphy-14-sample {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .tech-tag-filters {
+    max-height: calc(100vh - 150px);
+  }
+
+  .tech-tag-filters-inner {
+    gap: 8px;
+  }
+
+  .tech-tag-filter {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-tag-filters {
+    max-height: calc(100vh - 130px);
+  }
+
+  .tech-tag-filters-inner {
+    gap: 6px;
+  }
+
+  .tech-tag-filter {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+
+  .tag-count {
+    margin-left: 6px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.7rem;
+  }
 }
