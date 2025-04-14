@@ -369,5 +369,27 @@
     "summary": "\r\n在我们日常工作中，可能会遇到截图页面的场景，有时页面有些内容不符合要求，我们可能需要进行一些数值或内容的修改。如果你会 PS，修改内容难度不高，如果你是前端，打开控制台也能通过修改 dom 的方式进行简单的文字修改。\r\n\r\n今天，我就来分享一个冷门又实用的前端技巧 —— 只需一行 JavaScr...",
     "type": "default",
     "url": "/doc/35.html"
+  },
+  {
+    "id": "36",
+    "title": "8 个面向前端方向的 AI 编程助手",
+    "tags": [
+      "AI "
+    ],
+    "createdAt": "2025-04-14T17:02:03.000Z",
+    "summary": "\r\n## 1\\. Webcrumbs — 使用 TailwindCSS 即时生成组件\r\n\r\n<img src=\"/images/71.webp\" />\r\n\r\n官网地址：https://www.webcrumbs.org/frontend-ai\r\n\r\nWebcrumbs 的 Frontend AI 是...",
+    "type": "default",
+    "url": "/doc/36.html"
+  },
+  {
+    "id": "37",
+    "title": "AI 驱动的浏览器自动化神器 Nanobrowser",
+    "tags": [
+      "AI "
+    ],
+    "createdAt": "2025-04-14T17:18:03.000Z",
+    "summary": "\r\n推荐一款**颠覆传统网页操作的 AI 神器——Nanobrowser**！它能让你的浏览器像“自动驾驶”一样，自动完成数据抓取、比价下单、竞品分析等高难度任务，彻底解放双手！\r\n\r\n<img src=\"/images/81.webp\" />\r\n\r\n### **Nanobrowser 的核心特点*...",
+    "type": "default",
+    "url": "/doc/37.html"
   }
 ]
