@@ -4935,7 +4935,7 @@ pre.loading {
 /* 侧边栏切换按钮 */
 .sidebar-toggle {
   position: fixed;
-  left: 0;
+  left: -5px;
   top: 50%;
   transform: translateY(-50%);
   width: 48px;
