@@ -90,29 +90,6 @@
         gap: 1rem;
       }
 
-      .nav-link {
-        font-weight: 500;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .nav-link::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background-color: var(--accent-color);
-        transition: all 0.3s ease;
-        transform: translateX(-50%);
-      }
-
-      .nav-link:hover::after,
-      .nav-link.active::after {
-        width: 80%;
-      }
-
       /* 主内容区优化 */
       .main-content {
         padding-top: 0;

@@ -733,11 +733,30 @@ body:has(.sidebar-backdrop.active) {
   visibility: hidden;
   transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1),
     visibility 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: opacity, visibility;
+  pointer-events: none;
 }
 
 .modal-overlay.active {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  animation: modalOverlayFadeIn 0.35s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes modalOverlayFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 /* 高科技风格模态内容 */
