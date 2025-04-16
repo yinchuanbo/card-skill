@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +26,7 @@
 
     <!-- Load external styles first so our custom styles can override them -->
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/website-navigation.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -371,34 +372,25 @@
         background-color: rgba(40, 50, 60, 0.9);
       }
 
-      /* 主题切换按钮 */
-      .theme-toggle {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+      /* 主题切换按钮 - 覆盖之前的样式 */
+      header .theme-toggle {
+        position: static;
+        width: 40px;
+        height: 40px;
+        background: none;
+        box-shadow: none;
         border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 100;
-        font-size: 1.3rem;
-        transition: var(--transition-smooth);
+        font-size: inherit;
       }
 
-      .theme-toggle:hover {
-        transform: translateY(-3px) rotate(15deg);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      header .theme-toggle:hover {
+        transform: none;
+        box-shadow: none;
       }
 
-      [data-theme="dark"] .theme-toggle {
-        background: rgba(30, 40, 50, 0.9);
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+      [data-theme="dark"] header .theme-toggle {
+        background: none;
+        box-shadow: none;
       }
 
       /* 音频列表专用样式 */
@@ -1596,78 +1588,171 @@
         background-color: rgba(0, 0, 0, 0.15) !important;
         z-index: -1 !important;
       }
+
+      /* 页面容器样式 */
+      .page-container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: var(--color-background);
+        color: var(--color-text);
+      }
+
+      /* 导航统一样式 */
+      .site-header {
+        position: relative;
+        background-color: var(--bg-secondary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 0;
+        overflow: hidden;
+        z-index: 100;
+        margin-bottom: 0;
+        border-radius: 0;
+      }
+
+      .site-header .header-content {
+        padding: 1rem 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 1rem;
+      }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <!-- 返回按钮 -->
-      <div style="text-align: left; margin-top: 2rem">
-        <a href="/" class="return-button"> <span>←</span> 返回首页 </a>
-      </div>
-
-      <!-- 顶部精美头部 -->
-      <div class="tech-header">
-        <div class="tech-header-content">
-          <div class="tech-header-text">
-            <h1
-              style="
-                color: white !important;
-                font-family: 'ZCOOL KuaiLe', cursive !important;
-                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
-              "
-            >
-              墨境智库音频馆
-            </h1>
-            <p
-              class="subtitle"
-              style="
-                color: #f0d9b5 !important;
-                font-family: 'ZCOOL KuaiLe', cursive !important;
-                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-              "
-            >
-              优雅聆听，智慧相伴
-            </p>
+  <body class="light-theme">
+    <div class="page-container">
+      <!-- 头部区域 -->
+      <header class="site-header">
+        <canvas id="particleCanvas" class="particle-canvas"></canvas>
+        <div class="header-content">
+          <div class="header-left">
+            <a href="/" class="logo-link">
+              <h1 class="site-title">墨境智库</h1>
+            </a>
+            <p class="site-subtitle">发现价值，探索无限</p>
           </div>
-          <div
-            class="tech-avatar-container"
-            style="
-              background-color: #f9f5ec !important;
-              border: 2px solid rgba(240, 217, 181, 0.5) !important;
-              display: none;
-            "
-          >
-            <img
-              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDQ5NWUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItbXVzaWMiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBmaWxsPSIjZjlmNWVjIi8+PHBhdGggZD0iTTkgMTh2LTEzIGwxMiAtMiB2MTMiPjwvcGF0aD48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjMiIGZpbGw9IiNmMGQ5YjUiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE4IiBjeT0iMTYiIHI9IjMiIGZpbGw9IiNmMGQ5YjUiPjwvY2lyY2xlPjwvc3ZnPg=="
-              alt="墨境智库"
-              class="tech-avatar"
-              style="
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-              "
-            />
+
+          <!-- 主导航 -->
+          <nav class="main-nav">
+            <ul class="nav-list">
+              <li class="nav-item">
+                <a href="/" class="nav-link">首页</a>
+              </li>
+              <li class="nav-item">
+                <a href="/website-navigation.html" class="nav-link">
+                  <span class="nav-icon">🧭</span>
+                  网站导航
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/audio-list.html" class="nav-link active">
+                  <span class="nav-icon">🎧</span>
+                  音频库
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- 主题切换和菜单按钮 -->
+          <div class="header-right">
+            <button
+              id="themeToggle"
+              class="theme-toggle"
+              aria-label="切换深色/浅色主题"
+            >
+              <svg
+                class="sun-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg
+                class="moon-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                ></path>
+              </svg>
+            </button>
+
+            <button
+              class="menu-toggle"
+              id="mobileMenuToggle"
+              aria-label="打开菜单"
+              aria-expanded="false"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
           </div>
         </div>
 
-        <div class="audio-wave-container">
-          <div class="audio-wave-bar" style="animation-delay: 0.1s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.2s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.3s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.4s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.5s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.6s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.7s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.8s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 0.9s"></div>
-          <div class="audio-wave-bar" style="animation-delay: 1s"></div>
+        <!-- 移动端导航 -->
+        <div class="mobile-nav" id="mobileNav">
+          <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+              <a href="/" class="mobile-nav-link">首页</a>
+            </li>
+            <li class="mobile-nav-item">
+              <a href="/website-navigation.html" class="mobile-nav-link">
+                <span class="nav-icon">🧭</span>
+                网站导航
+              </a>
+            </li>
+            <li class="mobile-nav-item">
+              <a href="/audio-list.html" class="mobile-nav-link active">
+                <span class="nav-icon">🎧</span>
+                音频库
+              </a>
+            </li>
+          </ul>
         </div>
-      </div>
+      </header>
 
       <!-- 音频列表 -->
-      <div class="audio-list" id="audioList">
-        <!-- 音频列表将由JavaScript动态生成 -->
-      </div>
+      <main class="main-content">
+        <div class="page-title-container">
+          <h1 class="page-title">墨境智库音频馆</h1>
+          <p class="page-description">优雅聆听，智慧相伴</p>
+        </div>
+
+        <div class="audio-list" id="audioList">
+          <!-- 音频列表将由JavaScript动态生成 -->
+        </div>
+      </main>
 
       <footer class="main-footer">
         <div class="footer-content">
@@ -2416,7 +2501,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         renderAudioList();
         // 初始化主题切换功能
-        initThemeToggle();
+        // initThemeToggle();
         // 初始化音量控制
         updateVolumeUI();
       });
@@ -2658,6 +2743,119 @@
           }, 300);
         }, 8000);
       }
+    </script>
+
+    <!-- 主题切换和移动菜单脚本 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 主题切换功能
+        const themeToggle = document.getElementById("themeToggle");
+        let currentTheme = localStorage.getItem("theme") || "light";
+
+        // 检测系统偏好
+        if (!localStorage.getItem("theme")) {
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          currentTheme = prefersDark ? "dark" : "light";
+        }
+
+        // 应用初始主题
+        applyTheme();
+
+        // 切换主题按钮事件
+        if (themeToggle) {
+          themeToggle.addEventListener("click", function () {
+            currentTheme = currentTheme === "light" ? "dark" : "light";
+            localStorage.setItem("theme", currentTheme);
+            applyTheme();
+          });
+        }
+
+        // 应用主题函数
+        function applyTheme() {
+          // 移除所有主题类名
+          document.body.classList.remove("light-theme", "dark-theme");
+
+          // 添加当前主题类名
+          document.body.classList.add(`${currentTheme}-theme`);
+
+          // 设置HTML data-theme属性
+          document.documentElement.setAttribute("data-theme", currentTheme);
+
+          // 更新主题图标显示
+          updateThemeIcon();
+        }
+
+        // 更新主题图标显示
+        function updateThemeIcon() {
+          if (!themeToggle) return;
+
+          const sunIcon = themeToggle.querySelector(".sun-icon");
+          const moonIcon = themeToggle.querySelector(".moon-icon");
+
+          if (sunIcon && moonIcon) {
+            if (currentTheme === "dark") {
+              sunIcon.style.display = "none";
+              moonIcon.style.display = "block";
+            } else {
+              sunIcon.style.display = "block";
+              moonIcon.style.display = "none";
+            }
+          }
+        }
+
+        // 移动菜单功能
+        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+        const mobileNav = document.getElementById("mobileNav");
+        const bodyElement = document.body;
+
+        if (mobileMenuToggle && mobileNav) {
+          // 切换移动菜单
+          mobileMenuToggle.addEventListener("click", function () {
+            if (mobileNav.classList.contains("active")) {
+              closeMobileMenu();
+            } else {
+              openMobileMenu();
+            }
+          });
+
+          // 点击页面任何区域关闭移动菜单
+          document.addEventListener("click", function (e) {
+            if (
+              mobileNav.classList.contains("active") &&
+              !mobileNav.contains(e.target) &&
+              e.target !== mobileMenuToggle &&
+              !mobileMenuToggle.contains(e.target)
+            ) {
+              closeMobileMenu();
+            }
+          });
+
+          // ESC键关闭菜单
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+              closeMobileMenu();
+            }
+          });
+        }
+
+        // 打开移动菜单
+        function openMobileMenu() {
+          mobileNav.classList.add("active");
+          mobileMenuToggle.setAttribute("aria-expanded", "true");
+          mobileMenuToggle.classList.add("active");
+          bodyElement.style.overflow = "hidden";
+        }
+
+        // 关闭移动菜单
+        function closeMobileMenu() {
+          mobileNav.classList.remove("active");
+          mobileMenuToggle.setAttribute("aria-expanded", "false");
+          mobileMenuToggle.classList.remove("active");
+          bodyElement.style.overflow = "";
+        }
+      });
     </script>
   </body>
 </html>

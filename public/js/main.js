@@ -49,7 +49,7 @@ async function initializeApp() {
   addScrollIndicators();
 
   // 初始化主题切换功能
-  initThemeToggle();
+  // initThemeToggle();
 
   const cardTitles = document.querySelectorAll(".card-header h2");
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,6 +48,7 @@
     <link rel="manifest" href="/site.webmanifest" />
 
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/website-navigation.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -59,50 +60,377 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
     /> -->
+
+    <!-- 自定义导航样式调整 -->
+    <style>
+      /* CSS变量补充 */
+      :root {
+        --hover-bg-rgb: 0, 0, 0;
+        --menu-button-color: var(--text-color);
+        --menu-button-bg: rgba(0, 0, 0, 0.05);
+      }
+
+      [data-theme="dark"] {
+        --hover-bg-rgb: 255, 255, 255;
+        --menu-button-bg: rgba(255, 255, 255, 0.1);
+      }
+
+      /* 统一导航样式 */
+      .site-header.tech-header {
+        position: relative;
+        background-color: var(--bg-secondary);
+        box-shadow: 0 2px 10px var(--card-shadow);
+        overflow: hidden;
+        z-index: 100;
+      }
+
+      .site-header .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        position: relative;
+        z-index: 2;
+        /* max-width: 1400px; */
+        margin: 0 auto;
+      }
+
+      .site-header .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header .site-title {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        font-family: "Zhi Mang Xing", cursive;
+        color: var(--text-color);
+      }
+
+      .site-header .site-subtitle {
+        margin: 0.2rem 0 0;
+        font-size: 0.9rem;
+        color: var(--text-color-faded);
+      }
+
+      .logo-link {
+        text-decoration: none;
+        color: var(--text-color);
+      }
+
+      /* 适配原有技术风格 */
+      .tech-header .tech-nav {
+        margin: 0 2rem;
+      }
+
+      /* 右侧按钮区域 */
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      /* 主题切换按钮 */
+      .theme-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color);
+        transition: background-color 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--hover-bg);
+      }
+
+      /* 移动菜单按钮 */
+      .menu-toggle {
+        background-color: var(--menu-button-bg);
+        border: none;
+        cursor: pointer;
+        width: 42px; /* 略微调整大小 */
+        height: 42px;
+        position: relative;
+        z-index: 1001; /* 确保高于移动菜单 */
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: none; /* 默认隐藏，在移动视图中显示 */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0; /* 重置内边距 */
+        margin-left: 5px; /* 添加一些间距 */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 增强按钮可见性 */
+      .menu-toggle:hover {
+        background-color: rgba(var(--hover-bg-rgb), 0.15);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      /* 让按钮内的线条更明显 */
+      .menu-toggle span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        margin: 3px 0;
+        background-color: var(--text-color);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        border-radius: 2px;
+      }
+
+      /* 移动导航样式 */
+      .mobile-nav {
+        display: block; /* 改为block，通过位置控制可见性 */
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        background-color: var(--bg-secondary);
+        box-shadow: -5px 0 15px var(--card-shadow);
+        z-index: 1000; /* 确保在其他元素上方 */
+        transition: right 0.3s ease;
+        padding: 5rem 1rem 1rem;
+        overflow-y: auto; /* 允许内容滚动 */
+        box-sizing: border-box;
+      }
+
+      .mobile-nav.active {
+        right: 0;
+      }
+
+      /* 确保移动导航中的链接有足够对比度 */
+      .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        color: var(--text-color);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 1.1rem; /* 增大字体确保可见 */
+        margin-bottom: 0.8rem; /* 增加间距 */
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .mobile-nav-link .nav-icon {
+        margin-right: 0.8rem;
+        font-size: 1.25rem;
+      }
+
+      .mobile-nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: var(--hover-bg);
+      }
+
+      .mobile-nav-link.active {
+        color: var(--accent-color);
+        background-color: var(--accent-color-light);
+        font-weight: 600;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 汉堡菜单动画 */
+      .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      /* 移动菜单标题 */
+      .mobile-nav-header {
+        margin-bottom: 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--accent-color);
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      /* 响应式调整 */
+      @media (max-width: 992px) {
+        .site-header .header-content {
+          padding: 1rem;
+        }
+
+        .main-nav.tech-nav {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: flex !important; /* 使用!important确保显示 */
+        }
+
+        .tech-header .header-right {
+          margin-left: auto;
+        }
+
+        /* 让浮层遮罩和导航在移动设备上可见 */
+        body.menu-open .mobile-menu-backdrop {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        body.menu-open .mobile-nav {
+          right: 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .site-header .site-title {
+          font-size: 1.5rem;
+        }
+
+        .site-header .site-subtitle {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .site-header .header-content {
+          padding: 0.8rem;
+        }
+
+        .site-header .site-title {
+          font-size: 1.2rem;
+        }
+
+        .header-right {
+          gap: 0.5rem;
+        }
+      }
+    </style>
   </head>
-  <body>
+  <body class="light-theme">
     <div class="container">
       <!-- 高科技风格头部 -->
-      <header class="tech-header">
+      <header class="site-header tech-header">
         <canvas id="particleCanvas" class="particle-canvas"></canvas>
-        <div class="tech-header-content">
-          <div class="tech-header-text">
-            <h1>墨境智库</h1>
-            <p class="subtitle">知识如山水长流，观之可悟</p>
+        <div class="header-content">
+          <div class="header-left">
+            <a href="/" class="logo-link">
+              <h1 class="site-title">墨境智库</h1>
+            </a>
+            <p class="site-subtitle">知识如山水长流，观之可悟</p>
           </div>
 
-          <!-- 导航菜单 -->
-          <!-- <nav class="tech-nav">
-            <ul class="tech-nav-list">
-              <li class="tech-nav-item">
-                <a href="/" class="tech-nav-link active">首页</a>
+          <!-- 主导航 -->
+          <nav class="main-nav">
+            <ul class="nav-list">
+              <li class="nav-item">
+                <a href="/" class="nav-link active">首页</a>
               </li>
-              <li class="tech-nav-item">
-                <a href="/audio-list.html" class="tech-nav-link">
-                  <span class="nav-icon">🎧</span>
-                  音频库
+              <li class="nav-item">
+                <a href="/website-navigation.html" class="nav-link">
+                  <span class="nav-icon">🧭</span>
+                  网站导航
                 </a>
               </li>
             </ul>
+          </nav>
+
+          <!-- 主题切换和菜单按钮 -->
+          <div class="header-right">
             <button
-              class="tech-nav-toggle"
-              aria-label="切换导航菜单"
+              id="themeToggle"
+              class="theme-toggle"
+              aria-label="切换深色/浅色主题"
+            >
+              <svg
+                class="sun-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg
+                class="moon-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                ></path>
+              </svg>
+            </button>
+
+            <button
+              class="menu-toggle"
+              id="mobileMenuToggle"
+              aria-label="打开菜单"
               aria-expanded="false"
             >
               <span></span>
               <span></span>
               <span></span>
             </button>
-          </nav> -->
 
-          <div class="tech-avatar-container">
-            <img
-              src="/images/avatar/default-avatar.svg"
-              onerror="this.onerror=null; this.src='/images/avatar/default-avatar.png';"
-              alt="用户头像"
-              class="tech-avatar"
-            />
+            <div class="tech-avatar-container">
+              <img
+                src="/images/avatar/default-avatar.svg"
+                onerror="this.onerror=null; this.src='/images/avatar/default-avatar.png';"
+                alt="用户头像"
+                class="tech-avatar"
+              />
+            </div>
           </div>
+        </div>
+
+        <!-- 移动端导航 -->
+        <div class="mobile-nav" id="mobileNav">
+          <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+              <a href="/" class="mobile-nav-link active">首页</a>
+            </li>
+            <li class="mobile-nav-item">
+              <a href="/website-navigation.html" class="mobile-nav-link">
+                <span class="nav-icon">🧭</span>
+                网站导航
+              </a>
+            </li>
+          </ul>
         </div>
       </header>
 
@@ -194,6 +522,216 @@
 
     <!-- 添加粒子效果脚本 -->
     <script src="/js/particle-effects.js"></script>
+
+    <!-- 主题切换脚本 -->
+    <script src="/js/theme-handler.js"></script>
+
+    <!-- 移动菜单脚本 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 移动菜单功能
+        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+        const mobileNav = document.getElementById("mobileNav");
+        const bodyElement = document.body;
+
+        // 直接强制应用样式，确保移动菜单按钮可见
+        if (mobileMenuToggle) {
+          // 检查是否是移动视图
+          if (window.innerWidth <= 992) {
+            mobileMenuToggle.style.display = "flex";
+
+            // 添加一些明显的样式，确保可见
+            mobileMenuToggle.style.backgroundColor = "#f0f0f0";
+            if (
+              document.documentElement.getAttribute("data-theme") === "dark"
+            ) {
+              mobileMenuToggle.style.backgroundColor = "#333";
+            }
+          }
+        }
+
+        // 首先确保移动菜单初始状态正确
+        if (mobileNav) {
+          mobileNav.style.right = "-100%"; // 确保初始位置在屏幕外
+        }
+
+        if (mobileMenuToggle && mobileNav) {
+          console.log("Mobile menu toggle initialized");
+
+          // 移除内联 padding，使用 CSS 样式
+          mobileMenuToggle.style.padding = null;
+
+          // 切换移动菜单
+          mobileMenuToggle.addEventListener("click", function (e) {
+            e.preventDefault(); // 阻止默认行为
+            e.stopPropagation(); // 防止点击事件冒泡
+            console.log("Mobile menu button clicked");
+
+            // 显示一个短暂的视觉反馈
+            mobileMenuToggle.style.opacity = "0.7";
+            setTimeout(() => {
+              mobileMenuToggle.style.opacity = "";
+            }, 200);
+
+            if (mobileNav.classList.contains("active")) {
+              console.log("Closing mobile menu");
+              closeMobileMenu();
+            } else {
+              console.log("Opening mobile menu");
+              openMobileMenu();
+            }
+          });
+
+          // 点击页面任何区域关闭移动菜单
+          document.addEventListener("click", function (e) {
+            if (
+              mobileNav &&
+              mobileNav.classList.contains("active") &&
+              !mobileNav.contains(e.target) &&
+              e.target !== mobileMenuToggle &&
+              !mobileMenuToggle.contains(e.target)
+            ) {
+              closeMobileMenu();
+            }
+          });
+
+          // ESC键关闭菜单
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+              closeMobileMenu();
+            }
+          });
+
+          // 移动导航中链接点击事件
+          const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+          mobileNavLinks.forEach((link) => {
+            link.addEventListener("click", function () {
+              // 延迟关闭，让点击有时间完成
+              setTimeout(closeMobileMenu, 100);
+            });
+          });
+        }
+
+        // 打开移动菜单
+        function openMobileMenu() {
+          if (!mobileNav) return;
+
+          // 确保菜单可见和正确位置
+          mobileNav.style.display = "block";
+
+          // 添加延迟确保过渡效果显示
+          setTimeout(() => {
+            mobileNav.classList.add("active");
+            mobileNav.style.right = "0"; // 强制设置位置
+            mobileMenuToggle.classList.add("active");
+            bodyElement.classList.add("menu-open"); // 添加body类
+          }, 10);
+
+          mobileMenuToggle.setAttribute("aria-expanded", "true");
+          mobileMenuToggle.setAttribute("aria-label", "关闭菜单");
+
+          // 检查菜单状态
+          console.log("Menu active:", mobileNav.classList.contains("active"));
+          console.log("Menu style right:", getComputedStyle(mobileNav).right);
+
+          // 防止背景滚动
+          bodyElement.style.overflow = "hidden";
+
+          // 为页面添加黑色透明遮罩
+          if (!document.getElementById("mobile-menu-backdrop")) {
+            const backdrop = document.createElement("div");
+            backdrop.id = "mobile-menu-backdrop";
+            backdrop.className = "mobile-menu-backdrop";
+            backdrop.style.position = "fixed";
+            backdrop.style.top = "0";
+            backdrop.style.left = "0";
+            backdrop.style.width = "100%";
+            backdrop.style.height = "100%";
+            backdrop.style.background = "rgba(0,0,0,0.5)";
+            backdrop.style.zIndex = "999"; // 确保遮罩在移动菜单下方
+            backdrop.style.opacity = "0";
+            backdrop.style.transition = "opacity 0.3s ease";
+            backdrop.style.pointerEvents = "auto";
+            document.body.appendChild(backdrop);
+
+            // 显示遮罩
+            setTimeout(() => {
+              backdrop.style.opacity = "1";
+            }, 10);
+
+            // 点击遮罩关闭菜单
+            backdrop.addEventListener("click", closeMobileMenu);
+            backdrop.addEventListener("touchend", closeMobileMenu, {
+              passive: false,
+            });
+          }
+        }
+
+        // 关闭移动菜单
+        function closeMobileMenu() {
+          if (!mobileNav) return;
+
+          mobileNav.classList.remove("active");
+          mobileNav.style.right = "-100%"; // 强制设置位置
+          mobileMenuToggle.classList.remove("active");
+          bodyElement.classList.remove("menu-open"); // 移除body类
+
+          mobileMenuToggle.setAttribute("aria-expanded", "false");
+          mobileMenuToggle.setAttribute("aria-label", "打开菜单");
+
+          console.log(
+            "Menu closed, active:",
+            mobileNav.classList.contains("active")
+          );
+
+          // 恢复背景滚动
+          bodyElement.style.overflow = "";
+
+          // 移除遮罩
+          const backdrop = document.getElementById("mobile-menu-backdrop");
+          if (backdrop) {
+            backdrop.style.opacity = "0";
+            backdrop.style.pointerEvents = "none";
+            setTimeout(() => {
+              if (backdrop.parentNode) {
+                backdrop.parentNode.removeChild(backdrop);
+              }
+            }, 300);
+          }
+        }
+
+        // 添加窗口调整大小监听
+        window.addEventListener("resize", function () {
+          const isMobileView = window.innerWidth <= 992;
+
+          // 确保菜单按钮在移动视图中可见
+          if (mobileMenuToggle) {
+            if (isMobileView) {
+              mobileMenuToggle.style.display = "flex";
+            } else {
+              mobileMenuToggle.style.display = "";
+              // 关闭可能打开的菜单
+              if (mobileNav && mobileNav.classList.contains("active")) {
+                closeMobileMenu();
+              }
+            }
+          }
+        });
+
+        // 添加媒体查询检测
+        const checkMobileView = window.matchMedia("(max-width: 992px)");
+        function handleViewportChange(e) {
+          if (!e.matches) {
+            // 如果不是移动视图，确保关闭菜单
+            closeMobileMenu();
+          }
+        }
+        checkMobileView.addEventListener("change", handleViewportChange);
+
+        // 初始检查
+        handleViewportChange(checkMobileView);
+      });
+    </script>
 
     <!-- 侧边栏控制脚本 -->
     <script>
