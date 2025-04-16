@@ -74,7 +74,7 @@ async function initializeApp() {
   addScrollIndicators();
 
   // 初始化主题切换
-  initThemeToggle();
+  // initThemeToggle();
 
   const cardTitles = document.querySelectorAll(".card-header h2");
 
@@ -712,6 +712,20 @@ async function openModal(card) {
 
     // 设置内容
     modalContent.innerHTML = techContent;
+
+    // 添加墨水效果到关闭按钮
+    if (modalClose) {
+      // 移除之前可能存在的墨水效果元素
+      const oldInkEffect = modalClose.querySelector(".ink-effect");
+      if (oldInkEffect) {
+        modalClose.removeChild(oldInkEffect);
+      }
+
+      // 添加新的墨水效果元素
+      const inkEffect = document.createElement("div");
+      inkEffect.className = "ink-effect";
+      modalClose.appendChild(inkEffect);
+    }
 
     // 添加动态元素和效果
     addModalEffects(modalContent);
