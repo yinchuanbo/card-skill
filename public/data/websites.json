@@ -90,6 +90,13 @@
             "description": "生命的遗产是对知识的更新",
             "category": "学习平台",
             "icon": "https://www.modevol.com/favicon.png"
+        },
+        {
+            "name": "DeepSeek",
+            "url": "https://chat.deepseek.com/",
+            "description": "助力编程代码开发、创意写作、文件处理等任务，支持文件上传及长文本对话。",
+            "category": "工具网站",
+            "icon": "https://chat.deepseek.com/favicon.svg"
         }
     ]
 }

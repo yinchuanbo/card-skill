@@ -31,13 +31,573 @@
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/website-navigation.css" />
 
+    <!-- 引入动画库 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Zhi+Mang+Xing&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Zhi+Mang+Xing&family=Nunito:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- 页面优化样式 -->
+    <style>
+      :root {
+        --card-radius: 16px;
+        --header-height: 70px;
+        --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --shadow-elevation-1: 0 2px 5px rgba(0, 0, 0, 0.08);
+        --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
+        --shadow-elevation-3: 0 16px 35px rgba(0, 0, 0, 0.18);
+        --shadow-color-light: rgba(0, 0, 0, 0.1);
+        --shadow-color-dark: rgba(0, 0, 0, 0.25);
+      }
+
+      /* 通用优化 */
+      body {
+        font-family: "Nunito", sans-serif;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+
+      /* 粒子背景优化 */
+      .particle-canvas {
+        opacity: 0.7;
+      }
+
+      /* 头部优化 */
+      .site-header {
+        position: sticky;
+        top: 0;
+        height: var(--header-height);
+        backdrop-filter: blur(8px);
+        z-index: 200;
+        transition: var(--transition-normal);
+      }
+
+      .header-content {
+        height: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+
+      .header-right {
+        gap: 1rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: var(--accent-color);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 80%;
+      }
+
+      /* 主内容区优化 */
+      .main-content {
+        padding-top: 0;
+      }
+
+      /* 页面标题区域优化 */
+      .page-title-container {
+        margin: 0 0 2rem;
+        padding: 5rem 1rem 6rem;
+        background: linear-gradient(
+          135deg,
+          var(--accent-color-light),
+          var(--accent-color)
+        );
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .page-title {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: white;
+        animation: fadeInDown 1.2s ease-out;
+      }
+
+      .page-description {
+        font-size: 1.3rem;
+        max-width: 760px;
+        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.9);
+        animation: fadeInUp 1.2s ease-out;
+      }
+
+      .page-title-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml,<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+        opacity: 0.4;
+        z-index: 0;
+      }
+
+      .page-title-decoration {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background-color: var(--bg-color);
+        clip-path: polygon(0 0, 100% 70%, 100% 100%, 0% 100%);
+      }
+
+      /* 搜索框优化 */
+      .search-container {
+        margin: -3rem auto 3rem;
+        position: relative;
+        z-index: 10;
+        max-width: 760px;
+        padding: 0 1.5rem;
+      }
+
+      .search-wrapper {
+        background: var(--bg-secondary);
+        border-radius: 50px;
+        box-shadow: var(--shadow-elevation-2);
+        height: 60px;
+        border: none;
+      }
+
+      .search-input {
+        height: 100%;
+        font-size: 1.1rem;
+      }
+
+      .search-button {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition-normal);
+      }
+
+      /* 分类导航优化 */
+      .categories-section {
+        margin: 0 0 3rem;
+      }
+
+      .categories-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+
+      .categories-bar {
+        padding: 0.8rem;
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        position: relative;
+      }
+
+      .categories-bar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .category-tag {
+        flex: 0 0 auto;
+        background: var(--bg-secondary);
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 100px;
+        white-space: nowrap;
+        box-shadow: var(--shadow-elevation-1);
+        margin: 0 0.3rem;
+        transition: var(--transition-normal);
+        border: none;
+      }
+
+      .category-tag:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-elevation-2);
+      }
+
+      .category-tag.active {
+        background: var(--accent-color);
+        color: white;
+        box-shadow: 0 5px 15px rgba(62, 92, 62, 0.4);
+      }
+
+      /* 网站卡片优化 */
+      .websites-section {
+        margin: 0 auto 4rem;
+      }
+
+      .websites-wrapper {
+        max-width: 100%;
+        padding: 0 1rem;
+      }
+
+      .website-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.8rem;
+      }
+
+      .website-card {
+        border-radius: var(--card-radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-elevation-1);
+        transition: var(--transition-normal);
+        border: none;
+        position: relative;
+        overflow: hidden;
+        animation-duration: 0.6s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .website-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          to right,
+          var(--accent-color),
+          var(--accent-color-light)
+        );
+        opacity: 0;
+        transition: var(--transition-normal);
+      }
+
+      .website-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-elevation-3);
+        border: none;
+      }
+
+      .website-card:hover::before {
+        opacity: 1;
+      }
+
+      .website-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+        border-radius: 12px;
+        margin-right: 1rem;
+        transition: transform 0.3s ease;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .website-card:hover .website-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .website-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .website-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 1rem 0 1.5rem;
+      }
+
+      .website-actions {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .website-category {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.35rem 0.8rem;
+        border-radius: 100px;
+      }
+
+      .website-visit {
+        border-radius: 100px;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 8px rgba(62, 92, 62, 0.25);
+      }
+
+      .website-visit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(62, 92, 62, 0.35);
+      }
+
+      /* 添加网站按钮优化 */
+      .add-website-container {
+        margin: 3rem 0 5rem;
+      }
+
+      .add-website-btn {
+        padding: 1rem 2rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.03em;
+        border-radius: 100px;
+        box-shadow: 0 8px 25px rgba(62, 92, 62, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .add-website-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(62, 92, 62, 0.4);
+      }
+
+      .plus-icon {
+        font-size: 1.4rem;
+        margin-right: 0.5rem;
+      }
+
+      /* 添加网站模态框优化 */
+      .modal-overlay {
+        backdrop-filter: blur(8px);
+      }
+
+      .add-website-modal {
+        border-radius: 24px;
+        border: none;
+        padding: 2.5rem;
+        box-shadow: var(--shadow-elevation-3);
+      }
+
+      .modal-close {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg-color);
+        border-radius: 50%;
+        top: 1.5rem;
+        right: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: var(--transition-normal);
+      }
+
+      .modal-close:hover {
+        transform: rotate(90deg);
+        background-color: #ff6b6b;
+        color: white;
+      }
+
+      .add-website-modal h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+      }
+
+      .form-group {
+        margin-bottom: 1.8rem;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        margin-bottom: 0.6rem;
+        font-size: 1rem;
+        display: block;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        box-shadow: 0 0 0 3px rgba(62, 92, 62, 0.3);
+      }
+
+      .form-actions {
+        gap: 1.5rem;
+      }
+
+      .btn-submit,
+      .btn-cancel {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-submit {
+        box-shadow: 0 4px 12px rgba(62, 92, 62, 0.3);
+      }
+
+      .btn-submit:hover {
+        box-shadow: 0 8px 20px rgba(62, 92, 62, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .btn-cancel {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      /* 页脚优化 */
+      .site-footer {
+        padding: 3rem 2rem;
+        position: relative;
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .footer-left p {
+        font-weight: 500;
+      }
+
+      .footer-right {
+        gap: 2rem;
+      }
+
+      .footer-link {
+        font-weight: 500;
+        position: relative;
+      }
+
+      .footer-link::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--accent-color);
+        transition: width 0.3s ease;
+      }
+
+      .footer-link:hover::after {
+        width: 100%;
+      }
+
+      /* 动画 */
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 响应式优化 */
+      @media (max-width: 992px) {
+        .page-title {
+          font-size: 2.5rem;
+        }
+
+        .page-description {
+          font-size: 1.1rem;
+        }
+
+        .search-container {
+          margin-top: -2.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page-title-container {
+          padding: 4rem 1rem 5rem;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .website-grid {
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .add-website-btn {
+          padding: 0.8rem 1.5rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .page-title-container {
+          padding: 3rem 1rem 4rem;
+        }
+
+        .page-title {
+          font-size: 1.8rem;
+        }
+
+        .page-description {
+          font-size: 1rem;
+        }
+
+        .search-container {
+          margin-top: -2rem;
+        }
+
+        .website-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .category-tag {
+          padding: 0.7rem 1.2rem;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
   </head>
   <body class="light-theme">
     <div class="page-container">
@@ -49,7 +609,7 @@
             <a href="/" class="logo-link">
               <h1 class="site-title">墨境智库</h1>
             </a>
-            <p class="site-subtitle">发现价值，探索无限</p>
+            <!-- <p class="site-subtitle">发现价值，探索无限</p> -->
           </div>
 
           <!-- 主导航 -->
@@ -60,8 +620,7 @@
               </li>
               <li class="nav-item">
                 <a href="/website-navigation.html" class="nav-link active">
-                  <span class="nav-icon">🧭</span>
-                  网站导航
+                  网址导航
                 </a>
               </li>
             </ul>
@@ -135,8 +694,7 @@
             </li>
             <li class="mobile-nav-item">
               <a href="/website-navigation.html" class="mobile-nav-link active">
-                <span class="nav-icon">🧭</span>
-                网站导航
+                网址导航
               </a>
             </li>
           </ul>
@@ -147,8 +705,13 @@
       <main class="main-content">
         <!-- 页面标题 -->
         <div class="page-title-container">
-          <h1 class="page-title">优质网站导航</h1>
-          <p class="page-description">汇集精选网站资源，便捷高效地发现价值</p>
+          <h1 class="page-title animate__animated animate__fadeInDown">
+            优质网站导航
+          </h1>
+          <p class="page-description animate__animated animate__fadeInUp">
+            发现、收集并分享那些改变生活、提升效率的精选网站资源
+          </p>
+          <div class="page-title-decoration"></div>
         </div>
 
         <!-- 搜索栏 -->
@@ -158,14 +721,14 @@
               type="text"
               id="searchWebsites"
               class="search-input"
-              placeholder="搜索网站..."
+              placeholder="搜索网站名称、描述或分类..."
               aria-label="搜索网站"
             />
             <button class="search-button" aria-label="搜索">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="22"
+                height="22"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -233,11 +796,17 @@
         <button class="modal-close" id="addModalClose" aria-label="关闭">
           &times;
         </button>
-        <h2>添加新站点</h2>
+        <h2>添加优质网站</h2>
         <form id="addWebsiteForm">
           <div class="form-group">
             <label for="websiteName">网站名称</label>
-            <input type="text" id="websiteName" required autocomplete="off" />
+            <input
+              type="text"
+              id="websiteName"
+              required
+              autocomplete="off"
+              placeholder="输入网站名称"
+            />
           </div>
           <div class="form-group">
             <label for="websiteUrl">网站链接</label>
@@ -250,11 +819,15 @@
             />
           </div>
           <div class="form-group">
-            <label for="websiteDescription">简短描述</label>
-            <textarea id="websiteDescription" rows="3"></textarea>
+            <label for="websiteDescription">网站描述</label>
+            <textarea
+              id="websiteDescription"
+              rows="3"
+              placeholder="简要描述网站的主要功能和特点"
+            ></textarea>
           </div>
           <div class="form-group">
-            <label for="websiteCategory">分类</label>
+            <label for="websiteCategory">所属分类</label>
             <select id="websiteCategory" required>
               <option value="">选择分类...</option>
               <!-- 分类将由JavaScript填充 -->
@@ -270,10 +843,10 @@
             />
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn-submit">保存站点</button>
             <button type="button" class="btn-cancel" id="cancelAdd">
               取消
             </button>
+            <button type="submit" class="btn-submit">保存站点</button>
           </div>
         </form>
       </div>
@@ -283,5 +856,75 @@
     <script src="/js/particle-effects.js"></script>
     <script src="/js/theme-handler.js"></script>
     <script src="/js/website-navigation.js"></script>
+    <script>
+      // 添加滚动效果
+      document.addEventListener("DOMContentLoaded", function () {
+        // 滚动时缩小头部
+        const header = document.querySelector(".site-header");
+        let lastScrollTop = 0;
+
+        window.addEventListener(
+          "scroll",
+          function () {
+            const currentScrollTop =
+              window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScrollTop > 60) {
+              header.style.boxShadow = "var(--shadow-elevation-2)";
+
+              if (currentScrollTop > lastScrollTop) {
+                // 向下滚动
+                header.style.transform = "translateY(-100%)";
+              } else {
+                // 向上滚动
+                header.style.transform = "translateY(0)";
+              }
+            } else {
+              header.style.boxShadow = "var(--shadow-elevation-1)";
+              header.style.transform = "translateY(0)";
+            }
+
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          },
+          false
+        );
+
+        // 分类标签滚动按钮
+        const categoriesBar = document.getElementById("categoriesBar");
+        if (categoriesBar) {
+          let isDown = false;
+          let startX;
+          let scrollLeft;
+
+          categoriesBar.addEventListener("mousedown", (e) => {
+            isDown = true;
+            categoriesBar.style.cursor = "grabbing";
+            startX = e.pageX - categoriesBar.offsetLeft;
+            scrollLeft = categoriesBar.scrollLeft;
+          });
+
+          categoriesBar.addEventListener("mouseleave", () => {
+            isDown = false;
+            categoriesBar.style.cursor = "grab";
+          });
+
+          categoriesBar.addEventListener("mouseup", () => {
+            isDown = false;
+            categoriesBar.style.cursor = "grab";
+          });
+
+          categoriesBar.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - categoriesBar.offsetLeft;
+            const walk = (x - startX) * 2;
+            categoriesBar.scrollLeft = scrollLeft - walk;
+          });
+
+          // 初始时设置光标样式
+          categoriesBar.style.cursor = "grab";
+        }
+      });
+    </script>
   </body>
 </html>

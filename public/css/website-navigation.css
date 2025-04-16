@@ -352,7 +352,7 @@ body {
 .search-button {
   background: none;
   border: none;
-  padding: 0.5rem 1.5rem;
+  /* padding: 0.5rem 1.5rem; */
   color: var(--text-color);
   cursor: pointer;
   transition: color 0.3s ease;
