@@ -1,10 +1,12 @@
 // DOM Elements
-const cardGrid = document.getElementById("cardGrid");
-const searchInput = document.getElementById("searchInput");
-const tagFilters = document.getElementById("tagFilters");
-const modalOverlay = document.getElementById("modalOverlay");
-const modalClose = document.getElementById("modalClose");
-const modalContent = document.getElementById("modalContent");
+let cardGrid = document.getElementById("cardGrid");
+let searchInput = document.getElementById("searchInput");
+let tagFilters = document.getElementById("tagFilters");
+let modalOverlay = document.getElementById("modalOverlay");
+let modalClose = document.getElementById("modalClose");
+let modalContent = document.getElementById("modalContent");
+let tagToggle = document.getElementById("tagToggle");
+let filterCount = document.getElementById("filterCount");
 
 // State
 let cards = [];
@@ -36,20 +38,43 @@ document.addEventListener("keydown", (e) => {
 
 // Initialize App
 async function initializeApp() {
-  await fetchCards();
-  if (cards.length > 0) {
+  // 获取卡片容器
+  cardGrid = document.getElementById("cardGrid");
+  searchInput = document.getElementById("searchInput");
+  tagFilters = document.getElementById("tagFilters");
+  tagToggle = document.getElementById("tagToggle");
+  filterCount = document.getElementById("filterCount");
+  modalOverlay = document.getElementById("modalOverlay");
+
+  // 设置标签筛选器点击事件
+  tagFilters?.addEventListener("click", handleTagFilterClick);
+  // 设置标签筛选器折叠切换事件
+  tagToggle?.addEventListener("click", handleTagsToggle);
+
+  // 添加重置密码按钮到头部右侧
+  addResetPasswordButton();
+
+  // 设置搜索输入事件
+  searchInput?.addEventListener("input", debounce(filterCards, 300));
+
+  // 获取并渲染卡片
+  try {
+    await fetchCards();
     renderCards();
     setupTagFilters();
+  } catch (error) {
+    console.error("Error initializing app:", error);
+    if (cardGrid) {
+      cardGrid.innerHTML = `<div class="error">Failed to load cards. Please check your connection and try again.</div>`;
+    }
   }
 
-  // 添加阅读进度指示器
+  // 添加阅读进度指示器和滚动指示器
   addReadingProgressIndicator();
-
-  // 添加滚动箭头和指示器
   addScrollIndicators();
 
-  // 初始化主题切换功能
-  // initThemeToggle();
+  // 初始化主题切换
+  initThemeToggle();
 
   const cardTitles = document.querySelectorAll(".card-header h2");
 
@@ -149,10 +174,140 @@ function createCardElement(card, index) {
     </div>
   `;
 
-  // 添加点击事件以打开模态框
-  cardElement.addEventListener("click", () => openModal(card));
+  // 添加点击事件以打开模态框，并增加密码验证
+  cardElement.addEventListener("click", () => {
+    // 检查localStorage中是否存储了密码
+    const storedHashedPassword = localStorage.getItem("articlePassword");
+
+    // 正确的密码，经过加密处理
+    const correctPassword = "yin123456"; // 可以根据实际需求修改
+    const correctHashedPassword = hashPassword(correctPassword);
+
+    if (
+      storedHashedPassword &&
+      storedHashedPassword === correctHashedPassword
+    ) {
+      // 密码正确，允许访问内容
+      openModal(card);
+    } else {
+      // 密码不正确或不存在，显示密码输入框
+      showPasswordDialog(card);
+    }
+  });
 
   return cardElement;
+}
+
+/**
+ * 使用简单的哈希函数对密码进行加密
+ * @param {string} password - 原密码
+ * @returns {string} 经过哈希处理的密码
+ */
+function hashPassword(password) {
+  // 这里使用一个简单的哈希算法，实际应用中可以使用更安全的算法
+  let hash = 0;
+  if (password.length === 0) return hash.toString();
+
+  for (let i = 0; i < password.length; i++) {
+    const char = password.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+
+  return hash.toString();
+}
+
+/**
+ * 显示密码输入对话框
+ * @param {Object} card - 卡片数据对象
+ */
+function showPasswordDialog(card) {
+  // 创建模态对话框
+  const passwordDialog = document.createElement("div");
+  passwordDialog.className = "password-dialog";
+
+  passwordDialog.innerHTML = `
+    <div class="password-dialog-content">
+      <h3>需要密码访问</h3>
+      <p>请输入密码以查看文章内容</p>
+      <input type="password" id="articlePasswordInput" placeholder="请输入密码">
+      <div class="password-dialog-buttons">
+        <button id="cancelPasswordBtn">取消</button>
+        <button id="submitPasswordBtn">确认</button>
+      </div>
+    </div>
+  `;
+
+  // 添加到页面
+  document.body.appendChild(passwordDialog);
+
+  // 获取元素
+  const passwordInput = document.getElementById("articlePasswordInput");
+  const submitBtn = document.getElementById("submitPasswordBtn");
+  const cancelBtn = document.getElementById("cancelPasswordBtn");
+
+  // 自动聚焦到密码输入框
+  setTimeout(() => passwordInput.focus(), 100);
+
+  // 绑定确认按钮点击事件
+  submitBtn.addEventListener("click", () => {
+    validatePassword(passwordInput.value, card, passwordDialog);
+  });
+
+  // 绑定取消按钮点击事件
+  cancelBtn.addEventListener("click", () => {
+    closePasswordDialog(passwordDialog);
+  });
+
+  // 绑定按键事件，支持回车确认
+  passwordInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      validatePassword(passwordInput.value, card, passwordDialog);
+    } else if (e.key === "Escape") {
+      closePasswordDialog(passwordDialog);
+    }
+  });
+}
+
+/**
+ * 关闭密码对话框
+ * @param {HTMLElement} dialog - 密码对话框元素
+ */
+function closePasswordDialog(dialog) {
+  document.body.removeChild(dialog);
+}
+
+/**
+ * 验证密码
+ * @param {string} password - 用户输入的密码
+ * @param {Object} card - 卡片数据对象
+ * @param {HTMLElement} dialog - 密码对话框元素
+ */
+function validatePassword(password, card, dialog) {
+  const correctPassword = "yin123456"; // 可以根据实际需求修改
+
+  if (password === correctPassword) {
+    // 密码正确，存储哈希后的密码到localStorage
+    localStorage.setItem("articlePassword", hashPassword(password));
+
+    // 关闭密码对话框
+    closePasswordDialog(dialog);
+
+    // 打开文章内容
+    openModal(card);
+  } else {
+    // 密码错误，显示错误提示
+    const passwordInput = document.getElementById("articlePasswordInput");
+    passwordInput.classList.add("error");
+    passwordInput.value = "";
+    passwordInput.placeholder = "密码错误，请重试";
+
+    // 移除错误样式
+    setTimeout(() => {
+      passwordInput.classList.remove("error");
+      passwordInput.placeholder = "请输入密码";
+    }, 1500);
+  }
 }
 
 /**
@@ -1125,4 +1280,50 @@ function addModalEffects(modalContent) {
     heading.classList.add("tech-heading");
     observer.observe(heading);
   });
+}
+
+/**
+ * 清除存储的密码
+ */
+function clearStoredPassword() {
+  localStorage.removeItem("articlePassword");
+  alert("密码已清除，下次访问文章需要重新输入密码");
+}
+
+/**
+ * 添加重置密码按钮
+ */
+function addResetPasswordButton() {
+  const headerRight = document.querySelector(".header-right");
+
+  if (headerRight) {
+    // 创建重置密码按钮
+    const resetButton = document.createElement("button");
+    resetButton.className = "reset-password-btn";
+    resetButton.setAttribute("aria-label", "重置文章访问密码");
+    resetButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    `;
+
+    // 绑定点击事件
+    resetButton.addEventListener("click", () => {
+      const confirmed = confirm(
+        "确定要清除已保存的密码吗？清除后需要重新输入密码才能访问文章。"
+      );
+      if (confirmed) {
+        clearStoredPassword();
+      }
+    });
+
+    // 插入到主题切换按钮前面
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+      headerRight.insertBefore(resetButton, themeToggle);
+    } else {
+      headerRight.appendChild(resetButton);
+    }
+  }
 }

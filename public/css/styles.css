@@ -931,7 +931,7 @@ body:has(.sidebar-backdrop.active) {
   right: 1rem;
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(62, 92, 62, 0.1);
   border-radius: 50%;
   display: flex;
@@ -952,7 +952,7 @@ body:has(.sidebar-backdrop.active) {
 }
 
 [data-theme="dark"] .modal-close {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5) !important;
   border-color: rgba(255, 255, 255, 0.2);
   color: #ccc;
 }
@@ -5179,5 +5179,207 @@ pre.loading {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* 密码验证对话框样式 */
+.password-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+.password-dialog-content {
+  background-color: var(--paper);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: var(--shadow-strong);
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+.password-dialog-content h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+}
+
+.password-dialog-content p {
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+
+#articlePasswordInput {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--border-subtle);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: var(--paper-dark);
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+#articlePasswordInput:focus {
+  border-color: var(--mountain-green);
+  box-shadow: 0 0 0 3px var(--mountain-green-light);
+}
+
+#articlePasswordInput.error {
+  border-color: var(--rust-red);
+  background-color: var(--rust-red-light);
+  animation: shake 0.4s linear;
+}
+
+.password-dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.password-dialog-buttons button {
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+#cancelPasswordBtn {
+  background-color: var(--paper-dark);
+  color: var(--text-dark);
+}
+
+#submitPasswordBtn {
+  background-color: var(--mountain-green);
+  color: white;
+}
+
+#cancelPasswordBtn:hover {
+  background-color: var(--ink-light);
+  color: white;
+}
+
+#submitPasswordBtn:hover {
+  background-color: var(--pine-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(10px);
+  }
+  60% {
+    transform: translateX(-10px);
+  }
+  80% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* 适应深色模式 */
+[data-theme="dark"] .password-dialog-content {
+  background-color: var(--modal-bg-lighter, #080808);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] #articlePasswordInput {
+  background-color: var(--modal-bg, #000000);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] #cancelPasswordBtn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] #articlePasswordInput.error {
+  background-color: rgba(224, 165, 153, 0.2);
+  border-color: var(--rust-red);
+}
+
+/* 重置密码按钮样式 */
+.reset-password-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.reset-password-btn:hover {
+  background-color: var(--mountain-green-light);
+  transform: translateY(-2px);
+}
+
+.reset-password-btn:active {
+  transform: translateY(0);
+}
+
+/* 确保按钮在移动设备上正确显示 */
+@media (max-width: 480px) {
+  .reset-password-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .reset-password-btn svg {
+    width: 18px;
+    height: 18px;
   }
 }
