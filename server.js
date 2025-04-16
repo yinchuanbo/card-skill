@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const marked = require("marked");
 const matter = require("gray-matter");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +20,12 @@ fs.ensureDirSync(publicDir);
 // Serve static files
 app.use(express.static(publicDir));
 app.use("/doc", express.static(docDir));
+
+// 中间件
+app.use(bodyParser.json());
+
+// 数据文件路径
+const websitesDataPath = path.join(publicDir, "data", "websites.json");
 
 // Route for the main page
 app.get("/", (req, res) => {
@@ -258,6 +265,92 @@ async function convertMarkdownToHtml() {
 if (process.env.NODE_ENV !== "production") {
   convertMarkdownToHtml();
 }
+
+// 获取所有网站数据
+app.get("/api/websites", (req, res) => {
+  try {
+    // 确保数据目录存在
+    if (!fs.existsSync(path.dirname(websitesDataPath))) {
+      fs.mkdirSync(path.dirname(websitesDataPath), { recursive: true });
+    }
+
+    // 检查文件是否存在，如果不存在则创建默认文件
+    if (!fs.existsSync(websitesDataPath)) {
+      const defaultData = { websites: [] };
+      fs.writeFileSync(websitesDataPath, JSON.stringify(defaultData, null, 4));
+    }
+
+    const websitesData = JSON.parse(fs.readFileSync(websitesDataPath, "utf8"));
+    res.json(websitesData);
+  } catch (error) {
+    console.error("获取网站数据失败:", error);
+    res.status(500).json({ error: "获取网站数据失败" });
+  }
+});
+
+// 添加新网站
+app.post("/api/websites", (req, res) => {
+  try {
+    const newWebsite = req.body;
+
+    // 基本验证
+    if (!newWebsite.name || !newWebsite.url || !newWebsite.category) {
+      return res.status(400).json({ error: "缺少必要字段" });
+    }
+
+    // 读取现有数据
+    const websitesData = JSON.parse(fs.readFileSync(websitesDataPath, "utf8"));
+
+    // 检查是否有重复URL
+    const isDuplicate = websitesData.websites.some(
+      (site) => site.url === newWebsite.url
+    );
+    if (isDuplicate) {
+      return res.status(400).json({ error: "该网站URL已存在" });
+    }
+
+    // 添加新网站
+    websitesData.websites.push(newWebsite);
+
+    // 写入文件
+    fs.writeFileSync(websitesDataPath, JSON.stringify(websitesData, null, 4));
+
+    res.status(201).json({ message: "网站添加成功", website: newWebsite });
+  } catch (error) {
+    console.error("添加网站失败:", error);
+    res.status(500).json({ error: "添加网站失败" });
+  }
+});
+
+// 删除网站
+app.delete("/api/websites/:url", (req, res) => {
+  try {
+    const urlToDelete = decodeURIComponent(req.params.url);
+
+    // 读取现有数据
+    const websitesData = JSON.parse(fs.readFileSync(websitesDataPath, "utf8"));
+
+    // 查找要删除的网站索引
+    const siteIndex = websitesData.websites.findIndex(
+      (site) => site.url === urlToDelete
+    );
+
+    if (siteIndex === -1) {
+      return res.status(404).json({ error: "未找到该网站" });
+    }
+
+    // 删除网站
+    websitesData.websites.splice(siteIndex, 1);
+
+    // 写入文件
+    fs.writeFileSync(websitesDataPath, JSON.stringify(websitesData, null, 4));
+
+    res.json({ message: "网站删除成功" });
+  } catch (error) {
+    console.error("删除网站失败:", error);
+    res.status(500).json({ error: "删除网站失败" });
+  }
+});
 
 // 在本地开发环境中启动服务器
 if (require.main === module) {

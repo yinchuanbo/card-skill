@@ -15,9 +15,6 @@ const mobileNav = document.getElementById("mobileNav");
 let websites = [];
 let categories = [];
 let activeCategory = "all";
-let websiteData = localStorage.getItem("savedWebsites")
-  ? JSON.parse(localStorage.getItem("savedWebsites"))
-  : [];
 
 // 默认分类
 const defaultCategories = [
@@ -30,94 +27,6 @@ const defaultCategories = [
   "社区论坛",
   "资源下载",
   "娱乐休闲",
-];
-
-// 默认网站数据
-const defaultWebsites = [
-  {
-    name: "GitHub",
-    url: "https://github.com",
-    description: "全球最大的开源代码托管平台，为开发者提供Git仓库服务",
-    category: "开发文档",
-    icon: "https://github.githubassets.com/favicons/favicon.svg",
-  },
-  {
-    name: "MDN Web Docs",
-    url: "https://developer.mozilla.org",
-    description: "Mozilla的开发者网络，提供Web技术文档和学习资源",
-    category: "开发文档",
-    icon: "https://developer.mozilla.org/favicon-48x48.png",
-  },
-  {
-    name: "Dribbble",
-    url: "https://dribbble.com",
-    description: "设计师分享作品的平台，展示UI、图标、插画等设计作品",
-    category: "设计资源",
-    icon: "https://cdn.dribbble.com/assets/favicon-63b2904a073c89b52b19aa08cebc16a154bcf83fee8ecc6439968b1e6db569c7.ico",
-  },
-  {
-    name: "Stack Overflow",
-    url: "https://stackoverflow.com",
-    description: "专业的程序设计领域的问答网站，解决编程问题的社区",
-    category: "社区论坛",
-    icon: "https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196",
-  },
-  {
-    name: "Figma",
-    url: "https://www.figma.com",
-    description: "基于浏览器的协作式界面设计工具，支持原型设计和交互",
-    category: "设计资源",
-    icon: "https://static.figma.com/app/icon/1/favicon.svg",
-  },
-  {
-    name: "CSS-Tricks",
-    url: "https://css-tricks.com",
-    description: "分享CSS技巧和前端开发资源的网站",
-    category: "技术博客",
-    icon: "https://css-tricks.com/favicon.ico",
-  },
-  {
-    name: "Coursera",
-    url: "https://www.coursera.org",
-    description: "提供来自顶尖大学和公司的在线课程",
-    category: "学习平台",
-    icon: "https://d3njjcbhbojbot.cloudfront.net/web/images/favicons/favicon-v2-32x32.png",
-  },
-  {
-    name: "Unsplash",
-    url: "https://unsplash.com",
-    description: "免费高质量图片分享网站，所有图片均可商用",
-    category: "资源下载",
-    icon: "https://unsplash.com/favicon.ico",
-  },
-  {
-    name: "Product Hunt",
-    url: "https://www.producthunt.com",
-    description: "发现新产品和创新科技的平台",
-    category: "技术博客",
-    icon: "https://ph-static.imgix.net/ph-ios-icon.png",
-  },
-  {
-    name: "CodePen",
-    url: "https://codepen.io",
-    description: "前端代码分享社区，可在线编辑和预览HTML、CSS和JavaScript",
-    category: "工具网站",
-    icon: "https://cpwebassets.codepen.io/assets/favicon/favicon-touch-de50acbf5d634ec6791894eba4ba9cf490f709b3d742597c6fc4b734e6492a5a.png",
-  },
-  {
-    name: "Behance",
-    url: "https://www.behance.net",
-    description: "Adobe旗下的创意作品展示平台",
-    category: "设计资源",
-    icon: "https://a5.behance.net/5a5349b1b1a5071eb71fc8ee02976117a5a5b54e/img/site/favicon.ico?cb=264615658",
-  },
-  {
-    name: "Medium",
-    url: "https://medium.com",
-    description: "高质量文章发布平台，涵盖技术、设计、创业等多个领域",
-    category: "技术博客",
-    icon: "https://medium.com/favicon.ico",
-  },
 ];
 
 // 初始化应用
@@ -133,38 +42,81 @@ if (mobileMenuToggle)
   mobileMenuToggle.addEventListener("click", toggleMobileMenu);
 
 // 初始化应用
-function initializeApp() {
-  // 如果本地存储中没有数据，使用默认数据
-  if (websiteData.length === 0) {
-    websiteData = defaultWebsites;
-    localStorage.setItem("savedWebsites", JSON.stringify(websiteData));
-  }
+async function initializeApp() {
+  try {
+    // 从API获取网站数据
+    await fetchWebsites();
 
-  websites = websiteData;
-  extractCategories();
-  setupCategoryFilters();
-  renderWebsites();
+    // 提取分类和渲染网站
+    extractCategories();
+    setupCategoryFilters();
+    renderWebsites();
 
-  // 填充类别选择框
-  populateCategorySelect();
+    // 填充类别选择框
+    populateCategorySelect();
 
-  // 初始化粒子效果
-  if (typeof initParticleCanvas === "function") {
-    initParticleCanvas();
-  }
-
-  // 点击页面任何区域关闭移动菜单
-  document.addEventListener("click", function (e) {
-    if (
-      mobileNav &&
-      mobileNav.classList.contains("active") &&
-      !mobileNav.contains(e.target) &&
-      e.target !== mobileMenuToggle &&
-      !mobileMenuToggle.contains(e.target)
-    ) {
-      closeMobileMenu();
+    // 初始化粒子效果
+    if (typeof initParticleCanvas === "function") {
+      initParticleCanvas();
     }
-  });
+
+    // 点击页面任何区域关闭移动菜单
+    document.addEventListener("click", function (e) {
+      if (
+        mobileNav &&
+        mobileNav.classList.contains("active") &&
+        !mobileNav.contains(e.target) &&
+        e.target !== mobileMenuToggle &&
+        !mobileMenuToggle.contains(e.target)
+      ) {
+        closeMobileMenu();
+      }
+    });
+  } catch (error) {
+    console.error("初始化应用失败:", error);
+    showErrorMessage("加载网站数据失败，请刷新页面重试。");
+  }
+}
+
+// 从API获取网站数据
+async function fetchWebsites() {
+  try {
+    // 显示加载中状态
+    if (websiteGrid) {
+      websiteGrid.innerHTML = `
+        <div class="tech-loading">
+          <div class="tech-loading-spinner"></div>
+          <p>正在加载网站数据...</p>
+        </div>
+      `;
+    }
+
+    const response = await fetch("/api/websites");
+
+    if (!response.ok) {
+      throw new Error(`API响应错误: ${response.status}`);
+    }
+
+    const data = await response.json();
+    websites = data.websites || [];
+
+    return websites;
+  } catch (error) {
+    console.error("获取网站数据失败:", error);
+    throw error;
+  }
+}
+
+// 显示错误消息
+function showErrorMessage(message) {
+  if (websiteGrid) {
+    websiteGrid.innerHTML = `
+      <div class="error-message">
+        <p>${message}</p>
+        <button onclick="location.reload()">重试</button>
+      </div>
+    `;
+  }
 }
 
 // 切换移动菜单
@@ -415,54 +367,108 @@ function closeAddModal() {
 }
 
 // 处理添加网站表单提交
-function handleAddWebsite(e) {
+async function handleAddWebsite(e) {
   e.preventDefault();
 
-  // 获取表单数据
-  const name = document.getElementById("websiteName").value.trim();
-  const url = document.getElementById("websiteUrl").value.trim();
-  const description = document
-    .getElementById("websiteDescription")
-    .value.trim();
-  const category = document.getElementById("websiteCategory").value;
-  const icon = document.getElementById("websiteIcon").value.trim();
-
-  // 验证必填字段
-  if (!name || !url || !category) {
-    alert("请填写必填字段（网站名称、网站链接和分类）");
-    return;
-  }
-
-  // 验证URL格式
   try {
-    new URL(url);
+    // 获取表单数据
+    const name = document.getElementById("websiteName").value.trim();
+    const url = document.getElementById("websiteUrl").value.trim();
+    const description = document
+      .getElementById("websiteDescription")
+      .value.trim();
+    const category = document.getElementById("websiteCategory").value;
+    const icon = document.getElementById("websiteIcon").value.trim();
+
+    // 验证必填字段
+    if (!name || !url || !category) {
+      alert("请填写必填字段（网站名称、网站链接和分类）");
+      return;
+    }
+
+    // 验证URL格式
+    try {
+      new URL(url);
+    } catch (error) {
+      alert("请输入有效的网站链接");
+      return;
+    }
+
+    // 创建新网站对象
+    const newWebsite = {
+      name,
+      url,
+      description,
+      category,
+      icon: icon || "",
+    };
+
+    // 显示提交中状态
+    const submitBtn = addWebsiteForm.querySelector(".btn-submit");
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "保存中...";
+    submitBtn.disabled = true;
+
+    // 调用API保存网站
+    const response = await fetch("/api/websites", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newWebsite),
+    });
+
+    // 恢复按钮状态
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "添加网站失败");
+    }
+
+    // 获取更新后的网站列表
+    await fetchWebsites();
+
+    // 更新UI
+    extractCategories();
+    setupCategoryFilters();
+    populateCategorySelect();
+    renderWebsites();
+
+    // 关闭模态框
+    closeAddModal();
+
+    // 显示成功消息
+    showSuccessToast("网站添加成功！");
   } catch (error) {
-    alert("请输入有效的网站链接");
-    return;
+    console.error("添加网站失败:", error);
+    alert(`添加网站失败: ${error.message}`);
   }
+}
 
-  // 创建新网站对象
-  const newWebsite = {
-    name,
-    url,
-    description,
-    category,
-    icon: icon || "",
-  };
+// 显示成功提示
+function showSuccessToast(message) {
+  // 创建toast元素
+  const toast = document.createElement("div");
+  toast.className = "success-toast";
+  toast.textContent = message;
 
-  // 添加到数据和本地存储
-  websites.push(newWebsite);
-  websiteData.push(newWebsite);
-  localStorage.setItem("savedWebsites", JSON.stringify(websiteData));
+  // 添加到页面
+  document.body.appendChild(toast);
 
-  // 更新UI
-  extractCategories();
-  setupCategoryFilters();
-  populateCategorySelect();
-  renderWebsites();
+  // 显示
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
 
-  // 关闭模态框
-  closeAddModal();
+  // 自动消失
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 300);
+  }, 3000);
 }
 
 // 处理键盘事件
