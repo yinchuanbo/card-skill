@@ -2796,7 +2796,7 @@ body.modal-open {
 
 /* 调整模态窗口内容的字号和行高 */
 #modalContent .content {
-  font-size: 1.1rem; /* 从1.05rem增加到1.1rem */
+  font-size: 1rem; /* 从1.05rem增加到1.1rem */
   line-height: 1.9;
   color: var(--text-dark);
 }
@@ -2836,7 +2836,7 @@ body.modal-open {
 /* 调整模态窗口内列表项的字号和间距 */
 #modalContent ul,
 #modalContent ol {
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin-bottom: 1.5rem;
   padding-left: 2rem;
 }
