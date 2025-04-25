@@ -1211,6 +1211,10 @@ body:has(.sidebar-backdrop.active) {
   display: none;
 }
 
+[data-theme="dark"] #modalContent .content {
+  background-color: rgba(16, 24, 32, 0.5);
+}
+
 [data-theme="dark"] #modalContent h1 {
   color: #f0d9b5;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -2901,6 +2905,7 @@ body.modal-open {
   font-size: 1rem; /* 从1.05rem增加到1.1rem */
   line-height: 1.9;
   color: var(--text-dark);
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 #modalContent .content > *:last-child {
