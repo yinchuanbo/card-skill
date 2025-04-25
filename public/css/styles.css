@@ -190,11 +190,12 @@ pre[class*="language-"] {
 
 /* 暗色主题下的模态窗口调整 */
 [data-theme="dark"] #modalContent {
-  background-color: #000000;
-  border-color: rgba(255, 255, 255, 0.05);
-  max-width: 900px !important;
-  max-height: 700px !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  background: #1c1c1c;
+  border: none;
+  box-shadow: none;
+  background-image: linear-gradient(rgba(62, 92, 62, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 92, 62, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* 暗色主题下的代码块调整 */
@@ -761,36 +762,47 @@ body:has(.sidebar-backdrop.active) {
 
 /* 高科技风格模态内容 */
 #modalContent {
-  position: relative;
-  width: 60%;
-  height: calc(100% - 2rem);
-  max-width: 900px !important;
-  max-height: 700px !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: auto;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 0;
   overflow-y: auto;
   transform: scale(0.95);
   opacity: 0;
   transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1),
     opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(62, 92, 62, 0.1);
+  box-shadow: none;
+  border: none;
   background-image: linear-gradient(rgba(62, 92, 62, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(62, 92, 62, 0.02) 1px, transparent 1px);
   background-size: 20px 20px;
   padding-top: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#modalContent header,
+#modalContent .content {
+  width: 60%;
+  max-width: 900px;
+}
+
+#modalContent .content {
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-overlay.active #modalContent {
   transform: scale(1);
   opacity: 1;
-}
-
-/* 顶部科技装饰条 */
-#modalContent::before {
-  display: none;
 }
 
 @keyframes modalGradientShift {
@@ -881,9 +893,10 @@ body:has(.sidebar-backdrop.active) {
 #modalContent .content {
   padding: 1.5rem 2.5rem 2.5rem;
   position: relative;
-  /* overflow-x: hidden; */
   color: var(--text-dark);
   line-height: 1.7;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* 模态框内容区域背景发光效果 */
@@ -925,41 +938,130 @@ body:has(.sidebar-backdrop.active) {
 }
 
 /* 模态框关闭按钮 */
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(62, 92, 62, 0.1);
-  border-radius: 50%;
+.modal-close,
+#modalClose {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  background: rgba(240, 240, 240, 0.7) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: none;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  font-size: 22px;
+  font-size: 28px;
   line-height: 1;
-  color: var(--text-medium);
-  transition: all 0.2s ease;
-}
-
-.modal-close:hover {
-  background: rgba(62, 92, 62, 0.1);
   color: var(--text-dark);
-  transform: rotate(90deg);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  overflow: hidden;
 }
 
-[data-theme="dark"] .modal-close {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ccc;
+.modal-close:hover,
+#modalClose:hover {
+  background: var(--mountain-green) !important;
+  color: white;
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-[data-theme="dark"] .modal-close:hover {
-  background: rgba(0, 0, 0, 0.7);
-  color: #fff;
+.modal-close:active,
+#modalClose:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 添加抖动动画效果 */
+@keyframes pulse-attention {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.modal-close::after,
+#modalClose::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+  z-index: -1;
+}
+
+.modal-close:hover::after,
+#modalClose:hover::after {
+  opacity: 0.8;
+}
+
+/* 暗色主题下的模态关闭按钮调整 */
+[data-theme="dark"] .modal-close,
+[data-theme="dark"] #modalClose {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+  color: #e0e0e0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-close:hover,
+[data-theme="dark"] #modalClose:hover {
+  background-color: var(--mountain-green) !important;
+  color: #ffffff;
+  border-color: var(--mountain-green);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 10px rgba(62, 92, 62, 0.4);
+}
+
+[data-theme="dark"] .modal-close:active,
+[data-theme="dark"] #modalClose:active {
+  background-color: rgba(62, 92, 62, 0.9) !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .modal-close,
+  #modalClose {
+    width: 42px;
+    height: 42px;
+    top: 1rem;
+    right: 1rem;
+    font-size: 24px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-close,
+  #modalClose {
+    width: 36px;
+    height: 36px;
+    top: 0.8rem;
+    right: 0.8rem;
+    font-size: 20px;
+    border-radius: 8px;
+  }
 }
 
 /* 标签样式 */
@@ -4749,20 +4851,19 @@ pre:hover .tech-copy-btn {
 
 /* 响应式调整 - 平板 */
 @media (max-width: 1024px) {
-  #modalContent {
+  #modalContent header,
+  #modalContent .content {
     width: 75%;
-    max-width: 900px !important;
-    max-height: 700px !important;
+    max-width: 900px;
   }
 }
 
 /* 响应式调整 - 移动设备 */
 @media (max-width: 768px) {
-  #modalContent {
+  #modalContent header,
+  #modalContent .content {
     width: 85%;
-    height: calc(100% - 2rem);
-    max-width: 900px !important;
-    max-height: 700px !important;
+    max-width: 900px;
   }
 
   #modalContent header {
@@ -4773,22 +4874,15 @@ pre:hover .tech-copy-btn {
     padding: 0.8rem 1.5rem 1.5rem;
   }
 
-  .modal-close {
-    top: 0.8rem;
-    right: 0.8rem;
-    width: 32px;
-    height: 32px;
-    font-size: 1.5rem;
-  }
+  /* Modal close button styles are now defined in the main .modal-close, #modalClose section */
 }
 
 /* 响应式调整 - 小屏幕移动设备 */
 @media (max-width: 480px) {
-  #modalContent {
+  #modalContent header,
+  #modalContent .content {
     width: 95%;
-    height: calc(100% - 1rem);
-    max-width: 900px !important;
-    max-height: 700px !important;
+    max-width: 900px;
   }
 
   #modalContent header {
@@ -4799,13 +4893,7 @@ pre:hover .tech-copy-btn {
     padding: 0.7rem 1rem 1.5rem;
   }
 
-  .modal-close {
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 28px;
-    height: 28px;
-    font-size: 1.3rem;
-  }
+  /* Modal close button styles are now defined in the main .modal-close, #modalClose section */
 }
 
 /* HTML 特定的标记样式增强 */
