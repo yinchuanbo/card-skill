@@ -97,6 +97,20 @@
             "description": "助力编程代码开发、创意写作、文件处理等任务，支持文件上传及长文本对话。",
             "category": "工具网站",
             "icon": "https://chat.deepseek.com/favicon.svg"
+        },
+        {
+            "name": "魔搭社区",
+            "url": "https://modelscope.cn/my/overview",
+            "description": "汇聚各领域最先进的机器学习模型，提供模型探索体验、推理、训练、部署和应用的一站式服务。",
+            "category": "开发平台",
+            "icon": "https://g.alicdn.com/sail-web/maas/2.7.41/favicon/128.ico"
+        },
+        {
+            "name": "阿里云百炼",
+            "url": "https://bailian.console.aliyun.com/?spm=5176.29619931.J__Z58Z6CX7MY__Ll8p1ZOR.1.1369521cmSPhJx&tab=home#/home",
+            "description": "全链路大模型服务与应用开发平台",
+            "category": "开发平台",
+            "icon": "https://gw.alicdn.com/imgextra/i4/O1CN01vVn7g32134zNZEeAR_!!6000000006928-55-tps-24-24.svg"
         }
     ]
 }
