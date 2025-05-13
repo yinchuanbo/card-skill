@@ -402,5 +402,27 @@
     "summary": "\r\n> Web 开发中，优化页面性能非常重要。内联资源（如 CSS、JavaScript 和图片）是一种常见的优化方式，但它既有优势，也伴随着潜在的缺点。深入理解其影响，可以帮助我们在实际开发中做出更合理的技术决策。\r\n\r\n## 一. 什么是内联资源？\r\n\r\n内联资源是指将 CSS、JavaScri...",
     "type": "default",
     "url": "/doc/38.html"
+  },
+  {
+    "id": "39",
+    "title": "Ai 工具 Cursor 无限续杯",
+    "tags": [
+      "Cursor"
+    ],
+    "createdAt": "2025-05-13T15:43:25.000Z",
+    "summary": "\r\n## Cursor 无限续杯的方法\r\n\r\n- step1: cursor 软件退出登录\r\n\r\n- step2: cursor 网页端删除账号\r\n\r\n- step3: 运行命令（注意：用管理员身份运行 windows powershell）\r\n\r\n**window:**\r\n\r\n```bash\r\ni...",
+    "type": "default",
+    "url": "/doc/39.html"
+  },
+  {
+    "id": "40",
+    "title": "用 Cursor 还在被 AI 乱改代码？你可能没用对 Rules",
+    "tags": [
+      "Cursor"
+    ],
+    "createdAt": "2025-05-13T15:51:58.000Z",
+    "summary": "\r\n## 什么是 Cursor Rules？\r\n\r\nCursor Rules 本质上是一个规则文件。因为我们在用 AI 时，上下文不会一直保持，Rules 文件则能提供持久且可复用的上下文，每次与模型对话时都会自动附带。\r\n\r\nCursor Rules 目前有三种类型：\r\n\r\n- Project R...",
+    "type": "default",
+    "url": "/doc/40.html"
   }
 ]
