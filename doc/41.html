@@ -1,0 +1,163 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>通过 llms.txt 文件让 AI 更容易的收录你的网站内容</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>通过 llms.txt 文件让 AI 更容易的收录你的网站内容</h1>
+                        <div class="meta">
+                            <time datetime="Thu May 15 2025 01:39:58 GMT+0800 (中国标准时间)">2025/5/15</time>
+                            <div class="tags">
+                                <span class="tag">SEO</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>最近团队在验证给独立站加上 llms.txt 用来校验 AI 友好型的测试，说白了就是，让 AI 更容易的爬取你的网站，好让你的网站，你的品牌更容易的出现在 AI 的搜索结果中。</p>
+<h1 id="关于-llmstxt-标准的解析">关于 LLMS.TXT 标准的解析</h1>
+<h2 id="概念定义">概念定义</h2>
+<p>LLMS.TXT 是一项正处于提案阶段的网络规范，其核心构想是建议网站在根目录下放置一个名为&quot;llms.txt&quot;的 Markdown 格式文件。该文件的主要功能是为大型语言模型(LLM)提供网站内容的精简概述，帮助人工智能系统更高效、准确地理解网站信息。</p>
+<h2 id="技术特点">技术特点</h2>
+<p>与常规 HTML 页面相比，LLMS.TXT 文件具有以下显著特征：</p>
+<ul>
+<li>去除冗余元素：过滤掉导航菜单、广告投放和复杂脚本等干扰性内容</li>
+<li>内容精炼：仅保留网站最核心的信息表述</li>
+<li>格式统一：采用标准化的 Markdown 语法</li>
+</ul>
+<h2 id="设计初衷">设计初衷</h2>
+<p>该标准提案(详见 llmstxt.org)主要针对 LLM 处理网页内容时面临的两大挑战：</p>
+<ol>
+<li>上下文窗口限制：多数语言模型存在单次处理信息量的上限</li>
+<li>HTML 解析困难：将复杂 HTML 转换为 AI 可理解的纯文本过程繁琐且易错</li>
+</ol>
+<h2 id="核心价值">核心价值</h2>
+<p>LLMS.TXT 为 AI 系统提供了以下优势：</p>
+<ul>
+<li>理解优化：结构化摘要帮助 AI 快速把握网站重点</li>
+<li>检索高效：直接提供关键内容的 Markdown 链接</li>
+<li>容量适配：精简入口更适应大模型的内存限制</li>
+</ul>
+<h2 id="应用场景">应用场景</h2>
+<p>该标准特别适用于：</p>
+<ul>
+<li>技术文档：加速 AI 对 API 参考和开发文档的理解</li>
+<li>电子商务：优化产品描述的 AI 可读性</li>
+<li>教育资料：提升在线课程内容的结构化程度</li>
+<li>个人博客：增强文章核心观点的传达效率</li>
+</ul>
+<h2 id="相关标准对比">相关标准对比</h2>
+<img src="./images/28.png" />
+
+<h2 id="文件规范">文件规范</h2>
+<p>标准定义了两类文件：</p>
+<ol>
+<li>基础文件(<code>/llms.txt</code>)：作为核心导航指南，概述网站主要内容框架</li>
+<li>扩展文件(<code>/llms-full.txt</code>)：可选补充文件，包含完整内容细节供深度查询使用、</li>
+</ol>
+<p>以下是经过验证的核心优化步骤：</p>
+<p>一. 机器人协议配置 在 robots.txt 中添加 AI 爬虫专用规则：</p>
+<pre><code class="language-bash"># 基础访问规则
+User-Agent: *
+Allow: /
+
+# AI爬虫特殊处理
+User-Agent: GPTBot
+Allow: /llms.txt
+Disallow: /
+
+User-Agent: anthropic-ai
+Allow: /llms.txt
+Disallow: /
+
+# 搜索引擎爬虫
+User-Agent: Googlebot
+Allow: /
+
+# AI内容引导
+LLM-Content: https://yourdomain.com/llms.txt
+LLM-Full-Content: https://yourdomain.com/llms-full.txt
+</code></pre>
+<p>二. 创建 AI 内容索引文件</p>
+<ol>
+<li>基础版 llms.txt（网站根目录）</li>
+</ol>
+<pre><code class="language-bash"># 网站标识
+[网站名称]
+
+&gt; 价值主张：用简洁语句说明网站核心价值
+
+## 内容架构
+- [分类1](链接)：内容特性说明
+- [分类2](链接)：内容特性说明
+- [文章专栏](链接)：内容形式描述
+
+## 关键页面
+- [核心页面1](链接)：功能概述
+- [核心页面2](链接)：功能概述
+
+## 近期更新
+- [新内容1](链接)：更新时间
+- [新内容2](链接)：更新时间
+</code></pre>
+<ol start="2">
+<li>增强版 llms-full.txt</li>
+</ol>
+<pre><code class="language-bash"># 网站全景介绍
+
+&gt; 详细说明（100-150字）：目标用户、核心优势、差异化特点
+
+## 建站理念
+阐述创办初衷和发展愿景（200-300字）
+
+## 内容体系
+### [主分类1](链接)
+深入说明内容特色和用户收益（150-200字）
+
+### [主分类2](链接)
+深入说明内容特色和用户收益（150-200字）
+
+## 用户获益
+具体描述能解决哪些问题（200-300字）
+
+## 内容更新
+### [最新文章1](链接)
+核心观点和价值提炼（100-150字）
+
+### [最新文章2](链接)
+核心观点和价值提炼（100-150字）
+</code></pre>
+<p>三、页面内容优化要点</p>
+<ul>
+<li>采用层级分明的标题体系（H1-H6 规范使用）</li>
+<li>正文前添加精要概述（100-150 字）</li>
+<li>使用列表、分段等提升可读性</li>
+<li>简化前端代码，避免过度动态加载</li>
+<li>核心信息置于 HTML 文档前部</li>
+</ul>
+<p>【关键发现】</p>
+<ol>
+<li>平台差异：字节/亚马逊 AI 爬取最频繁，OpenAI 内容转化更优</li>
+<li>发布时间：周四至周五更新效果最佳</li>
+<li>内容本质：技术优化需配合优质原创内容</li>
+<li>结构优先：简洁架构比视觉设计更重要</li>
+<li>更新频率：持续更新建立 AI 信任度</li>
+</ol>
+<p><strong>【实用工具推荐】</strong></p>
+<p>[1] <strong>Firecrawl LLMs.txt Generator</strong> : <em><a href="https://llmstxt.firecrawl.dev/">https://llmstxt.firecrawl.dev/</a></em></p>
+<p>[2] <strong>SiteSpeakAI LLMs.txt Generator</strong> : <em><a href="https://sitespeak.ai/tools/llms-txt-generator">https://sitespeak.ai/tools/llms-txt-generator</a></em></p>
+<p>[3] <strong>apify/actor-llmstxt-generator</strong> : <em><a href="https://github.com/apify/actor-llmstxt-generator">https://github.com/apify/actor-llmstxt-generator</a></em></p>
+<p>[4] <strong>WordLift AI-Powered SEO Generator</strong> : <em><a href="https://wordlift.io/generate-llms-txt/">https://wordlift.io/generate-llms-txt/</a></em></p>
+<p>[5] <strong>Mintlify</strong> : <em><a href="https://mintlify.com/docs/settings/llms">https://mintlify.com/docs/settings/llms</a></em></p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

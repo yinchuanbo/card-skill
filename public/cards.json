@@ -424,5 +424,16 @@
     "summary": "\r\n## 什么是 Cursor Rules？\r\n\r\nCursor Rules 本质上是一个规则文件。因为我们在用 AI 时，上下文不会一直保持，Rules 文件则能提供持久且可复用的上下文，每次与模型对话时都会自动附带。\r\n\r\nCursor Rules 目前有三种类型：\r\n\r\n- Project R...",
     "type": "default",
     "url": "/doc/40.html"
+  },
+  {
+    "id": "41",
+    "title": "通过 llms.txt 文件让 AI 更容易的收录你的网站内容",
+    "tags": [
+      "SEO"
+    ],
+    "createdAt": "2025-05-14T17:39:58.000Z",
+    "summary": "\r\n最近团队在验证给独立站加上 llms.txt 用来校验 AI 友好型的测试，说白了就是，让 AI 更容易的爬取你的网站，好让你的网站，你的品牌更容易的出现在 AI 的搜索结果中。\r\n\r\n# 关于 LLMS.TXT 标准的解析\r\n\r\n## 概念定义\r\n\r\nLLMS.TXT 是一项正处于提案阶段的网...",
+    "type": "default",
+    "url": "/doc/41.html"
   }
 ]
