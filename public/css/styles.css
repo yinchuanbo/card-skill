@@ -3224,7 +3224,7 @@ blockquote p:last-child {
   margin-bottom: 0;
 }
 
-.tech-tag-filter:hover {
+.tech-tag-filter:not(.active):hover {
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   transform: translateY(-1px);
@@ -3265,7 +3265,7 @@ blockquote p:last-child {
   transition: all 0.2s ease;
 }
 
-.tech-tag-filter:hover .tag-count {
+.tech-tag-filter:not(.active):hover .tag-count {
   background: rgba(62, 92, 62, 0.15);
 }
 
@@ -3281,7 +3281,7 @@ blockquote p:last-child {
   color: rgba(255, 255, 255, 0.8);
 }
 
-[data-theme="dark"] .tech-tag-filter:hover {
+[data-theme="dark"] .tech-tag-filter:not(.active):hover {
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
@@ -3301,7 +3301,7 @@ blockquote p:last-child {
   color: rgba(255, 255, 255, 0.7);
 }
 
-[data-theme="dark"] .tech-tag-filter:hover .tag-count {
+[data-theme="dark"] .tech-tag-filter:not(.active):hover .tag-count {
   background: rgba(177, 167, 212, 0.15);
 }
 
@@ -5125,7 +5125,7 @@ pre.loading {
   border-radius: 2px;
 }
 
-.tech-tag-filter:hover {
+.tech-tag-filter:not(.active):hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   background-color: rgba(255, 255, 255, 0.9);
@@ -5135,7 +5135,7 @@ pre.loading {
   background: linear-gradient(90deg, var(--mountain-green-light), transparent);
 }
 
-[data-theme="dark"] .tech-tag-filter:hover {
+[data-theme="dark"] .tech-tag-filter:not(.active):hover {
   background: rgba(50, 50, 50, 0.8);
 }
 

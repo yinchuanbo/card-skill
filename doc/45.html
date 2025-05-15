@@ -1,0 +1,364 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>React Scheduler - 时间切片</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>React Scheduler - 时间切片</h1>
+                        <div class="meta">
+                            <time datetime="Fri May 16 2025 01:18:58 GMT+0800 (中国标准时间)">2025/5/16</time>
+                            <div class="tags">
+                                <span class="tag">性能优化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="前言">前言</h2>
+<p>React <code>Fiber</code> 架构下使用 <code>Scheduler</code> 调度器特性 -「时间切片」进行「任务调度」，即：每执行一段时间的任务，就把主线程交还给浏览器，避免长时间占用主线程。</p>
+<p>试想，触发一次 React 更新动作，会经过 <code>Reconciler</code> 调和阶段进行 Diff 的比较以及组件重渲染，如果组件 render 耗时过长或参与调和的 Fiber 节点很多，JS 执行时间过长就会带来页面卡住现象（无响应）。</p>
+<p>在 Fiber 架构下，每一个虚拟 DOM 都是一个「任务执行单元」，而不是整个 Fiber 树一次全进入调和阶段。这样，借助 Scheduler 时间切片特性去调用 workLoop 循环执行任务，在需要让出主线程的时候中断任务，等待下一次合适的时间继续执行。</p>
+<p>Scheduler「时间切片」的本质是为了模拟 requestIdelCallback 实现 JS 任务执行和浏览器渲染合理分配的运行在每一帧上，它们的区别在于：</p>
+<ul>
+<li><code>requestIdelCallback</code> 会在每一帧任务执行后存在剩余时间时，允许用户调用它来执行自己定义的代码，当没有剩余时间时，会将执行权交还给浏览器；</li>
+<li><code>React 时间切片</code>则是通过宏任务 MessageChannel 实现<code>高频短间隔 5ms</code> 执行 JS 逻辑，之后会将执行权交给浏览器去做渲染，并开启下一个异步请求，待浏览器工作完成后继续执行此任务。</li>
+</ul>
+<p>任何 <strong>连续、可中断</strong> 的流程都可以使用 <code>Scheduler</code> 来调度。</p>
+<blockquote>
+<p>扩展：除去“浏览器重排/重绘”，浏览器在一帧中可以用于执行 JS 的时机如下：</p>
+<p>一个 task(宏任务) -- 队列中全部 job(微任务) -- requestAnimationFrame -- 浏览器重排/重绘 -- requestIdleCallback</p>
+</blockquote>
+<p>接下来，我们将从三种角度来看看「时间切片」的发展史：</p>
+<ol>
+<li><code>requestIdleCallback</code>，浏览器 API；</li>
+<li><code>requestAnimationFrame</code>，React 旧方案；</li>
+<li><code>高频短间隔调度任务</code>，React 新方案。</li>
+</ol>
+<p>另一篇「<a href="https://juejin.cn/post/7146004608115015693">React Scheduler - 优先级调度</a>」可以看这里。</p>
+<h2 id="一、requestidlecallback">一、requestIdleCallback</h2>
+<p><code>requestIdleCallback</code>（下文简称 rIC）是浏览器提供的一个原生 API，它会判断一帧的任务执行是否留有空闲时间，去执行特定任务（不重要且不紧急的任务），目的是解决执行任务长时间占用主线程，导致高优先级任务（动画、事件）无法及时响应，带来的页面丢帧（卡死）情况。</p>
+<p>rIC 语法使用如下：</p>
+<pre><code class="language-js">window.requestIdleCallback(callback[, options]);
+</code></pre>
+<ol>
+<li>callback 为要执行的回调函数，它接收 <code>deadline</code> 作为对象。deadline 包含两个属性：</li>
+</ol>
+<pre><code class="language-typescript">type Deadline = {
+  timeRemaining: () =&gt; number; // 当前剩余的可用时间。即该帧剩余时间。
+  didTimeout: boolean; // 是否超时。
+};
+</code></pre>
+<ol start="2">
+<li>options 可以指定超时时间 options.timeout，如果任务还没有被排上执行，则会强制执行。</li>
+<li>使用示例：</li>
+</ol>
+<pre><code class="language-javascript">let appendTotal = 10000;
+let count = 0;
+const workLoop = (deadline) =&gt; {
+  // 1、执行切片任务，当没有剩余时间时，终止执行
+  while (deadline.timeRemaining() &gt; 0 &amp;&amp; count &lt; appendTotal) {
+    for (let i = 0; i &lt; 10; i++) {
+      const div = document.createElement(&quot;div&quot;);
+      div.innerHTML = &quot;box&quot;;
+      document.body.appendChild(div);
+    }
+    count++;
+  }
+  // 2、存在未执行完成的任务，开启下次空闲调度执行
+  if (count &lt; appendTotal) {
+    console.log(&quot;再次开启空闲调度&quot;, count);
+    requestIdleCallback(workLoop);
+  } else {
+    console.log(&quot;任务执行完成&quot;);
+  }
+};
+console.log(&quot;开启空闲调度&quot;);
+requestIdleCallback(workLoop);
+</code></pre>
+<p>虽然浏览器提供了 API 实现「任务空闲调度」，但它存在一些缺陷使得 React 团队并未采用它。</p>
+<ul>
+<li>一帧的执行时间存在偏差，导致留给工作执行的时间不确定（不稳定）；</li>
+<li>浏览器兼容不好，其中 safari 浏览器根本不支持它。</li>
+</ul>
+<h2 id="二、requestanimationframe">二、requestAnimationFrame</h2>
+<p>最初，React 采用 <code>requestAnimationFrame</code>（下文简称 rAF）+ <code>MessageChannel</code> 代替 rIC 使任务调度与帧对齐。</p>
+<p>具体实现分为以下两步：</p>
+<ol>
+<li>判断一帧是否有剩余时间；</li>
+<li>存在剩余时间时，执行任务。</li>
+</ol>
+<h3 id="21、计算一帧的过期时间">2.1、计算一帧的过期时间</h3>
+<p><code>rAF</code> 会在每一帧任务的绘制之前执行，接收一个回调函数，回调函数的参数 <code>rafatime</code> 为执行当前帧的开始时间。</p>
+<p>语法如下：</p>
+<pre><code class="language-javascript">window.requestAnimationFrame(callback);
+</code></pre>
+<p>我们把一帧的执行时间控制在 16.67ms，可以推算出一帧的过期时间：</p>
+<pre><code class="language-javascript">let deadlineTime;
+requestAnimationFrame((rafTime) =&gt; {
+  // 一帧的执行结束时间 = 一帧开始时间 + 用时 16.67ms
+  deadlineTime = rafTime + 16.67;
+  console.log(rafTime, deadlineTime);
+});
+</code></pre>
+<h3 id="22、执行任务">2.2、执行任务</h3>
+<p><code>MessageChannel</code> 接口允许我们创建一个新的消息通道，并通过该通道的两个 Port 进行通信。选择 MessageChannel 实现时间切片，<strong>目的就是为了产生宏任务</strong>。</p>
+<p>React 为实现暂停 JS 任务执行，将主线程交还给浏览器，让浏览器有机会执行页面渲染，就需要借助事件循环的「宏任务」。</p>
+<p><strong>因为宏任务会在下次事件循环中执行，不会阻塞本次页面渲染更新。之所以不选择微任务，是因为「微任务是在本次页面更新前会全部执行」，这一点与同步执行无异，不会让出主线程</strong>。</p>
+<p>我们结合这两步看看最初 React 时间切片的实现：</p>
+<pre><code class="language-javascript">// 计算出当前帧 结束时间点
+var deadlineTime;
+// 保存任务
+var callback;
+// 建立通信
+var channel = new MessageChannel();
+var port1 = channel.port1;
+var port2 = channel.port2;
+
+// 接收并执行宏任务
+port2.onmessage = () =&gt; {
+  // 判断当前帧是否还有空闲，即返回的是剩下的时间
+  const timeRemaining = () =&gt; deadlineTime - performance.now();
+  const _timeRemain = timeRemaining();
+  // 有空闲时间 且 有回调任务
+  if (_timeRemain &gt; 0 &amp;&amp; callback) {
+    const deadline = {
+      timeRemaining, // 计算剩余时间
+      didTimeout: _timeRemain &lt; 0, // 当前帧是否完成
+    };
+    // 执行回调
+    callback(deadline);
+  }
+};
+
+window.requestIdleCallback = function (cb) {
+  requestAnimationFrame((rafTime) =&gt; {
+    // 结束时间点 = 开始时间点 + 一帧用时16.667ms
+    deadlineTime = rafTime + 16.667;
+    // 保存任务
+    callback = cb;
+    // 发送个宏任务
+    port1.postMessage(null);
+  });
+};
+</code></pre>
+<h2 id="三、requesthostcallback">三、requestHostCallback</h2>
+<p>由于 rAF 仰仗显示器的刷新频率，太过依赖设备本身运作流程，存在不稳定性。为了在每一帧尽可能多的执行任务，React 团队采用了 <strong><code>5ms</code> 间隔的宏任务消息事件来发起任务调度</strong>。</p>
+<p>在 Scheduler 包中，<code>SchedulerHostConfig.default.js</code> 文件提供了 requestHostCallback 核心实现。</p>
+<p>在源码中会根据环境实现两套 API：在不支持 <code>MessageChannel</code> 的环境下使用 <code>setTimeout</code> 作为备选方案，否则使用 MessageChannel，我们重点看这部分实现。</p>
+<h3 id="31、相关变量">3.1、相关变量</h3>
+<pre><code class="language-javascript">export let requestHostCallback; // 处理 taskQueue 任务
+export let cancelHostCallback;
+export let requestHostTimeout; // 处理 timerQueue 任务
+export let cancelHostTimeout;
+export let shouldYieldToHost; // 是否让出主线程（currentTime &gt;= deadline）
+export let getCurrentTime; // 获取当前时间
+export let forceFrameRate; // 根据 FPS 计算每一帧时长
+</code></pre>
+<p>Scheduler 会将任务分为两种类型：taskQueue 和 timerQueue，</p>
+<ol>
+<li>taskQueue 队列中存放的是需要立即执行的任务（已就绪任务）；</li>
+<li>timerQueue 队列中存放的是可以延期执行的任务（未就绪任务）。</li>
+</ol>
+<p>所以分别提供了两种调度任务方式：<code>requestHostCallback</code> 和 <code>requestHostTimeout</code>。</p>
+<p><code>shouldYieldToHost</code> 会被用在外部 <code>workLoop</code> 循环执行任务时，确定是否需要中断执行，让出主线程。</p>
+<h3 id="32、具体实现">3.2、具体实现</h3>
+<p>在源码中，通过 <code>MessageChannel</code> 创建一个消息通道，当用户执行 <code>requestHostCallback</code> 调度 callback 时，便会通过 <code>postMessage</code> 发起一个宏任务进入 <code>performWorkUntilDeadline</code> 方法。</p>
+<pre><code class="language-javascript">if (typeof window === &#39;undefined&#39; || typeof MessageChannel !== &#39;function&#39;) {
+  // 非浏览器环境，或不支持 MessageChannel，会使用 setTimeout 宏任务来实现
+} else {
+  // 保存 api 引用，防止 polyfill 覆盖它们
+  const setTimeout = window.setTimeout;
+  const clearTimeout = window.clearTimeout;
+
+  getCurrentTime = () =&gt; performance.now(); // 页面加载后开始计算
+
+  let isMessageLoopRunning = false; // 标记 MessageChannel 正在运行
+  let scheduledHostCallback = null; // 要执行的处理函数
+  let taskTimeoutID = -1; // 用作终止 setTimeout 延迟任务
+
+  // 定义每一帧工作时间，默认时间为 5ms，React 会根据浏览器主机环境进行重新计算。
+  let yieldInterval = 5;
+  let deadline = 0; // 过期时间，让出主线程
+
+  // 让出主线程
+  shouldYieldToHost = function () {
+    return getCurrentTime() &gt;= deadline;
+  };
+
+  // （可选方法）默认空闲执行时间是5ms，用户可通过该方法来根据不同用户主机的设备刷新率（FPS）来计算预留时间
+  forceFrameRate = function (fps) {
+    if (fps &lt; 0 || fps &gt; 125) {
+      return;
+    }
+    if (fps &gt; 0) {
+      yieldInterval = Math.floor(1000 / fps);
+    } else {
+      yieldInterval = 5;
+    }
+  };
+
+  // 开启高频短间隔 5ms 执行工作
+  const performWorkUntilDeadline = () =&gt; {
+    ...
+  };
+
+  // 定义宏任务，建立通信
+  const channel = new MessageChannel();
+  const port = channel.port2; // 用于发布任务
+  channel.port1.onmessage = performWorkUntilDeadline; // 处理任务
+
+  requestHostCallback = function (callback) {
+    scheduledHostCallback = callback; // 保存任务
+    if (!isMessageLoopRunning) {
+      isMessageLoopRunning = true;
+      port.postMessage(null); // 发起宏任务
+    }
+  };
+
+  cancelHostCallback = function () {
+    scheduledHostCallback = null;
+  };
+
+  requestHostTimeout = function (callback, ms) {
+    taskTimeoutID = setTimeout(() =&gt; {
+      callback(getCurrentTime());
+    }, ms);
+  };
+
+  cancelHostTimeout = function () {
+    clearTimeout(taskTimeoutID);
+    taskTimeoutID = -1;
+  };
+}
+</code></pre>
+<p>在 <code>performWorkUntilDeadline</code> 方法中，基于 <code>yieldInterval</code> 计算得到一个执行过期时间 <code>deadline</code>，也就是「高频短间隔 5ms」。</p>
+<p>当用户在 callback 中通过调用 <code>shouldYieldToHost()</code> 发现执行时间过期且还存在未完成的任务，可在 callback 函数中返回 true，<code>performWorkUntilDeadline</code> 会先将主线程交给浏览器，再开启一个宏任务等待执行。</p>
+<pre><code class="language-javascript">const performWorkUntilDeadline = () =&gt; {
+  if (scheduledHostCallback !== null) {
+    const currentTime = getCurrentTime(); // 拿到当前时间
+    // 根据 yieldInterval（5ms）计算剩余时间（任务执行截止时间）。这种方式意味着 port.postMessage 开始后总有剩余时间
+    deadline = currentTime + yieldInterval;
+    // 标识还有时间，类似 requestIdleCallback deadline.didTimeout
+    const hasTimeRemaining = true;
+    try {
+      const hasMoreWork = scheduledHostCallback(hasTimeRemaining, currentTime);
+      // 执行完成，没有新任务，初始化工作环境
+      if (!hasMoreWork) {
+        isMessageLoopRunning = false;
+        scheduledHostCallback = null;
+      } else {
+        // 如果任务截止时间过期（根据 shouldYieldToHost()），还有需要处理的工作，再发起一个异步宏任务
+        port.postMessage(null);
+      }
+    } catch (error) {
+      port.postMessage(null);
+      throw error;
+    }
+  } else {
+    isMessageLoopRunning = false;
+  }
+};
+</code></pre>
+<p>利用宏任务异步的机制，以高频（短间隔）5ms 的方式去对任务进行切片执行，每隔 5ms 让出执行权给浏览器看它是否有渲染工作要做，浏览器做完工作或没有工作要做时，根据 EventLoop 的运行机制会再次进入到下一个宏任务中，接着上次的任务继续执行。</p>
+<blockquote>
+<p>之所以选择宏任务，不选择微任务，是因为微任务会在页面更新前全部执行完成，无法做到将主线程交还给浏览器，而宏任务可以。</p>
+</blockquote>
+<p>此外，<code>setTimeout</code> 仅作为宏任务的备选方案，这是因为：</p>
+<p><strong>当递归执行 setTimeout(fn, 0) 时，间隔会由最初的 1ms 变成 4ms。如果使用它来实现 Scheduler，就会浪费 4 毫秒。因为 60 FPS 下要求每帧间隔不超过 16.66 ms，所以 4ms 存在浪费。</strong></p>
+<p>你可以将下面代码运行在浏览器查看运行结果：</p>
+<pre><code class="language-javascript">var count = 0;
+
+var startVal = +new Date();
+console.log(&quot;start time&quot;, 0, 0);
+function func() {
+  setTimeout(() =&gt; {
+    console.log(&quot;exec time&quot;, ++count, +new Date() - startVal);
+    if (count === 20) return;
+    func();
+  }, 0);
+}
+
+func();
+</code></pre>
+<h2 id="四、使用">四、使用</h2>
+<p>现在，我们通过一个简单 DOM 来验证一下 <code>requestHostCallback</code> 实现是否有用。</p>
+<p>假设页面上有两个 DOM 节点，我们要去访问 DOM 属性（DOM 操作会影响程序执行效率），时间切片的任务数量为 5000 次。如果我们直接同步执行这 5000 次任务，会造成页面渲染卡顿大约 3s 时间（本机测试），在这期间无法对页面进行任何操作（如点击按钮）。代码如下：</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;button id=&quot;btn1&quot;&gt;按钮1&lt;/button&gt;
+  &lt;button id=&quot;btn2&quot;&gt;按钮2&lt;/button&gt;
+
+  &lt;script&gt;
+    let workIndex = 0;
+    let taskTotal = 5000; // 任务数量
+    const start = Date.now();
+    function handleWork() {
+      for (let j = 0; j &lt; 4000; j++) {
+        // DOM 操作严重影响程序执行效率
+        const btn1Attr = document.getElementById(&quot;btn1&quot;).attributes;
+        const btn2Attr = document.getElementById(&quot;btn2&quot;).attributes;
+        const btn3Attr = document.getElementById(&quot;btn1&quot;).attributes;
+        const btn4Attr = document.getElementById(&quot;btn2&quot;).attributes;
+      }
+      workIndex++;
+      if (workIndex &gt;= taskTotal) {
+        console.log(`任务调度完成，用时：`, Date.now() - start, &quot;ms!&quot;);
+      }
+    }
+
+    while (workIndex &lt; taskTotal) {
+      handleWork();
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>现在我们改用 <code>requestHostCallback</code> 高频 5ms 宏任务方式去执行，页面渲染不会出现卡顿，点击按钮能够正常响应。代码如下：</p>
+<pre><code class="language-html">&lt;script&gt;
+  let workIndex = 0;
+  let taskTotal = 5000; // 任务数量
+  const start = Date.now();
+  function handleWork() {
+    for (let j = 0; j &lt; 4000; j++) {
+      // DOM 操作严重影响程序执行效率
+      const btn1Attr = document.getElementById(&quot;btn1&quot;).attributes;
+      const btn2Attr = document.getElementById(&quot;btn2&quot;).attributes;
+      const btn3Attr = document.getElementById(&quot;btn1&quot;).attributes;
+      const btn4Attr = document.getElementById(&quot;btn2&quot;).attributes;
+    }
+    workIndex++;
+    if (workIndex &gt;= taskTotal) {
+      console.log(`任务调度完成，用时：`, Date.now() - start, &quot;ms!&quot;);
+    }
+  }
+
+  // while (workIndex &lt; taskTotal) {
+  //   handleWork();
+  // }
+
+  function workLoop() {
+    // 执行 shouldYieldToHost 来判断本次宏任务的 高频（短间隔）5ms 时间切片是否用尽
+    while (!shouldYieldToHost() &amp;&amp; workIndex &lt; taskTotal) {
+      handleWork();
+    }
+    if (workIndex &lt; taskTotal) {
+      console.log(`开启下一个宏任务继续执行剩余任务`);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  requestHostCallback(workLoop);
+&lt;/script&gt;
+</code></pre>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
