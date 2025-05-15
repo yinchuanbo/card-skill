@@ -1,0 +1,175 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>流式 HTML：那个没人告诉你的前端性能黑科技</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>流式 HTML：那个没人告诉你的前端性能黑科技</h1>
+                        <div class="meta">
+                            <time datetime="Thu May 15 2025 19:08:58 GMT+0800 (中国标准时间)">2025/5/15</time>
+                            <div class="tags">
+                                <span class="tag">HTML</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>你辛苦做了个漂亮的前端应用，在本地测试飞快，但一上线就卡到怀疑人生。用户点一下，毫无反应；等你的应用终于苏醒，用户早就跑了。</p>
+<p>今天咱们就聊聊，为什么你的网站加载还是这么慢——并介绍一个神奇的技巧：<strong>流式 HTML（Streaming HTML）</strong>。</p>
+<p>接下来，我们通过一个真实案例（使用 Node.js + React）深入探讨问题所在，解释传统客户端渲染（CSR）的弊端，并展示如何只需几行代码就大幅提升性能。</p>
+<hr>
+<h2 id="为什么你的前端页面仍然慢到离谱？">为什么你的前端页面仍然慢到离谱？</h2>
+<p>现在大多数现代 Web 应用都基于 React、Vue 或 Angular 等前端框架。这些框架强大无比，打造复杂 UI 易如反掌——但问题是：<strong>默认采用客户端渲染（Client-Side Rendering，简称 CSR</strong>。</p>
+<p>CSR 意味着：</p>
+<ul>
+<li>用户访问你的网站时，收到的并不是完整的 HTML。</li>
+<li>而是一个空的  <code>&lt;div&gt;</code>  和超大的 JavaScript 文件。</li>
+<li>JS 下载并执行完毕后，才开始调用 API、渲染页面，用户才能看到内容。</li>
+</ul>
+<p>如果用户的网络慢一点、设备性能差一些，或者你的 API 服务器刚好今天“情绪不稳定”——</p>
+<p>那整个过程会漫长无比，用户感觉迟缓、卡顿，最终直接放弃。</p>
+<p>要命的是：<strong>这不是用户的错，也不是 React 本身的问题，而是架构的问题。</strong></p>
+<hr>
+<h2 id="问题本质：瀑布式加载的死亡循环">问题本质：瀑布式加载的“死亡循环”</h2>
+<p>以常见的后台管理页面为例，CSR 下访问该页面的全过程：</p>
+<ol>
+<li>浏览器请求 HTML 页面；</li>
+<li>服务端返回极简的 HTML 外壳；</li>
+<li>浏览器看到  <code>&lt;script&gt;</code>  标签，开始下载 JS；</li>
+<li>JS 下载完毕，开始运行；</li>
+<li>JS 再次调用 API 获取数据（比如用户信息）；</li>
+<li>数据返回后，JS 才开始渲染页面。</li>
+</ol>
+<p>每一步都依赖上一步的完成，就像瀑布一样逐级等待。</p>
+<img src="./images/91.webp" />
+
+<p><strong>传统 CSR 加载示意图（逐级阻塞）</strong></p>
+<p>想象一下，你的 JS 文件很大，比如 2MB，就算网络不错也要几秒，再加上 API 调用的延迟——用户可能要等上五秒才能看到页面。</p>
+<p>这在网页性能领域，基本上意味着“死亡”。</p>
+<img src="./images/92.webp" />
+
+<hr>
+<h2 id="一种常见的解决方案：服务端渲染（ssr）">一种常见的解决方案：服务端渲染（SSR）</h2>
+<p>一种广为人知的解决方案就是 SSR。</p>
+<p>SSR 的思路是服务器预先渲染完整的 HTML 页面再发送给用户：</p>
+<ul>
+<li>用户瞬间看到页面内容；</li>
+<li>浏览器再异步加载 JS，接管交互。</li>
+</ul>
+<p>但 SSR 也不是万能药：<strong>对已有项目的改造成本极高</strong>，涉及到状态管理、数据同步、hydration 问题。适合新项目，但旧项目迁移需谨慎。</p>
+<hr>
+<h2 id="真正优雅的解法：html-流式传输（streaming）">真正优雅的解法：HTML 流式传输（Streaming）</h2>
+<p>相比 SSR，流式 HTML 更加巧妙：</p>
+<ul>
+<li>用户访问页面时，服务器立刻返回基本的 HTML 骨架和加载动画；</li>
+<li>浏览器迅速渲染初始页面，感觉“响应很快”；</li>
+<li>与此同时，服务器异步调用非关键 API；</li>
+<li>数据一旦获取完成，服务器再通过流式传输，将 HTML 逐步传给浏览器；</li>
+<li>浏览器同时开始并行下载 JS 文件；</li>
+<li>JS 加载完成时，页面数据已经就位，直接进行渲染。</li>
+</ul>
+<p>看图更直观：</p>
+<img src="./images/93.webp" />
+
+<p><strong>HTML 流式传输示意图（并行处理）</strong></p>
+<p>相当于你边做饭边洗衣服，而不是做完饭再去洗衣服。节约时间，提升体验。</p>
+<img src="./images/94.webp" />
+
+<hr>
+<h2 id="看代码：express-实现流式-html-传输实战">看代码：Express 实现流式 HTML 传输实战</h2>
+<p>用 Node.js Express 来演示：</p>
+<pre><code class="language-js">const express = require(&quot;express&quot;);
+const fs = require(&quot;fs&quot;);
+const app = express();
+const PORT = 3000;
+
+// 静态资源服务
+app.use(express.static(&quot;public&quot;));
+
+// 模拟 API 调用获取用户数据
+const fetchEmployees = async () =&gt; {
+  const res = await fetch(&quot;https://jsonplaceholder.typicode.com/users&quot;);
+  return res.json();
+};
+
+// 提前读取 HTML 模板并拆分为两段
+const [HTML_START, HTML_END] = fs
+  .readFileSync(&quot;./public/index.html&quot;, &quot;utf8&quot;)
+  .split(&quot;&lt;/body&gt;&quot;);
+
+app.get(&quot;/server&quot;, async (req, res) =&gt; {
+  res.write(HTML_START); // 立即返回 HTML 骨架给浏览器
+
+  try {
+    const employees = await fetchEmployees();
+    // 数据返回后再追加到流中
+    res.write(`
+      &lt;script&gt;
+        const serverEmployees = ${JSON.stringify(employees)};
+        console.log(&#39;Server data:&#39;, serverEmployees);
+      &lt;/script&gt;
+      ${HTML_END}
+    `);
+  } catch (err) {
+    console.error(&quot;API 错误：&quot;, err);
+    res.write(HTML_END);
+  }
+
+  res.end();
+});
+
+app.listen(PORT, () =&gt; console.log(`服务器启动：http://localhost:${PORT}`));
+</code></pre>
+<p><strong>发生了什么？</strong></p>
+<ul>
+<li>浏览器立即得到 HTML 骨架；</li>
+<li>JS 文件和 HTML 并行加载；</li>
+<li>服务器端获取 API 数据后继续返回 HTML；</li>
+<li>浏览器无需再单独调用 API，直接渲染页面。</li>
+</ul>
+<hr>
+<h2 id="实践价值与适用场景">实践价值与适用场景</h2>
+<h3 id="优点：">优点：</h3>
+<ul>
+<li>更快的首屏渲染，用户体验极大提升；</li>
+<li>无需大规模重构现有项目；</li>
+<li>并行请求，降低页面延迟；</li>
+<li>相比 SSR，更轻量、更灵活。</li>
+</ul>
+<h3 id="局限：">局限：</h3>
+<ul>
+<li>并非所有数据都能提前服务端请求；</li>
+<li>如果依赖客户端输入的数据，仍需 CSR。</li>
+</ul>
+<p>适合以下情况：</p>
+<ul>
+<li>页面加载时有大量静态或半静态数据；</li>
+<li>无法或不想完全迁移至 SSR；</li>
+<li>使用的不是 Next.js 等 Meta-Framework（已自带流式功能）。</li>
+</ul>
+<hr>
+<h2 id="性能优化额外小贴士：">性能优化额外小贴士：</h2>
+<ul>
+<li>静态资源开启缓存策略；</li>
+<li>压缩响应（Gzip/Brotli）；</li>
+<li>JS/CSS 文件最小化；</li>
+<li>关键资源使用  <code>&lt;link rel=&quot;preload&quot;&gt;</code>；</li>
+<li>持续监测 TTFB（首字节响应时间）与 LCP（最大内容绘制时间）。</li>
+</ul>
+<p>别忘了，性能不只是技术指标，更是业务指标！</p>
+<hr>
+<h2 id="最后，总结一下我们今天学到的：">最后，总结一下我们今天学到的：</h2>
+<p>✅ 传统客户端渲染延迟体验严重 ✅ 服务端渲染体验好，但成本高 ✅ HTML 流式传输兼顾两者优势，实操简单</p>
+<p>只要一个简单的模式切换和一些基础 Express 代码，你就能实现更快的页面加载，创造更好的用户体验。</p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

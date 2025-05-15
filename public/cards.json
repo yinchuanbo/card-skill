@@ -446,5 +446,16 @@
     "summary": "\r\n## 1\\. Scrollbar-Gutter 和 Scrollbar-Color\r\n\r\n当浏览器显示滚动条时，布局可能会因为滚动条的出现而发生偏移。使用  `scrollbar-gutter`，可以在开始滚动之前就保留滚动条空间，从而避免这种布局变化：\r\n\r\n```css\r\n.scrollab...",
     "type": "default",
     "url": "/doc/42.html"
+  },
+  {
+    "id": "43",
+    "title": "流式 HTML：那个没人告诉你的前端性能黑科技",
+    "tags": [
+      "HTML"
+    ],
+    "createdAt": "2025-05-15T11:08:58.000Z",
+    "summary": "\r\n你辛苦做了个漂亮的前端应用，在本地测试飞快，但一上线就卡到怀疑人生。用户点一下，毫无反应；等你的应用终于苏醒，用户早就跑了。\r\n\r\n今天咱们就聊聊，为什么你的网站加载还是这么慢——并介绍一个神奇的技巧：**流式 HTML（Streaming HTML）**。\r\n\r\n接下来，我们通过一个真实案例（...",
+    "type": "default",
+    "url": "/doc/43.html"
   }
 ]
