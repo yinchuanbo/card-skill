@@ -1,0 +1,185 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>2025 年十大 CSS 新特性：已在所有主流浏览器中支持</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>2025 年十大 CSS 新特性：已在所有主流浏览器中支持</h1>
+                        <div class="meta">
+                            <time datetime="Thu May 15 2025 18:48:58 GMT+0800 (中国标准时间)">2025/5/15</time>
+                            <div class="tags">
+                                <span class="tag">CSS</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="1-scrollbar-gutter-和-scrollbar-color">1. Scrollbar-Gutter 和 Scrollbar-Color</h2>
+<p>当浏览器显示滚动条时，布局可能会因为滚动条的出现而发生偏移。使用  <code>scrollbar-gutter</code>，可以在开始滚动之前就保留滚动条空间，从而避免这种布局变化：</p>
+<pre><code class="language-css">.scrollable {
+  scrollbar-gutter: stable both-edges;
+}
+</code></pre>
+<p>还可以使用  <code>scrollbar-color</code>  来美化滚动条：</p>
+<pre><code class="language-css">.scrollable {
+  scrollbar-color: #444 #ccc;
+}
+</code></pre>
+<p>这可以确保布局稳定，并防止滚动条出现时的跳动。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li><code>scrollbar-gutter</code>  保证布局稳定，通过提前保留滚动条空间，避免滚动条出现时造成的布局跳动。</li>
+<li><code>scrollbar-color</code>  让我肌能够定制滚动条的轨道和拇指，增强设计一致性，尤其是在暗色或主题 UI 中。</li>
+</ul>
+<h2 id="2-target-text">2. ::target-text</h2>
+<p><code>::target-text</code>  用于高亮显示通过内部链接（例如点击页面上的锚点）到达的文本：</p>
+<pre><code class="language-css">::target-text {
+  background: yellow;
+  color: black;
+}
+</code></pre>
+<p>这让用户立刻看到他们所导航到的文本部分。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>高亮显示通过链接锚点定位的具体文本，让用户在浏览长文档或文章时，立即清晰地看到自己所在位置。</li>
+</ul>
+<h2 id="3-ruby-布局（ruby-align-和-ruby-position）">3. Ruby 布局（ruby-align 和 ruby-position）</h2>
+<p>对于某些语言和注释，<code>ruby-align</code>  和  <code>ruby-position</code>  非常重要。它们允许你控制短注释（ruby 文本）相对于主文本的位置：</p>
+<pre><code class="language-css">ruby {
+  ruby-align: center;
+  ruby-position: over;
+}
+</code></pre>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>对于东亚语言排版，允许精确控制小注释（ruby 文本）的位置，如位于主文本的上方或旁边。</li>
+<li>对于教育或参考资料中的行内注释也非常有用。</li>
+</ul>
+<h2 id="4-相对色语法与-light-dark">4. 相对色语法与 light-dark()</h2>
+<p>CSS 中的现代颜色处理包括相对色语法，可以基于现有颜色调整亮度或饱和度。另外，<code>light-dark()</code>  使得在亮色和暗色值之间轻松切换成为可能：</p>
+<pre><code class="language-css">.element {
+  background: light-dark(#ffffff, #000000);
+}
+</code></pre>
+<p>还可以使用  <code>&lt;color-interpolation-method&gt;</code>  创建更平滑的渐变效果。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>相对色语法让您能够根据参考颜色动态调整属性，如亮度或饱和度。</li>
+<li><code>light-dark()</code>  简化了在亮色和暗色之间切换的过程，适用于主题或暗黑模式。</li>
+</ul>
+<h2 id="5-独占手风琴">5. 独占手风琴</h2>
+<p>通常手风琴组件需要 JavaScript 来确保每次只有一个面板是打开的，但是 HTML 中的  <code>&lt;details&gt;</code>  元素可以让这一过程更加简化。以下是一个保持面板互斥的简短示例：</p>
+<pre><code class="language-html">&lt;details name=&quot;exclusive&quot;&gt;
+  &lt;summary&gt;Details&lt;/summary&gt;
+  Something small enough to escape casual notice.
+&lt;/details&gt;
+</code></pre>
+<pre><code class="language-css">details {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0.5em 0.5em 0;
+}
+
+summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+
+details[open] {
+  padding: 0.5em;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 0.5em;
+}
+</code></pre>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>无需复杂的 JavaScript 逻辑，即可一次性显示一个面板。</li>
+<li>非常适合 FAQ、菜单或任何场景，其中只应打开一个细节面板。</li>
+</ul>
+<h2 id="6-content-visibility">6. content-visibility</h2>
+<p><code>content-visibility</code>  跳过屏幕外元素的渲染，直到它们滚动到视野中：</p>
+<pre><code class="language-css">.lazy-load-section {
+  content-visibility: auto;
+}
+</code></pre>
+<p>这减少了初始渲染的开销，提升了长页面的性能。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>推迟渲染屏幕外的元素，提升长页面或复杂布局的性能。</li>
+<li>提升加载速度，并减少内存占用，尤其是在移动设备上。</li>
+</ul>
+<h2 id="7-font-size-adjust">7. font-size-adjust</h2>
+<p>当自定义字体不可用时，浏览器会回退到其他字体，通常会破坏布局。<code>font-size-adjust</code>  有助于保持文本大小和可读性的一致性：</p>
+<pre><code class="language-css">.text {
+  font-family: &quot;CustomFont&quot;, Arial, sans-serif;
+  font-size-adjust: 0.5;
+}
+</code></pre>
+<p>这保持了回退字体的 x-height 和可读性一致。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>当自定义字体不可用或加载缓慢时，保持一致的文本外观。</li>
+<li>通过匹配回退字体的 x-height 来确保可读性和设计一致性。</li>
+</ul>
+<h2 id="8-transition-behavior">8. transition-behavior</h2>
+<p>虽然  <code>transition-timing-function</code>  为我们提供了过渡控制，但  <code>transition-behavior</code>  引入了更多的控制，允许您在没有复杂 JavaScript 的情况下反转或暂停过渡。这为平滑的 UI 交互和更复杂的动画场景铺平了道路。</p>
+<pre><code class="language-css">.card {
+  transition-property: opacity, display;
+  transition-duration: 0.25s;
+  transition-behavior: allow-discrete;
+}
+
+.card.fade-out {
+  opacity: 0;
+  display: none;
+}
+</code></pre>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>扩展基础过渡，允许可逆或更复杂的过渡，而无需繁琐的脚本。</li>
+<li>适用于精细的 UI 效果、互动组件和独特的动画场景。</li>
+</ul>
+<h2 id="9-css-property-和阶梯值函数">9. CSS @property 和阶梯值函数</h2>
+<p><code>@property</code>  使您能够声明带有预定义语法、继承规则和初始值的自定义属性：</p>
+<pre><code class="language-css">@property --animation-progress {
+  syntax: &quot;&lt;number&gt;&quot;;
+  inherits: false;
+  initial-value: 0;
+}
+</code></pre>
+<p>您还可以使用新的阶梯值函数如  <code>round()</code>、<code>mod()</code>  和  <code>rem()</code>  直接在 CSS 中进行计算，消除了许多 JavaScript 或预处理器的使用。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li><code>@property</code>  使自定义属性成为完全声明的变量，具有类型、默认值和继承规则。</li>
+<li><code>round()</code>、<code>mod()</code>  和  <code>rem()</code>  等函数让在 CSS 中进行简单数学计算变得更加直接，减少了对预处理器或 JavaScript 的依赖。</li>
+</ul>
+<h2 id="10-offset-position-和-offset-path">10. offset-position 和 offset-path</h2>
+<p>对于更复杂的运动设计，<code>offset-position</code>  和  <code>offset-path</code>  使您可以在没有复杂 JavaScript 框架的情况下，沿自定义路径对元素进行动画：</p>
+<pre><code class="language-css">.move {
+  offset-path: path(&quot;M10,80 Q95,10 180,80&quot;);
+  offset-position: 0%;
+  transition: offset-position 2s ease;
+}
+</code></pre>
+<p>借助这些属性，您可以通过 SVG 路径或简单的曲线创建精致的动画效果。</p>
+<p><strong>适用场景 ✅</strong></p>
+<ul>
+<li>纯 CSS 的路径动画和运动。</li>
+<li>非常适合互动元素、运动图形或引导用户注意力沿曲线路径移动。</li>
+</ul>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

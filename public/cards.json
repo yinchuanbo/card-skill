@@ -435,5 +435,16 @@
     "summary": "\r\n最近团队在验证给独立站加上 llms.txt 用来校验 AI 友好型的测试，说白了就是，让 AI 更容易的爬取你的网站，好让你的网站，你的品牌更容易的出现在 AI 的搜索结果中。\r\n\r\n# 关于 LLMS.TXT 标准的解析\r\n\r\n## 概念定义\r\n\r\nLLMS.TXT 是一项正处于提案阶段的网...",
     "type": "default",
     "url": "/doc/41.html"
+  },
+  {
+    "id": "42",
+    "title": "2025 年十大 CSS 新特性：已在所有主流浏览器中支持",
+    "tags": [
+      "CSS"
+    ],
+    "createdAt": "2025-05-15T10:48:58.000Z",
+    "summary": "\r\n## 1\\. Scrollbar-Gutter 和 Scrollbar-Color\r\n\r\n当浏览器显示滚动条时，布局可能会因为滚动条的出现而发生偏移。使用  `scrollbar-gutter`，可以在开始滚动之前就保留滚动条空间，从而避免这种布局变化：\r\n\r\n```css\r\n.scrollab...",
+    "type": "default",
+    "url": "/doc/42.html"
   }
 ]
