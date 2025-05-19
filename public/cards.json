@@ -3,8 +3,7 @@
     "id": "01",
     "title": "发布订阅模式",
     "tags": [
-      "发布订阅",
-      "设计模式"
+      "JavaScript"
     ],
     "createdAt": "2025-02-22T21:49:40.000Z",
     "summary": "\r\n### 1. 发布订阅模式是啥？\r\n\r\n简单来说，发布订阅模式就是一种**消息通信机制**。\r\n\r\n- **发布者（Publisher）**\r\n  ：负责发消息。\r\n- **订阅者（Subscriber）**\r\n  ：负责收消息。\r\n- **消息中心（Event Bus）**\r\n  ：负责管理消...",
@@ -15,7 +14,7 @@
     "id": "02",
     "title": "JavaScript 最实用的 10 种设计模式和应用场景",
     "tags": [
-      "设计模式"
+      "JavaScript"
     ],
     "createdAt": "2025-03-08T17:49:49.000Z",
     "summary": "\r\n## 1. 单例模式（Singleton Pattern）\r\n\r\n单例模式确保一个类只有一个实例，并提供一个全局访问点，一般应用场景表现在：\r\n\r\n- 全局状态管理（如 Redux 中的 Store）。\r\n- 数据库连接池。\r\n- 日志记录器。\r\n\r\n```js\r\nclass Singleton...",
@@ -26,7 +25,7 @@
     "id": "03",
     "title": "前端文件大小单位转换的最佳实践",
     "tags": [
-      "单位转换"
+      "JavaScript"
     ],
     "createdAt": "2025-03-08T17:54:15.000Z",
     "summary": "\r\n## 提高代码优雅度：文件大小单位转换的最佳实践\r\n\r\n在日常开发中，我们经常需要将文件大小从 KB 转换为 MB、GB 甚至 TB，以提供更直观的信息展示。\r\n\r\n今天，我们就来看看如何优雅地实现这一功能，并推荐一种更简洁高效的代码写法。\r\n\r\n## 传统写法：繁琐的 if-else\r\n\r\n`...",
@@ -37,7 +36,7 @@
     "id": "04",
     "title": "一起聊聊 Symbols 在前端的几个妙用",
     "tags": [
-      "Symbols"
+      "JavaScript"
     ],
     "createdAt": "2025-03-08T18:09:52.000Z",
     "summary": "\r\n## 1. JavaScript 的 Symbols 有什么用\r\n\r\nSymbols 与其他 JavaScript 原语不同，其保证唯一性。\r\n\r\n当开发者使用 `Symbol('description')` 创建 Symbols 时，其值永远不会与任何其他 Symbols 相同，即使是使用相同...",
@@ -48,7 +47,7 @@
     "id": "05",
     "title": "为何说 AbortController 是前端一把利剑",
     "tags": [
-      "AbortController"
+      "JavaScript"
     ],
     "createdAt": "2025-03-08T18:12:26.000Z",
     "summary": "\r\n## 1\\. 通过 AbortController 提前终止 fetch\r\n\r\n首先看一个例子，其使用 AbortController 来实现可以提前中止的 fetch：\r\n\r\n```js\r\nfetchButton.onclick = async () => {\r\n  const control...",
@@ -59,7 +58,7 @@
     "id": "06",
     "title": "Map最佳实践",
     "tags": [
-      "Map"
+      "JavaScript"
     ],
     "createdAt": "2025-03-08T20:31:37.000Z",
     "summary": "\r\n<img src=\"/images/02.webp\" />\r\n\r\n**「Map」** 映射是一种经典的数据结构类型，其中数据以  **「key/value」**  的键值对形式存在\r\n\r\n|        |                 Map                  |     ...",
@@ -92,7 +91,7 @@
     "id": "09",
     "title": "Promise.allSettled",
     "tags": [
-      "Promise"
+      "JavaScript"
     ],
     "createdAt": "2025-03-09T09:50:25.000Z",
     "summary": "\r\n处理异步操作已经成为了 JavaScript 日常编码的核心部分。随着应用复杂度的增加，我们经常需要并发执行多个异步任务并合理处理它们的结果。长期以来，`Promise.all()`  一直是我们处理并发 Promise 的首选方法，但它存在一个致命缺陷：一旦任何一个 Promise 被拒绝（r...",
@@ -125,7 +124,7 @@
     "id": "12",
     "title": "一次搞懂 CSS 各种混合模式",
     "tags": [
-      "混合模式"
+      "CSS"
     ],
     "createdAt": "2025-03-10T20:23:43.000Z",
     "summary": "\r\n## 一. mix-blend-mode\r\n\r\n`mix-blend-mode` 用于设定一个元素如何与其父元素或背景中的其他元素进行混合。常见的应用包括图片和文字在背景上的混合，让内容与背景色彩产生有趣的视觉效果。\r\n\r\n```css\r\ndiv {\r\n  mix-blend-mode: dif...",
@@ -136,7 +135,7 @@
     "id": "13",
     "title": "CSS 滤镜 filter / backdrop-filter：模糊、透明图阴影、调色、毛玻璃、渐进式模糊效果",
     "tags": [
-      "filter / backdrop-filter"
+      "CSS"
     ],
     "createdAt": "2025-03-10T21:28:06.000Z",
     "summary": "\r\n## 一. 滤镜 filter\r\n\r\n`filter`属性能让你对 HTML 元素本身做一系列的图像处理效果，让我们能在不使用绘图软体的情况下实现各种特效，例如：模糊、明度、对比度等。\r\n\r\n```css\r\ndiv {\r\n  filter: 方法(数值);\r\n}\r\n```\r\n\r\n### 特效效果...",
@@ -147,7 +146,8 @@
     "id": "14",
     "title": "无限动画CSS工具库",
     "tags": [
-      "动画库"
+      "CSS",
+      "CSS动画"
     ],
     "createdAt": "2025-03-13T19:48:06.000Z",
     "summary": "\r\n今天，我们为大家介绍一款强大的 CSS 动画库——**AnimXYZ**，它能够帮助开发者轻松创建、定制和组合动画效果，而无需编写任何关键帧代码。\r\n\r\n<img src=\"/images/03.gif\">\r\n\r\n## 什么是 AnimXYZ？\r\n\r\n**AnimXYZ** 是一个基于 CSS ...",
@@ -158,7 +158,7 @@
     "id": "15",
     "title": "3个非常好用的图标网站",
     "tags": [
-      "Icon"
+      "工具集"
     ],
     "createdAt": "2025-03-13T19:55:06.000Z",
     "summary": "\r\n## 一. iconfont\r\n\r\n最常用的图标站，阿里巴巴出品。\r\n\r\n提供了成千上万的矢量图标，涵盖 UI 设计、APP、网页等多个领域。\r\n\r\n用户可以创建自己的项目，批量管理所需图标，方便在不同项目中复用。\r\n\r\n支持多种使用方式。\r\n\r\n支持多人协作。\r\n\r\nhttps://www.i...",
@@ -169,7 +169,7 @@
     "id": "16",
     "title": "10 个鲜为人知但必备的 NPM 包",
     "tags": [
-      "NPM 包"
+      "工具集"
     ],
     "createdAt": "2025-03-14T22:25:00.000Z",
     "summary": "\r\n## 1. date-fns-tz：时区处理的终极解决方案\r\n\r\n时区处理一直是开发者的噩梦，尤其是当应用需要支持全球用户时。虽然 Moment.js 曾经是时区处理的首选工具，但  `date-fns-tz`  提供了一个更现代化、轻量级的替代方案。它基于  `date-fns`  库，提供了...",
@@ -213,7 +213,7 @@
     "id": "20",
     "title": "前端国际化全场景支持方案，不入侵代码，一键完成 (vue2/3、react)",
     "tags": [
-      "国际化"
+      "工具集"
     ],
     "createdAt": "2025-03-15T08:41:07.000Z",
     "summary": "\r\n## 🚀 前言\r\n\r\n大家好呀！之前给大家介绍过一个关于国际化的 Vite 插件 `vite-plugin-auto-i18n`，这是一个自动翻译的 i18n Vite 插件。但当时这个插件还不够完美。所以，时隔一年，我们带来了前端国际化插件的升级版——更兼容、更适配、更稳定。🎉\r\n\r\n国际...",
@@ -224,8 +224,7 @@
     "id": "21",
     "title": "七行代码搞定无限滚动",
     "tags": [
-      "性能优化",
-      "滚动优化"
+      "性能优化"
     ],
     "createdAt": "2025-03-15T09:28:38.000Z",
     "summary": "\r\n无限滚动，又称瀑布流，已成为现代网站的标配。它能提升用户体验，让浏览更加流畅。分享下只需七行 JavaScript 代码，就能轻松实现高性能的无限滚动效果，并深入剖析其背后的性能优化原理。\r\n\r\n## 传统实现的痛点\r\n\r\n在谈论优化方案前，我们先来看看传统无限滚动实现中存在的问题：\r\n\r\n1....",
@@ -248,8 +247,7 @@
     "id": "23",
     "title": "HTML 中的 JavaScript",
     "tags": [
-      "高级程序设计",
-      "script 元素"
+      "JavaScript"
     ],
     "createdAt": "2025-03-15T20:37:45.000Z",
     "summary": "\r\n## script 元素\r\n\r\n**script 元素有下列 8 个属性：**\r\n\r\n### 1. async:\r\n\r\n可选，表示应该立即下载脚本，但不能妨碍页面上的其他操作，比如下载资源或等待其他脚本加载，这个属性只对外部脚本文件有效。\r\n\r\n### 2. charset:\r\n\r\n可选，使用 ...",
@@ -260,8 +258,7 @@
     "id": "25",
     "title": "原生 Observable API 来了",
     "tags": [
-      "Observable API",
-      "实验属性"
+      "JavaScript"
     ],
     "createdAt": "2025-03-18T20:32:01.000Z",
     "summary": "\r\n在 Web 开发中，异步事件处理始终是构建响应式、可扩展应用的核心挑战。传统方案依赖`addEventListener`进行事件监听，但在处理复杂事件流时，其命令式编程模型常导致代码臃肿、难以维护且缺乏组合性。尽管开发者通常通过 RxJS 等响应式编程库解决此类问题，但这些第三方方案需要额外学习...",
@@ -272,7 +269,7 @@
     "id": "26",
     "title": "Grid布局详解-掌握网页布局的终极武器",
     "tags": [
-      "Grid"
+      "CSS"
     ],
     "createdAt": "2025-03-18T20:57:14.000Z",
     "summary": "\r\n## 一. Grid 布局基础概念\r\n\r\n**Grid 布局（网格布局）** 是 CSS 中一种二维布局模型，允许开发者通过行（Row）和列（Column）的组合，将页面划分为多个区域，并精准控制元素的位置和尺寸。它的核心特点是同时管理行和列，适合构建复杂且结构化的布局。\r\n\r\n<img src...",
@@ -283,7 +280,8 @@
     "id": "27",
     "title": "前端异常隔离 Proxy、Web Workers 与 iframe 的深度对比",
     "tags": [
-      "异常隔离"
+      "JavaScript",
+      "异常处理"
     ],
     "createdAt": "2025-03-20T19:36:42.000Z",
     "summary": "\r\n在插件化架构中，**异常隔离**是保障系统稳定性的核心机制。通过隔离插件与宿主环境，即使单个插件崩溃，也不会影响整体系统运行。\r\n\r\n在前端开发中，异常隔离是保障应用稳定性的核心需求，尤其是在处理第三方脚本、插件或不可信代码时。本文将从 **实现原理**、**隔离级别**、**性能开销** 和 ...",
@@ -305,8 +303,7 @@
     "id": "31",
     "title": "JS 原生深拷贝 structuredClone",
     "tags": [
-      "structuredClone",
-      "深拷贝"
+      "JavaScript"
     ],
     "createdAt": "2025-04-08T21:10:33.000Z",
     "summary": "\r\n过去要进行对象深拷贝，往往需要 JSON 转换或第三方库。如今，现代 JavaScript 内置了 structuredClone，可直接生成对象的深层副本。\r\n\r\n```js\r\nconst deploymentConfig = {\r\n  provider: \"Sevalla\",\r\n  regi...",
@@ -317,7 +314,7 @@
     "id": "32",
     "title": "停止过度使用Console.log",
     "tags": [
-      "Console.log"
+      "JavaScript"
     ],
     "createdAt": "2025-04-10T21:06:03.000Z",
     "summary": "\r\n作为开发人员，过度使用 console.log()来快速调试代码是很诱人的。虽然这似乎是诊断问题的最快方法，但从长远来看，它可能会减慢您的速度、使您的代码混乱并限制您的见解。好消息是，JavaScript 的 console 对象提供了许多比 console.log()  更强大的方法，它们可以...",
@@ -328,7 +325,7 @@
     "id": "33",
     "title": "前端利器 Dinero.js：彻底告别 0.1+0.2 精度噩梦，优雅处理多币种",
     "tags": [
-      "Dinero.js",
+      "JavaScript",
       "货币计算"
     ],
     "createdAt": "2025-04-14T14:22:03.000Z",
@@ -340,7 +337,7 @@
     "id": "34",
     "title": "7 个代替 setTimeout 的方案，让定时任务更可靠",
     "tags": [
-      "定时器"
+      "JavaScript"
     ],
     "createdAt": "2025-04-14T14:41:03.000Z",
     "summary": "\r\n`setTimeout`是我们经常使用的定时器 API，它允许我们延迟执行代码。但在实际应用中，`setTimeout`存在一些局限性和潜在问题，比如精度不高、在页面不活跃时可能被节流等。分享 7 种替代方案，让我们的定时任务更加可靠和高效。\r\n\r\n## 1\\. requestAnimation...",
@@ -351,7 +348,7 @@
     "id": "35",
     "title": "只需一行代码，任意网页秒变可编辑",
     "tags": [
-      "designMode "
+      "JavaScript"
     ],
     "createdAt": "2025-04-14T15:07:03.000Z",
     "summary": "\r\n在我们日常工作中，可能会遇到截图页面的场景，有时页面有些内容不符合要求，我们可能需要进行一些数值或内容的修改。如果你会 PS，修改内容难度不高，如果你是前端，打开控制台也能通过修改 dom 的方式进行简单的文字修改。\r\n\r\n今天，我就来分享一个冷门又实用的前端技巧 —— 只需一行 JavaScr...",
@@ -494,7 +491,7 @@
     "id": "48",
     "title": "告别 node_modules 迷宫！Vue 团队成员新作让依赖管理爽到飞起",
     "tags": [
-      "node_modules"
+      "工具集"
     ],
     "createdAt": "2025-05-19T10:26:58.000Z",
     "summary": "\r\n## 一、node_modules：前端开发者的“甜蜜负担”\r\n\r\n想象一下，你接手一个大型前端项目，打开`node_modules`文件夹时，眼前是密密麻麻的文件夹和文件，宛如进入一座没有地图的迷宫。这个平均占据项目 60%存储空间的庞然大物，却藏着无数隐形炸弹：\r\n\r\n- **依赖冲突**\r...",
@@ -588,5 +585,16 @@
     "summary": "\n## 🌟 开篇：为什么你的 Vue 应用首屏总在转圈？\n\n## 2023 年权威报告显示，**首屏加载时间每增加 1 秒，用户流失率提升 11%** 。但 Vue 单页应用（SPA）常因打包体积过大、资源加载阻塞等问题，导致用户面对\"白屏焦虑\"。\n\n## 🔍 性能诊断用数据说话\n\n1. **L...",
     "type": "default",
     "url": "/doc/56.html"
+  },
+  {
+    "id": "57",
+    "title": "TypeScript 的5个好用技巧",
+    "tags": [
+      "TypeScript"
+    ],
+    "createdAt": "2025-05-19T15:39:24.000Z",
+    "summary": "\n## 1\\. 使用 const 断言锁定类型，确保对象的属性不可更改。\n\n可能你们在编码的时候也遇到过这样的情况，我们定义的接口类型被莫名其妙的修改了导致代码的报错，这样的情况会浪费我们很多不必要的时间来排查 bug。那我们应该如何杜绝这种情况的发生呢，这时 const 断言就派上用场了！使用 `...",
+    "type": "default",
+    "url": "/doc/57.html"
   }
 ]
