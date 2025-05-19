@@ -501,5 +501,16 @@
     "summary": "\r\n## 前言\r\n\r\n开发者都知道 JavaScript 是单线程的，即只有一个调用栈和堆，所有代码都在浏览器渲染进程的主线程中执行，当然也包括本文的主角，即 WebAssembly。\r\n\r\n虽然 WebAssembly 由高级语言编译而成，而且执行速度比 JavaScript 要快得多。然而，如果...",
     "type": "default",
     "url": "/doc/47.html"
+  },
+  {
+    "id": "48",
+    "title": "告别 node_modules 迷宫！Vue 团队成员新作让依赖管理爽到飞起",
+    "tags": [
+      "node_modules"
+    ],
+    "createdAt": "2025-05-19T10:26:58.000Z",
+    "summary": "\r\n## 一、node_modules：前端开发者的“甜蜜负担”\r\n\r\n想象一下，你接手一个大型前端项目，打开`node_modules`文件夹时，眼前是密密麻麻的文件夹和文件，宛如进入一座没有地图的迷宫。这个平均占据项目 60%存储空间的庞然大物，却藏着无数隐形炸弹：\r\n\r\n- **依赖冲突**\r...",
+    "type": "default",
+    "url": "/doc/48.html"
   }
 ]
