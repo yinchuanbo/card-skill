@@ -1,79 +1,77 @@
-# 墨境智库
+# Card Learning System
 
-一个基于 Node.js 开发的知识管理系统，支持 Markdown 格式的知识卡片，具有中国传统文化风格的界面设计。
+A high-quality card learning website system using Node.js, HTML, CSS, and JavaScript.
 
-## 功能特点
+## Features
 
-- 简洁优雅的中国传统山水风格界面
-- 支持 Markdown 格式的知识卡片
-- 标签过滤和搜索功能
-- 响应式设计，适配各种设备
-- 暗色/亮色主题切换
-- 佛道儒文化元素装饰
+- Markdown-based content management
+- Card-based learning interface
+- Responsive design
+- Tag-based filtering
+- Dark/Light mode toggle
 
-## Vercel 一键部署
+## Getting Started
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fmojing-zhiku)
+### Installation
 
-## 本地开发
+```bash
+npm install
+```
 
-### 环境要求
+### Development
 
-- Node.js 14+
-- npm 或 yarn
+```bash
+npm run dev
+```
 
-### 安装步骤
+This will start the development server at http://localhost:3000 (or the port specified in your environment).
 
-1. 克隆仓库
+### Building
 
-   ```bash
-   git clone https://github.com/yourusername/mojing-zhiku.git
-   cd mojing-zhiku
-   ```
+```bash
+npm run build
+```
 
-2. 安装依赖
+## Content Management
 
-   ```bash
-   npm install
-   ```
+### Creating New Content
 
-3. 启动开发服务器
+To create a new card content file:
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run new
+```
 
-4. 访问 `http://localhost:3000` 查看效果
+This command will:
 
-## 添加卡片
+1. Find the next available number in the sequence
+2. Prompt you for a title and tags
+3. Create a new Markdown file in the `src` directory with the proper format
 
-在 `src` 目录下创建 `.md` 文件，添加以下格式的前置信息:
+### Editing Content
+
+All content is stored in the `src` directory as Markdown files. Each file has a front matter section with metadata:
 
 ```markdown
 ---
-title: 卡片标题
-tags: [标签1, 标签2]
-createdAt: 2025-04-19T12:00:00Z
-summary: 卡片摘要，如果不提供将自动截取正文前150个字符
+title: "Article Title"
+tags:
+  - Tag1
+  - Tag2
+time: YYYY-MM-DD HH:MM:SS
 ---
 
-这里是卡片正文内容，支持完整的 Markdown 语法。
+## Content starts here...
 ```
 
-## 部署到 Vercel
+### Converting Content
 
-1. Fork 或克隆此仓库到您的 GitHub 账户
-2. 在 Vercel dashboard 中，点击"New Project"
-3. 导入您的 GitHub 仓库
-4. 无需更改任何配置，直接点击"Deploy"
-5. 部署完成后，您将获得一个`your-project.vercel.app`的域名
+The system automatically converts Markdown content to HTML:
 
-## 自定义域名
+```bash
+npm run convert
+```
 
-1. 在 Vercel 项目设置中，找到"Domains"选项卡
-2. 添加您的自定义域名
-3. 按照 Vercel 的指示配置 DNS 记录
-
-## 许可证
+## License
 
 MIT

@@ -7,7 +7,8 @@
     "start": "node server.js",
     "convert": "node scripts/converter.js",
     "dev": "npm run convert && node server.js",
-    "build": "npm run convert"
+    "build": "npm run convert",
+    "new": "node create-template.js"
   },
   "keywords": [
     "cards",
