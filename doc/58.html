@@ -86,10 +86,10 @@
 <td>前提是资源已经被子集化，比较适用多语言切换的场景</td>
 </tr>
 </tbody></table>
-<p>简单来说，<strong>字体子集化</strong>可单独食用，<strong>按需加载</strong>则必须要将字体前置子集化。才能完美实现按需加载。就我的这个项目而言，动态子集化方案不要太完美，毕竟一张海报本身就没几个字儿！所以我们这次<strong>将抛弃 CDN，通过动态的将服务本地中的字体资源子集化</strong>来实现字体的压缩效果。</p>
+<p>简单来说，<strong>字体子集化</strong>可单独使用，<strong>按需加载</strong>则必须要将字体前置子集化。才能完美实现按需加载。就我的这个项目而言，动态子集化方案不要太完美，毕竟一张海报本身就没几个字儿！所以我们这次<strong>将抛弃 CDN，通过动态的将服务本地中的字体资源子集化</strong>来实现字体的压缩效果。</p>
 <img src="/images/03.awebp" />
 
-<p>这里我们使用<strong>python</strong>中的一个字体工具库 <a href="https://github.com/fonttools/fonttools">fontTools</a> 来实现一个动态子集化，类似于 Google Fonts 的实现。核心思路就是将字符传给服务端，通过工具将传入的字符在本地字体文件中提取并返回给客户端，通过<strong>fontTools</strong> 还可以将 TTF 格式转化为和 Web 更搭的<strong>WOFF2</strong>格式。实现细节如下述代码所示</p>
+<p>这里我们使用<strong>python</strong>中的一个字体工具库 <a href="https://github.com/fonttools/fonttools">fontTools</a> 来实现一个动态子集化，类似于 Google Fonts 的实现。核心思路就是将字符传给服务端，通过工具将传入的字符在本地字体文件中提取并返回给客户端，通过 <strong>fontTools</strong> 还可以将 TTF 格式转化为和 Web 更搭的<strong>WOFF2</strong>格式。实现细节如下述代码所示</p>
 <pre><code class="language-python">@app.route(&#39;/font/&lt;font_name&gt;&#39;, methods=[&#39;GET&#39;])
 def get_font_subset(font_name):
     # 获取本地字体文件路径

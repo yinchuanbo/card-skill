@@ -605,5 +605,27 @@
     "summary": "\n## 故事背景\n\n事情起源于之前做的海报编辑器，自己调试时无意中发现字体渲染好慢，第一反应就是网怎么变慢了，断网了？仔细一看才发现，淦！这几个字体资源咋这么大，难怪网速变慢了呢 😁😁。\n\n<img src=\"/images/01.awebp\" />\n\n图片中的海报包含 6 种字体，其中最大的字...",
     "type": "default",
     "url": "/doc/58.html"
+  },
+  {
+    "id": "59",
+    "title": "如何提高前端应用的性能？",
+    "tags": [
+      "性能优化"
+    ],
+    "createdAt": "2025-05-19T17:00:55.000Z",
+    "summary": "\n## 如何提高前端应用的性能\n\n### 1\\. 代码优化\n\n**1.1 减少不必要的 DOM 操作**\n\n```js\n// 差: 频繁操作DOM\nfor (let i = 0; i < 100; i++) {\n  document.getElementById(\"list\").innerHTML ...",
+    "type": "default",
+    "url": "/doc/59.html"
+  },
+  {
+    "id": "60",
+    "title": "10 个 TypeScript 神仙技巧",
+    "tags": [
+      "TypeScript"
+    ],
+    "createdAt": "2025-05-19T17:06:33.000Z",
+    "summary": "\n### 引言\n\n在前端开发的江湖里，TypeScript 早已成为攻城略地的神兵利器！它不仅能让代码更健壮、更易维护，还能帮你轻松驾驭复杂业务逻辑。然而，很多前端工程师在使用 TypeScript 时，常常只掌握了基础语法，那些能大幅提升开发效率、解决实际难题的高阶技巧却鲜为人知。今天，我就来分享...",
+    "type": "default",
+    "url": "/doc/60.html"
   }
 ]
