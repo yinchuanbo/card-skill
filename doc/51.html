@@ -1,0 +1,117 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>为什么react需要fiber架构，而vue不需要？</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>为什么react需要fiber架构，而vue不需要？</h1>
+                        <div class="meta">
+                            <time datetime="Mon May 19 2025 21:30:58 GMT+0800 (中国标准时间)">2025/5/19</time>
+                            <div class="tags">
+                                <span class="tag">React</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>这是一个非常好的问题，涉及到了 React 和 Vue 的底层架构设计理念差异。我们可以从几个维度来理解为什么 <strong>React 需要 Fiber 架构</strong>，而 <strong>Vue（特别是 Vue 2 和 Vue 3）目前不需要类似 Fiber 的架构</strong>。</p>
+<hr>
+<h2 id="一、什么是-react-fiber-架构？">一、什么是 React Fiber 架构？</h2>
+<p>React Fiber 是 React 从 v16 开始引入的新架构，它是一种重新设计的 <strong>协调（Reconciliation）机制</strong>，主要目标是：</p>
+<ul>
+<li>支持异步渲染（interruptible rendering）</li>
+<li>更好地控制渲染优先级</li>
+<li>实现时间分片（Time Slicing）</li>
+<li>提升动画和交互的流畅度</li>
+</ul>
+<hr>
+<h2 id="二、为什么-react-需要-fiber？">二、为什么 React 需要 Fiber？</h2>
+<h3 id="1-函数式编程的局限性">1. <strong>函数式编程的局限性</strong></h3>
+<p>React 是声明式的 UI 框架，核心理念是<strong>函数式编程</strong>。这意味着组件是纯函数，更新时会重新执行整个函数生成新的 UI 树。</p>
+<ul>
+<li>原来的 React 协调过程是递归调用的，同步、不可中断。</li>
+<li>一旦开始更新，就必须一口气完成，哪怕更新任务很重。</li>
+<li>这会导致主线程长时间阻塞，掉帧，影响用户体验。</li>
+</ul>
+<p>所以 React 团队引入 Fiber，将原本的递归更新改成了一个可中断的“链表式遍历”过程。</p>
+<h3 id="2-需要实现时间切片--并发模式（concurrent-mode）">2. <strong>需要实现时间切片 / 并发模式（Concurrent Mode）</strong></h3>
+<p>React 团队希望让渲染变成“增量可中断”的，这样可以：</p>
+<ul>
+<li>把大任务分割成小任务，在帧空闲时间执行（requestIdleCallback/MessageChannel）</li>
+<li>提高用户交互流畅性</li>
+<li>支持更复杂的异步特性（如 Suspense、Concurrent Rendering）</li>
+</ul>
+<p>Fiber 正是这个异步可中断架构的核心。</p>
+<hr>
+<h2 id="三、vue-为什么不需要-fiber？">三、Vue 为什么不需要 Fiber？</h2>
+<p>Vue（尤其是 Vue 3）虽然也有响应式和虚拟 DOM，但它的设计哲学和目标不同，所以<strong>暂时不需要 Fiber 这样的架构</strong>。</p>
+<h3 id="1-响应式系统设计不同">1. <strong>响应式系统设计不同</strong></h3>
+<p>Vue 使用的是响应式系统（基于 Proxy），通过依赖追踪来精准追踪组件依赖的数据：</p>
+<ul>
+<li>哪个数据变了，只更新依赖它的组件或 DOM 片段。</li>
+<li>精准更新，避免了全树 diff 的问题。</li>
+</ul>
+<p>而 React 的状态变更是触发函数重渲，必须手动优化（如 <code>memo</code>, <code>useCallback</code>, <code>useMemo</code>）避免性能浪费。</p>
+<h3 id="2-更新过程可控且较轻量">2. <strong>更新过程可控且较轻量</strong></h3>
+<p>Vue 在更新过程中，会批量收集变更（nextTick），进行合并更新。</p>
+<ul>
+<li>它是同步递归的，但通常递归深度较浅。</li>
+<li>加上响应式系统限制了更新范围，性能足够好，不需要复杂的调度器。</li>
+</ul>
+<h3 id="3-没有-concurrent-mode-的需求">3. <strong>没有 Concurrent Mode 的需求</strong></h3>
+<p>Vue 当前没有对标 React Concurrent Mode 的完整并发渲染模式。</p>
+<ul>
+<li>Vue 的设计更偏向于“快速更新 + 精准响应”</li>
+<li>React 更注重可预测性 + 并发渲染控制</li>
+</ul>
+<hr>
+<h2 id="四、总结对比">四、总结对比</h2>
+<table>
+<thead>
+<tr>
+<th>特性/架构</th>
+<th>React (Fiber)</th>
+<th>Vue (2/3)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>响应式系统</td>
+<td>无（手动管理状态）</td>
+<td>有（响应式 Proxy）</td>
+</tr>
+<tr>
+<td>协调过程</td>
+<td>Fiber 架构，异步、可中断</td>
+<td>同步递归调用</td>
+</tr>
+<tr>
+<td>状态更新触发</td>
+<td>整个组件重新渲染，虚拟 DOM diff</td>
+<td>精准响应，局部更新</td>
+</tr>
+<tr>
+<td>并发渲染支持</td>
+<td>有（Concurrent Mode、Suspense、时间切片等）</td>
+<td>无（当前版本未支持）</td>
+</tr>
+<tr>
+<td>是否需要 Fiber？</td>
+<td>必须，需要支持异步渲染和并发</td>
+<td>暂时不需要，架构本身避免了大规模递归 diff 问题</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="五、未来-vue-会不会有-fiber-类似的机制？">五、未来 Vue 会不会有 Fiber 类似的机制？</h2>
+<p>Vue 的核心团队目前并未公开有类似 Fiber 的重构计划，但如果将来 Vue 引入并发渲染（如动画更复杂、页面更大），不排除会设计一个自己的调度系统来实现更精细的更新控制。</p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

@@ -726,6 +726,15 @@ body:has(.sidebar-backdrop.active) {
   transform: translateZ(0);
   backface-visibility: hidden;
   animation: modalOverlayFadeIn 0.35s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  backdrop-filter: initial !important;
+}
+
+[data-theme="light"] .modal-overlay.active {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="dark"] .modal-overlay.active {
+  background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 @keyframes modalOverlayFadeIn {
@@ -747,7 +756,7 @@ body:has(.sidebar-backdrop.active) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 #modalContent header,
@@ -2415,8 +2424,6 @@ body.modal-open {
   border-radius: 0;
   width: 100%;
   height: 100vh;
-  max-width: 100%;
-  max-height: calc(100vh - 40px);
   overflow-y: auto;
   box-shadow: none;
   position: relative;
@@ -2630,12 +2637,17 @@ body.modal-open {
   line-height: 1.9;
   color: var(--text-dark);
   background-color: rgba(255, 255, 255, 1);
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
-    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
-    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-  min-height: calc(100vh - 40px);
+  max-height: calc(100vh - 40px);
+}
+
+[data-theme="light"] #modalContent .content {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+[data-theme="dark"] #modalContent .content {
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #modalContent .content > *:last-child {
@@ -2971,7 +2983,7 @@ blockquote p:last-child {
 /* 高科技卡片网格 */
 .tech-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.8rem;
   margin: 0 0 4rem;
   position: relative;

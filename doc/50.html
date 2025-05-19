@@ -1,0 +1,270 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>写 TypeScript 必须改掉的16个坏习惯</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>写 TypeScript 必须改掉的16个坏习惯</h1>
+                        <div class="meta">
+                            <time datetime="Mon May 19 2025 21:22:58 GMT+0800 (中国标准时间)">2025/5/19</time>
+                            <div class="tags">
+                                <span class="tag">TypeScript</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="前言">前言</h2>
+<p>TypeScript 在前端项目中已经是标配，使用 TypeScript 有很多好处，它让 JavaScript 拥有了强大的类型系统。</p>
+<p>由于 JavaScript 本身是弱类型，很多前端开发人员并没有类型概念，对类型系统理解不深，常常走了不少弯路。本文总结了 16 个最常见的坑，结合实际例子帮助你少踩坑、写出更安全、更可维护的代码。</p>
+<h2 id="滥用-any">滥用 <code>any</code></h2>
+<p>有些小伙伴在做 TS 项目时，为了避免写类型，直接使用<code>any</code>。<code>any</code> 会关闭类型检查，相当于“告诉 TypeScript 别管我了”。这会让整个类型系统形同虚设。</p>
+<h3 id="错误示例：">错误示例：</h3>
+<pre><code class="language-js">function parseData(data: any) {
+  return data.user.name.toUpperCase();
+}
+
+parseData(null); // 运行时报错！
+</code></pre>
+<h3 id="正确示例：">正确示例：</h3>
+<pre><code class="language-js">interface User {
+  name: string;
+}
+interface Data {
+  user: User;
+}
+
+function parseData(data: Data): string {
+  return data.user.name.toUpperCase();
+}
+</code></pre>
+<p>尽量避免使用 <code>any</code>，使用 <code>unknown</code> 或明确类型更安全。满屏幕使用<code>any</code>是专业性不足的表现</p>
+<h2 id="不写函数返回值类型">不写函数返回值类型</h2>
+<p>TypeScript 会自动推导返回值，但在复杂逻辑中，<strong>显式声明返回类型可以增强可读性和类型保护</strong>。笔者认为最重要的是为了维护</p>
+<h3 id="错误示例：-1">错误示例：</h3>
+<pre><code class="language-js">function getUser(id: number) {
+  if (id === 1) return &quot;admin&quot;;
+  return null;
+}
+</code></pre>
+<h3 id="正确示例：-1">正确示例：</h3>
+<pre><code class="language-js">function getUser(id: number): string | null {
+  if (id === 1) return &quot;admin&quot;;
+  return null;
+}
+</code></pre>
+<p>显式声明返回类型是良好的代码习惯，尤其适用于<strong>公共函数</strong>和<strong>库函数</strong>。</p>
+<h2 id="interface-和-type-定义太随意--不抽离">Interface 和 Type 定义太随意 / 不抽离</h2>
+<p>Interface 和 Type 是 TS 中非常重要的两种类型，在使用他们的时候，命名非常非常重要。写<strong>临时类型</strong>难以复用和维护</p>
+<h3 id="错误示例：-2">错误示例：</h3>
+<pre><code class="language-js">function login(user: { username: string, password: string }) {
+  // ...
+}
+</code></pre>
+<h3 id="正确示例：-2">正确示例：</h3>
+<pre><code class="language-js">interface LoginParams {
+  username: string;
+  password: string;
+}
+
+function login(user: LoginParams) {
+  // ...
+}
+</code></pre>
+<p>类型应当抽离，复用更方便，代码更清晰。</p>
+<h2 id="在对象或函数参数中直接使用类型断言">在对象或函数参数中直接使用类型断言</h2>
+<p>类型断言（Type Assertion）是 TypeScript 中的一种语法，表示<strong>你明确告诉编译器某个值的类型是什么</strong>，即使它当前的推导类型不是你说的这个。</p>
+<p>它不会做任何实际的运行时转换，仅仅用于<strong>绕过编译器的类型检查</strong>，常见于你“确信”某个值是什么类型但 TypeScript 推断不出来时。</p>
+<p>只有在特殊场景下才使用类型断言，类型断言会破坏类型自动推导</p>
+<h3 id="错误示例：-3">错误示例：</h3>
+<pre><code class="language-js">const data = fetchData() as any;
+const name = (data as { user: { name: string } }).user.name;
+</code></pre>
+<h3 id="正确示例：-3">正确示例：</h3>
+<pre><code class="language-js">interface UserData {
+  user: {
+    name: string,
+  };
+}
+
+const data: UserData = fetchData();
+const name = data.user.name;
+</code></pre>
+<p>类型断言不是万能钥匙，优先使用类型声明、接口、泛型。</p>
+<h2 id="不使用工具类型">不使用工具类型</h2>
+<p>TypeScript 提供了很多内置工具类型（如 <code>Partial</code>, <code>Pick</code>, <code>Omit</code> 等），可以简化代码并增强复用性。</p>
+<h3 id="错误示例：-4">错误示例：</h3>
+<pre><code class="language-typescript">interface User {
+  id: number;
+  name: string;
+  age: number;
+}
+
+type UserPreview = {
+  id: number;
+  name: string;
+};
+</code></pre>
+<h3 id="正确示例：-4">正确示例：</h3>
+<pre><code class="language-js">type UserPreview = Pick&lt;User, &quot;id&quot; | &quot;name&quot;&gt;;
+</code></pre>
+<p>合理使用工具类型，写出更简洁更灵活的代码。</p>
+<h2 id="混用-interface-和-type-不明确">混用 <code>interface</code> 和 <code>type</code> 不明确</h2>
+<p>两者功能类似，但存在一些差异，新手容易随意混用。</p>
+<h3 id="建议：">建议：</h3>
+<ul>
+<li>用 <code>interface</code> 定义对象结构。</li>
+<li>用 <code>type</code> 做联合类型、工具类型等更灵活的组合。</li>
+</ul>
+<h3 id="错误示例：-5">错误示例：</h3>
+<pre><code class="language-typescript">type User = {
+  name: string;
+};
+
+interface User {
+  age: number;
+} // 冲突！
+</code></pre>
+<h3 id="正确示例：-5">正确示例：</h3>
+<pre><code class="language-typescript">interface User {
+  name: string;
+  age: number;
+}
+</code></pre>
+<h3 id="小结：">小结：</h3>
+<p><code>interface</code> 用于结构定义，<code>type</code> 用于类型组合和增强。</p>
+<h2 id="不使用枚举（enum）管理常量值">不使用枚举（Enum）管理常量值</h2>
+<p>魔法字符串易出错、难维护，应该用枚举统一管理。</p>
+<h3 id="错误示例：-6">错误示例：</h3>
+<pre><code class="language-js">function getRole(role: string) {
+  if (role === &quot;admin&quot;) return &quot;管理员&quot;;
+}
+</code></pre>
+<h3 id="正确示例：-6">正确示例：</h3>
+<pre><code class="language-js">enum Role {
+  Admin = &quot;admin&quot;,
+  User = &quot;user&quot;,
+}
+
+function getRole(role: Role) {
+  if (role === Role.Admin) return &quot;管理员&quot;;
+}
+</code></pre>
+<p>常量值统一管理，提高可维护性。</p>
+<h2 id="类型不匹配却强行通过断言">类型不匹配却强行通过断言</h2>
+<p>使用 <code>as</code> 并不会真正转换类型，只是“告诉 TypeScript 你信我”。</p>
+<h3 id="错误示例：-7">错误示例：</h3>
+<pre><code class="language-typescript">const val = &quot;123&quot; as unknown as number;
+</code></pre>
+<h3 id="正确示例：-7">正确示例：</h3>
+<pre><code class="language-javascript">const val = Number(&quot;123&quot;); // 类型安全的转换
+</code></pre>
+<p>类型转换要谨慎，<code>as</code> 不能解决逻辑错误。</p>
+<h2 id="类型重复，没用泛型抽象">类型重复，没用泛型抽象</h2>
+<p>多个函数或接口出现重复代码时，应抽象为泛型。</p>
+<h3 id="错误示例：-8">错误示例：</h3>
+<pre><code class="language-typescript">function wrapString(value: string): string[] {
+  return [value];
+}
+
+function wrapNumber(value: number): number[] {
+  return [value];
+}
+</code></pre>
+<h3 id="正确示例：-8">正确示例：</h3>
+<pre><code class="language-js">function wrap&lt;T&gt;(value: T): T[] {
+  return [value];
+}
+</code></pre>
+<p>泛型能让你的类型更具扩展性和复用性。</p>
+<h2 id="不启用-strict-模式">不启用 <code>strict</code> 模式</h2>
+<p><code>strict</code> 是 TypeScript 中最核心的类型检查开关。关闭它会让很多问题“躲”过编译器。</p>
+<h3 id="正确做法：">正确做法：</h3>
+<p>在 <code>tsconfig.json</code> 中启用：</p>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true
+  }
+}
+</code></pre>
+<p>开启 <code>strict</code> 模式，是 TypeScript 真正发挥威力的前提。</p>
+<h2 id="忽视-ide-的提示与错误">忽视 IDE 的提示与错误</h2>
+<p>VSCode 等 IDE 通常会高亮潜在的类型问题，但很多新手视而不见。</p>
+<h3 id="错误示例：-9">错误示例：</h3>
+<pre><code class="language-js">const name: string = 123; // TS 提示类型错误，但被忽略
+</code></pre>
+<p>编译器和 IDE 是你最好的朋友，请认真对待他们的提示。</p>
+<h2 id="忽视类型收窄（type-narrowing）">忽视类型收窄（type narrowing）</h2>
+<p>类型收窄是 TypeScript 根据条件判断自动“缩小”变量的类型。</p>
+<h3 id="错误示例：-10">错误示例：</h3>
+<pre><code class="language-js">function printLength(str: string | null) {
+  return str.length; // 报错
+}
+</code></pre>
+<h3 id="正确示例：-9">正确示例：</h3>
+<pre><code class="language-js">function printLength(str: string | null) {
+  if (str) {
+    return str.length;
+  }
+  return 0;
+}
+</code></pre>
+<p>利用 <code>typeof</code>, <code>in</code>, <code>instanceof</code> 等收窄类型，避免错误。</p>
+<h2 id="忽略-undefined-和-null-的存在">忽略 <code>undefined</code> 和 <code>null</code> 的存在</h2>
+<p>TypeScript 默认不强制处理 <code>null</code> 和 <code>undefined</code>，需要手动开启 <code>strictNullChecks</code>。</p>
+<h3 id="错误示例：-11">错误示例：</h3>
+<pre><code class="language-js">function greet(name: string) {
+  return &quot;Hello &quot; + name.toUpperCase(); // name 可能为 undefined
+}
+</code></pre>
+<h3 id="正确示例：-10">正确示例：</h3>
+<pre><code class="language-js">function greet(name?: string) {
+  return name ? &quot;Hello &quot; + name.toUpperCase() : &quot;Hello&quot;;
+}
+</code></pre>
+<p>尽量避免写出不处理空值的代码，空值检查是常识。</p>
+<h2 id="忘记在对象访问前做空值判断">忘记在对象访问前做空值判断</h2>
+<p>对象嵌套访问时，未做空值判断极易导致运行时错误。</p>
+<h3 id="错误示例：-12">错误示例：</h3>
+<pre><code class="language-cpp">const username = user.profile.name;
+</code></pre>
+<h3 id="正确示例：-11">正确示例：</h3>
+<pre><code class="language-js">const username = user?.profile?.name ?? &quot;Anonymous&quot;;
+</code></pre>
+<p>善用可选链（<code>?.</code>）和空值合并运算符（<code>??</code>）提高代码健壮性。</p>
+<h2 id="使用泛型却不指定类型参数">使用泛型却不指定类型参数</h2>
+<p>TypeScript 中的泛型应显式传入类型，避免类型不明确或不被推导。</p>
+<h3 id="错误示例：-13">错误示例：</h3>
+<pre><code class="language-javascript">const arr = Array(); // 类型为 any[]
+</code></pre>
+<h3 id="正确示例：-12">正确示例：</h3>
+<pre><code class="language-typescript">const arr: Array&lt;number&gt; = [];
+</code></pre>
+<p>显式指定泛型参数有助于代码的可读性和类型安全。</p>
+<h2 id="混用--和-">混用 <code>==</code> 和 <code>===</code></h2>
+<p><code>==</code> 会进行隐式类型转换，容易出现意料之外的结果。</p>
+<h3 id="错误示例：-14">错误示例：</h3>
+<pre><code class="language-js">if (value == null) {
+  // 可能同时为 undefined 或 null
+}
+</code></pre>
+<h3 id="正确示例：-13">正确示例：</h3>
+<pre><code class="language-js">if (value === null) {
+  // 明确判断
+}
+</code></pre>
+<p>在 TypeScript 中应始终使用 <code>===</code> 和 <code>!==</code>，杜绝隐式类型转换。</p>
+<h2 id="总结">总结</h2>
+<p>写好 TypeScript 其实并不难，关键在于<strong>理解类型系统的设计意图，并养成良好的编码习惯</strong></p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

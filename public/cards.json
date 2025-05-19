@@ -291,18 +291,6 @@
     "url": "/doc/27.html"
   },
   {
-    "id": "29",
-    "title": "为何要强烈推荐这款 node_modules 可视化神器？",
-    "tags": [
-      "node_modules",
-      "工具集"
-    ],
-    "createdAt": "2025-03-31T19:58:42.000Z",
-    "summary": "\r\n## 什么是 Node Modules Inspector\r\n\r\n`node-modules-inspector` 工具可用于可视化 `node_modules`、项目依赖项检查等等。\r\n\r\n开发者可以通过在 `pnpm/npm` 项目下运行以下命令来快速尝鲜：\r\n\r\n```sh\r\npnpx n...",
-    "type": "default",
-    "url": "/doc/29.html"
-  },
-  {
     "id": "30",
     "title": "使用 GitDiagram 让你几秒钟读懂开源项目架构",
     "tags": [
@@ -512,5 +500,38 @@
     "summary": "\r\n## 一、node_modules：前端开发者的“甜蜜负担”\r\n\r\n想象一下，你接手一个大型前端项目，打开`node_modules`文件夹时，眼前是密密麻麻的文件夹和文件，宛如进入一座没有地图的迷宫。这个平均占据项目 60%存储空间的庞然大物，却藏着无数隐形炸弹：\r\n\r\n- **依赖冲突**\r...",
     "type": "default",
     "url": "/doc/48.html"
+  },
+  {
+    "id": "49",
+    "title": "要知道的技术网站",
+    "tags": [
+      "工具集"
+    ],
+    "createdAt": "2025-05-19T13:05:58.000Z",
+    "summary": "\r\n## 1、[gs.statcounter.com/](https://gs.statcounter.com/)\r\n\r\n全球浏览器份额占比数据查询网站主页如下：\r\n\r\n<img src=\"./images/107.webp\" />\r\n\r\n网站可以查阅 PC 端浏览器占比份额，也可以查询移动端占比份...",
+    "type": "default",
+    "url": "/doc/49.html"
+  },
+  {
+    "id": "50",
+    "title": "写 TypeScript 必须改掉的16个坏习惯",
+    "tags": [
+      "TypeScript"
+    ],
+    "createdAt": "2025-05-19T13:22:58.000Z",
+    "summary": "\r\n## 前言\r\n\r\nTypeScript 在前端项目中已经是标配，使用 TypeScript 有很多好处，它让 JavaScript 拥有了强大的类型系统。\r\n\r\n由于 JavaScript 本身是弱类型，很多前端开发人员并没有类型概念，对类型系统理解不深，常常走了不少弯路。本文总结了 16 个最...",
+    "type": "default",
+    "url": "/doc/50.html"
+  },
+  {
+    "id": "51",
+    "title": "为什么react需要fiber架构，而vue不需要？",
+    "tags": [
+      "React"
+    ],
+    "createdAt": "2025-05-19T13:30:58.000Z",
+    "summary": "\r\n这是一个非常好的问题，涉及到了 React 和 Vue 的底层架构设计理念差异。我们可以从几个维度来理解为什么 **React 需要 Fiber 架构**，而 **Vue（特别是 Vue 2 和 Vue 3）目前不需要类似 Fiber 的架构**。\r\n\r\n---\r\n\r\n## 一、什么是 Reac...",
+    "type": "default",
+    "url": "/doc/51.html"
   }
 ]
