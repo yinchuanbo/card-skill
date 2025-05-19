@@ -490,5 +490,16 @@
     "summary": "\r\n## 开篇\r\n\r\nScheduler 调度器的核心除了「时间切片」`requestHostCallback` 外，还有一个功能就是「优先级调度」。\r\n\r\n它会根据任务的优先级（任务设定的过期时间）决定先执行哪个任务。为了更快捷地查找到最高优先级任务，采用了数据结构「小顶堆」来存储任务。\r\n\r\n另...",
     "type": "default",
     "url": "/doc/46.html"
+  },
+  {
+    "id": "47",
+    "title": "2025年 WebAssembly 如何解 JavaScript 多线程难题？",
+    "tags": [
+      "WebAssembly"
+    ],
+    "createdAt": "2025-05-19T10:10:58.000Z",
+    "summary": "\r\n## 前言\r\n\r\n开发者都知道 JavaScript 是单线程的，即只有一个调用栈和堆，所有代码都在浏览器渲染进程的主线程中执行，当然也包括本文的主角，即 WebAssembly。\r\n\r\n虽然 WebAssembly 由高级语言编译而成，而且执行速度比 JavaScript 要快得多。然而，如果...",
+    "type": "default",
+    "url": "/doc/47.html"
   }
 ]

@@ -1,0 +1,232 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>2025年 WebAssembly 如何解 JavaScript 多线程难题？</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>2025年 WebAssembly 如何解 JavaScript 多线程难题？</h1>
+                        <div class="meta">
+                            <time datetime="Mon May 19 2025 18:10:58 GMT+0800 (中国标准时间)">2025/5/19</time>
+                            <div class="tags">
+                                <span class="tag">WebAssembly</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="前言">前言</h2>
+<p>开发者都知道 JavaScript 是单线程的，即只有一个调用栈和堆，所有代码都在浏览器渲染进程的主线程中执行，当然也包括本文的主角，即 WebAssembly。</p>
+<p>虽然 WebAssembly 由高级语言编译而成，而且执行速度比 JavaScript 要快得多。然而，如果让 WebAssembly 具备多线程的能力，浏览器引入 WebAssembly 代码后运行效率将得到显著的改善。典型的示例包括：</p>
+<ul>
+<li><strong>Squoosh.app：使用 WebAssembly 多线程进行客户端图像压缩，特别是对于 AVIF (C++)、JPEG-XL (C++)、OxiPNG (Rust) 和 WebP v2 (C++) 等格式，性能提升了 1.5x ~ 3x ，并且通过将 WebAssembly 线程与 WebAssembly SIMD 相结合进一步提升性能</strong></li>
+<li><strong>Google Earth： 其 Web 版本也使用 WebAssembly 多线程</strong></li>
+<li><strong>FFMPEG.WASM：流行的 FFmpeg 多媒体工具链的 WebAssembly 版本，使用 WebAssembly 线程直接在浏览器中高效地编码视频。</strong></li>
+</ul>
+<p>总之，WebAssembly 多线程支持是 WebAssembly 最重要的性能增强之一，其允许开发者在单独的内核上并行运行部分代码，或者在同一个内核中运行具有不同输入的同一份代码，从而最大限度的利用内核资源并减少总体执行时间。</p>
+<h2 id="1webassembly-多线程如何工作">1.WebAssembly 多线程如何工作</h2>
+<p>WebAssembly 线程并非一个单独的功能，而是多个组件的组合，其允许 WebAssembly 应用程序在 Web 上使用传统的多线程。</p>
+<h2 id="11-webassembly-组件之-web-worker">1.1 WebAssembly 组件之 Web Worker</h2>
+<p>浏览器中的多线程目前只能通过 Web Worker 实现。</p>
+<p>因此，WebAssembly 的第一个组件是 Worker， WebAssembly 多线程支持需要使用新的 Worker 构造函数来创建新的底层线程。</p>
+<pre><code class="language-js">const myWorker = new Worker(&quot;worker.js&quot;);
+
+first.onchange = () =&gt; {
+  myWorker.postMessage([first.value]);
+  console.log(&quot;消息已传递给 worker&quot;);
+};
+</code></pre>
+<p>每个线程都会加载 JavaScript 胶水，然后主线程使用 Worker.postMessage 方法与其他线程共享编译后的 WebAssembly.Module 以及共享的 WebAssembly.Memory，从而建立通信并允许所有这些线程在同一共享内存上运行相同的 WebAssembly 代码，而无需再次通过 JavaScript。</p>
+<p>接下来一起看看 WebAssembly.Module 和 WebAssembly.Memory 的作用。</p>
+<ul>
+<li>WebAssembly.Module</li>
+</ul>
+<p>该对象包含已经由浏览器编译的无状态 WebAssembly 代码，可以高效地与 Worker 共享和多次实例化。</p>
+<p>以下示例使用<br>WebAssembly.compileStreaming() 方法编译 simple.wasm 加载后的字节码，并将返回的 WebAssembly.Module 实例通过 postMessage 发送给 worker。</p>
+<pre><code class="language-js">const worker = new Worker(&quot;wasm_worker.js&quot;);
+
+WebAssembly.compileStreaming(fetch(&quot;simple.wasm&quot;)).then(
+  (mod) =&gt; worker.postMessage(mod)
+  // 发送 WebAssembly.Module 为 worker
+);
+</code></pre>
+<p><code>wasm_worker.js</code> 定义了模块需要使用的导入对象，然后创建一个事件处理器，以接受主线程发送的模块。在接收到模块后使用 <code>WebAssembly.instantiate()</code> 方法创建一个实例并调用其导出的函数。</p>
+<pre><code class="language-js">const importObject = {
+  imports: {
+    imported_func(arg) {
+      console.log(arg);
+    },
+  },
+};
+onmessage = (e) =&gt; {
+  console.log(&quot;module received from main thread&quot;);
+  const mod = e.data;
+  //   实例化模块
+  WebAssembly.instantiate(mod, importObject).then((instance) =&gt; {
+    instance.exports.exported_func();
+  });
+};
+</code></pre>
+<ul>
+<li>WebAssembly.Memory</li>
+</ul>
+<p>WebAssembly.Memory() 构造函数创建一个新的 Memory 对象，该对象的 buffer 属性是一个可调整大小的 ArrayBuffer ，其内存储的是 WebAssembly 实例所访问内存的原始字节码。</p>
+<p>从 JavaScript 或 WebAssembly 中所创建的内存，可以由 JavaScript 或 WebAssembly 来访问及更改。</p>
+<pre><code class="language-js">varmemory = newWebAssembly.Memory({ initial: 10, maximum: 100 });
+// 初始大小为10页（640KB），最大值设置为100页（6.4MB）
+</code></pre>
+<p>Web Worker 已经存在十多年了，受到广泛支持，并且不需要任何特殊标志。</p>
+<h2 id="12-webassembly-组件之-sharedarraybuffer">1.2 WebAssembly 组件之 SharedArrayBuffer</h2>
+<img src="./images/100.webp" />
+
+<p>WebAssembly 内存由 JavaScript API 中的 WebAssembly.Memory 对象表示。 默认情况下，WebAssembly.Memory 是 ArrayBuffer 的包装器 ，只能由单个线程访问的原始字节缓冲区。</p>
+<pre><code class="language-js">&gt; newWebAssembly.Memory({initial:1, maximum:10}).buffer
+ArrayBuffer {…}
+</code></pre>
+<p>为了支持多线程，WebAssembly.Memory 也获得了一个共享变体。 当通过 JavaScript API 或 WebAssembly 二进制文件本身使用 shared 标志创建时，其会成为 SharedArrayBuffer 的包装器，可以与其他线程共享并从任意一侧同时读取或修改。</p>
+<pre><code class="language-js">&gt; newWebAssembly.Memory({initial:1, maximum:10, shared:true}).buffer
+SharedArrayBuffer {…}
+</code></pre>
+<p>与通常用于主线程和 Web Workers 之间通信的 postMessage 不同，SharedArrayBuffer 不需要复制数据，甚至不需要等待事件循环（Event Loop）来发送和接收消息。 相反，所有线程几乎都会立即看到任何更改，这使其成为传统同步原语（Synchronisation Primitives）更好的编译目标。</p>
+<p>比如以下代码将 SharedArrayBuffer 传递给 worker 操作：</p>
+<pre><code class="language-js">const myWorker = new Worker(&quot;worker.js&quot;);
+
+if (crossOriginIsolated) {
+  // 全局 crossOriginIsolated 是只读属性，指示网站是否处于跨域隔离状态（cross-origin isolation）
+  // 该状态降低了旁路攻击（side-channel ）的风险并解锁了一些功能
+  const buffer = new SharedArrayBuffer(16);
+  myWorker.postMessage(buffer);
+} else {
+  const buffer = newArrayBuffer(16);
+  myWorker.postMessage(buffer);
+}
+</code></pre>
+<p>注意，因为安全问题 Chrome 68 通过利用站点隔离功能在 2018 年才重启 SharedArrayBuffer，该功能可将不同的网站置于不同的进程中，并使使用 Spectre 等旁路攻击变得更加困难。 然而，这种缓解措施仍然仅限于 Chrome 桌面版，因为站点隔离是一项相当昂贵的功能，并且无法默认为低内存移动设备上的所有站点启用，其他供应商也尚未实现。</p>
+<p>不过到 2020 年，Chrome 和 Firefox 都实现了站点隔离，以及网站通过 COOP 和 COEP 标头选择加入该功能的标准方法。 即使在低功耗设备上，选择加入机制也允许使用站点隔离，因为在低功耗设备上为所有网站启用站点隔离的成本太高。 要选择加入，请将以下标头添加到服务器配置中的主文档中：</p>
+<pre><code class="language-bash">Cross-Origin-Embedder-Policy: require-corp
+Cross-Origin-Opener-Policy: same-origin
+</code></pre>
+<p>通过以上方式就可以访问 SharedArrayBuffer，包括： SharedArrayBuffer 支持的 WebAssembly.Memory、精确计时器、内存测量以及出于安全原因需要隔离源的其他 API。</p>
+<h2 id="13-webassembly-组件之-webassembly-原子（atomics）">1.3 WebAssembly 组件之 WebAssembly 原子（Atomics）</h2>
+<p>虽然 SharedArrayBuffer 允许每个线程读取和写入同一内存，但为了正确通信，开发者需要确保其不会同时执行冲突的操作， 例如：一个线程可能开始从共享地址读取数据，而另一个线程正在写入数据，此类错误称为竞争条件。 为了防止竞争条件，开发者需要以某种方式同步这些访问，这就是原子操作的用武之地。</p>
+<img src="./images/101.webp" />
+
+<p>WebAssembly 原子是 WebAssembly 指令集的扩展，允许 “原子地” 读取和写入小数据单元，通常是 32 位和 64 位整数。 也就是说，确保没有两个线程同时读取或写入同一单元，从而在底层防止此类冲突。</p>
+<p>此外，WebAssembly 原子还包含两种指令类型，即 “wait” 和 “notify”，从而允许一个线程在共享内存中的给定地址上休眠（“等待”），直到另一个线程通过 “通知” 将其唤醒。所有更高级别的同步原语，包括：通道、互斥锁和读写锁都建立在这些指令的基础上。</p>
+<h2 id="2webassembly-多线程如何工作">2.WebAssembly 多线程如何工作</h2>
+<p>WebAssembly 原子和 SharedArrayBuffer 是相对较新的功能，尚未在所有支持 WebAssembly 的浏览器中提供。</p>
+<img src="./images/102.webp" />
+
+<p>为了确保所有用户都可以加载当前应用程序，需要构建两个不同版本的 Wasm 来实现渐进增强，一个版本支持多线程，另一个版本不支持，然后根据功能检测结果加载支持的版本。</p>
+<p>要在运行时检测 WebAssembly 是否支持多线程可以使用 wasm-feature-detect 库，其用于检测当前环境支持哪些 WebAssembly 功能。</p>
+<ul>
+<li>✅ 在浏览器、Node 和 Deno 中运行</li>
+<li>✅ Tree-shakable（仅打包使用的探测器）</li>
+<li>✅ 作为 ES6、CommonJS 和 UMD 模块提供。</li>
+<li>✅ 兼容 CSP</li>
+<li>✅ 所有检测器加起来仅 ~730B gzipped</li>
+</ul>
+<p>wasm-feature-detect 使用起来也非常简单，如下所示：</p>
+<pre><code class="language-js">import { threads } from &quot;wasm-feature-detect&quot;;
+const hasThreads = await threads();
+// 支持 thread
+constmodule = await (hasThreads
+  ? import(&quot;./module-with-threads.js&quot;)
+  : import(&quot;./module-without-threads.js&quot;));
+</code></pre>
+<p>比如该库还能监测是否支持 SID：</p>
+<pre><code class="language-js">import { simd } from &quot;wasm-feature-detect&quot;;
+if (await simd()) {
+  /* SIMD support */
+} else {
+  /* No SIMD support */
+}
+</code></pre>
+<h2 id="3webassembly-使用-c-语言的多线程">3.WebAssembly 使用 C 语言的多线程</h2>
+<p>在 C 语言中，特别是在类 Unix 系统上，使用线程的常见方法是通过 pthread 库提供的 POSIX 线程。 Emscripten 提供了一个与 API 兼容的 pthread 库实现，其构建在<strong>Web Workers、SharedArrayBuffer 和原子操作</strong>之上，这种支持在 Emscripten 中被认为是稳定的。因此相同的代码可以在 Web 上运行而无需更改。</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+// 导入 pthread 库
+void *thread_callback(void *arg)
+{
+    sleep(1);
+    // 当在 JS 中执行时会长时间会阻塞 UI
+    printf(&quot;Inside the thread: %d\n&quot;, *(int *)arg);
+    return NULL;
+}
+int main()
+{
+    puts(&quot;Before the thread&quot;);
+    pthread_t thread_id;
+    int arg = 42;
+    pthread_create(&amp;thread_id, NULL, thread_callback, &amp;arg);
+    // 创建后台进程
+    pthread_join(thread_id, NULL);
+    // 等待线程执行完成
+    puts(&quot;After the thread&quot;);
+    return 0;
+}
+</code></pre>
+<p>关于以上代码有几点需要说明：</p>
+<ul>
+<li><strong>pthread_create：创建一个后台线程，其需要一个目标来存储线程句柄，一些线程创建属性（这里不传递任何属性，所以它只是 NULL），要在新线程中执行的回调（这里是 thread_callback），以及传递给该线程的可选参数指针回调，以防开发者想共享主线程中的一些数据，比如这里的 arg</strong></li>
+<li><strong>pthread_join：等待线程执行完成，并获取回调返回的结果。 该函数接受先前分配的线程句柄以及用于存储结果的指针。 但上面示例无任何结果，因此采用 NULL 作为参数。</strong></li>
+</ul>
+<p>接下来使用 Emscripten 的线程编译代码，需要调用 emcc 并传递 -pthread 参数，就像在其他平台上使用 Clang 或 GCC 编译相同的代码一样：</p>
+<pre><code class="language-bash">emcc-pthreadexample.c-oexample.js
+</code></pre>
+<p>但是，当开发者尝试在浏览器或 Node.js 中运行代码时将得到警告，然后程序将挂起：</p>
+<pre><code class="language-c">// 以下是报错信息
+Before the thread
+Tried to spawn a new thread, but the thread pool is exhausted.
+This might result in a deadlock unless some threads eventually exit or the code
+explicitly breaks out to the event loop.
+If you want to increase the pool size, use setting `-s PTHREAD_POOL_SIZE=...`.
+If you want to throw an explicit error instead of the risk of deadlocking in those
+cases, use setting `-s PTHREAD_POOL_SIZE_STRICT=2`.
+[…hangs here…]
+</code></pre>
+<p>这是因为，Web 上大多数耗时的 API 都是异步的，并且依赖事件循环来执行。 与传统环境相比，此限制是一个重要区别，传统环境中应用程序通常以同步、阻塞方式运行 I/O。</p>
+<p>在这种情况下，代码同步调用 pthread_create 创建后台线程，然后再同步调用 pthread_join 等待后台线程完成执行。 然而，当使用 Emscripten 编译此代码时在幕后使用的 Web Workers 是异步的。</p>
+<p>此时，pthread_create 仅安排在下一次事件循环运行时创建一个新的 Worker 线程，但随后 pthread_join 立即阻止事件循环以等待该 Worker，并通过这样做阻止它被创建从而产生死锁（deadlock）。</p>
+<p>解决该问题的一种方法是在程序启动之前提前创建一个 Workers 池。 当调用 pthread_create 时从池中获取一个随时可用的 Worker，在其后台线程上运行回调，然后将 Worker 返回到池中。 所有这些都可以同步完成，因此只要池足够大就不会出现任何死锁。</p>
+<p>Emscripten 可以通过 -s PTHREAD_POOL_SIZE=... 选项指定线程池，同时还允许指定<br>navigator.hardwareConcurrency 这样的 JavaScript 表达式，以创建与 CPU 上的内核数量一样多的线程。</p>
+<pre><code class="language-bash">emcc -pthread -s PTHREAD_POOL_SIZE=1 example.c -o example.js
+</code></pre>
+<h2 id="4-推荐-comlink-创建线程池">4. 推荐 Comlink 创建线程池</h2>
+<p>Comlink 让 Web Workers 变得非常简单，其是一个小型库（1.1kB），消除了考虑 postMessage 的心理障碍，并隐藏了正在与 Worker 一起工作的事实。</p>
+<p>在更抽象的层面上，Comlink 底层是基于 postMessage 和 ES6 代理的 RPC 实现。目前 Comlink 在 Github 通过 Apache-2.0 协议开源，有超过 10.7k 的 star，是一个优质的前端开源项目。</p>
+<p>下面是 main.js 的示例：</p>
+<pre><code class="language-js">import * as Comlink from &quot;https://unpkg.com/comlink/dist/esm/comlink.mjs&quot;;
+async function init() {
+  const worker = new Worker(&quot;worker.js&quot;);
+  // WebWorkers 使用 `postMessage` 因此与  Comlink 兼容
+  const obj = Comlink.wrap(worker);
+  alert(`Counter: ${await obj.counter}`);
+  await obj.inc();
+  alert(`Counter: ${await obj.counter}`);
+}
+init();
+</code></pre>
+<p>下面是 worker.js 的代码示例：</p>
+<pre><code class="language-js">import Scripts(&quot;https://unpkg.com/comlink/dist/umd/comlink.js&quot;);
+const obj = {
+  counter: 0,
+  inc() {
+    this.counter++;
+  },
+};
+Comlink.expose(obj);
+</code></pre>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
