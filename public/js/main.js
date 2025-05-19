@@ -11,10 +11,49 @@ let filterCount = document.getElementById("filterCount");
 // State
 let cards = [];
 let activeFilters = [];
+let tagCountCache = {}; // Almacena en caché los contadores de etiquetas
 
 // Helper functions
 // Format a number as a 2-digit string
 const formatDigit = (num) => num.toString().padStart(2, "0");
+
+// Calcular los contadores de etiquetas
+function calculateTagCounts() {
+  // Reiniciar el cache
+  tagCountCache = {};
+
+  // Contar las apariciones de cada etiqueta
+  cards.forEach((card) => {
+    if (Array.isArray(card.tags)) {
+      card.tags.forEach((tag) => {
+        try {
+          // Procesar posibles problemas de codificación
+          let processedTag = tag;
+          try {
+            const decodedTag = decodeURIComponent(tag);
+            if (decodedTag !== tag && decodedTag.length > 0) {
+              processedTag = decodedTag;
+            }
+          } catch (e) {
+            // Error de decodificación, mantener el original
+          }
+
+          if (processedTag && processedTag.trim()) {
+            if (!tagCountCache[processedTag]) {
+              tagCountCache[processedTag] = 1;
+            } else {
+              tagCountCache[processedTag]++;
+            }
+          }
+        } catch (e) {
+          console.error("Error processing tag count:", tag, e);
+        }
+      });
+    }
+  });
+
+  return tagCountCache;
+}
 
 // Event Listeners
 document.addEventListener("DOMContentLoaded", initializeApp);
@@ -60,6 +99,8 @@ async function initializeApp() {
   // 获取并渲染卡片
   try {
     await fetchCards();
+    // Calcular contadores de etiquetas después de obtener las tarjetas
+    calculateTagCounts();
     renderCards();
     setupTagFilters();
   } catch (error) {
@@ -166,7 +207,14 @@ function createCardElement(card, index) {
         <time datetime="${card.createdAt}">${formattedDate}</time>
       </div>
       <div class="card-tags">
-        ${card.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
+        ${card.tags
+          .map(
+            (tag) =>
+              `<span class="tag">${tag}<span class="tag-count">${
+                tagCountCache[tag] || 0
+              }</span></span>`
+          )
+          .join("")}
       </div>
     </div>
     <div class="card-summary">
@@ -489,7 +537,12 @@ function setupTagFilters() {
     const tagElement = document.createElement("span");
     tagElement.className = "tech-tag-filter";
     tagElement.dataset.tag = tag; // 存储标签值在数据属性中
-    tagElement.textContent = tag;
+
+    // 添加标签文本和文章计数
+    tagElement.innerHTML = `${tag}<span class="tag-count">${
+      tagCountCache[tag] || 0
+    }</span>`;
+
     tagElement.setAttribute("role", "button"); // 添加ARIA角色以增强可访问性
     tagElement.setAttribute("tabindex", "0"); // 使元素可聚焦
 
@@ -694,14 +747,29 @@ async function openModal(card) {
     const doc = parser.parseFromString(html, "text/html");
     const content = doc.querySelector(".content");
     const title = doc.querySelector("h1").textContent;
-    const meta = doc.querySelector(".meta").cloneNode(true);
+
+    // Obtenemos las etiquetas del artículo
+    const tags = card.tags
+      .map(
+        (tag) =>
+          `<span class="tag">${tag}<span class="tag-count">${
+            tagCountCache[tag] || 0
+          }</span></span>`
+      )
+      .join("");
+
+    // 获取时间元数据
+    const time = doc.querySelector(".meta time").outerHTML;
 
     // 创建高科技风格的模态框内容
     let techContent = `
       <header>
         <h1>${title}</h1>
         <div class="meta">
-          ${meta.innerHTML}
+          ${time}
+          <div class="tags">
+            ${tags}
+          </div>
         </div>
       </header>
       <div class="content">

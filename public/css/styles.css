@@ -696,6 +696,7 @@ body:has(.sidebar-backdrop.active) {
   align-items: center;
   justify-content: center;
   line-height: 1.2;
+  position: relative; /* Añadido para posicionar el contador */
 }
 
 .card-tags .tag:hover,
@@ -3232,7 +3233,7 @@ blockquote p:last-child {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
   margin-bottom: 0;
 }
@@ -3270,12 +3271,17 @@ blockquote p:last-child {
   justify-content: center;
   padding: 2px 6px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.3);
+  background-color: rgba(62, 92, 62, 0.7);
+  color: #fff;
   font-size: 0.75rem;
   margin-left: 8px;
   min-width: 18px;
   height: 18px;
   transition: all 0.2s ease;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .tech-tag-filter:not(.active):hover .tag-count {
@@ -3283,44 +3289,47 @@ blockquote p:last-child {
 }
 
 .tech-tag-filter.active .tag-count {
-  background: rgba(62, 92, 62, 0.2);
-  color: var(--mountain-green);
+  background: rgba(62, 92, 62, 1);
+  color: #fff;
 }
 
-/* 暗色主题下的标签样式 */
-[data-theme="dark"] .tech-tag-filter {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.8);
+/* Estilo específico para el contador en las etiquetas de las tarjetas */
+.card-tags .tag .tag-count {
+  top: -6px;
+  right: -6px;
+  font-size: 0.65rem;
+  min-width: 16px;
+  height: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] .tech-tag-filter:not(.active):hover {
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+/* Estilo específico para el contador en las etiquetas del filtro */
+.tech-tag-filter .tag-count {
+  background-color: rgba(62, 92, 62, 0.6);
 }
 
-[data-theme="dark"] .tech-tag-filter.active {
-  background: rgba(100, 150, 100, 0.6);
+/* Estilo para los contadores en el modal */
+#modalContent .tags .tag .tag-count {
+  top: -8px;
+  right: -8px;
+  font-size: 0.7rem;
+  min-width: 18px;
+  height: 18px;
+  background-color: rgba(62, 92, 62, 0.8);
   color: white;
-  border-color: rgba(100, 150, 100, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-[data-theme="dark"] .tech-tag-filter.active::before {
-  background: var(--water-blue);
-}
-
+/* Tema oscuro para los contadores de etiquetas */
 [data-theme="dark"] .tag-count {
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-[data-theme="dark"] .tech-tag-filter:not(.active):hover .tag-count {
-  background: rgba(177, 167, 212, 0.15);
-}
-
-[data-theme="dark"] .tech-tag-filter.active .tag-count {
-  background: rgba(177, 167, 212, 0.2);
-  color: var(--water-blue);
+[data-theme="dark"] .card-tags .tag .tag-count,
+[data-theme="dark"] #modalContent .tags .tag .tag-count {
+  background-color: rgba(100, 150, 100, 0.5);
 }
 
 .tech-tags-toggle {
