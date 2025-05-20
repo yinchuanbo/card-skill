@@ -1,0 +1,90 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>ESLint 也接入了 AI</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>ESLint 也接入了 AI</h1>
+                        <div class="meta">
+                            <time datetime="Tue May 20 2025 17:53:44 GMT+0800 (中国标准时间)">2025/5/20</time>
+                            <div class="tags">
+                                <span class="tag">工程化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>在之前的文章中有分享过  <a href="https://mp.weixin.qq.com/s?__biz=MzUzNTk3MjE2Ng==&mid=2247516697&idx=1&sn=1a5ad4899624ef87a290ecc07ff18093&scene=21#wechat_redirect">🔗Vite 是首个接入 AI 能力的构建工具</a>，而现在  ESLint  也紧随其后，使用  AI  来管理代码规范！</p>
+<p>作为一名前端开发，咱们平时写代码的时候，<strong>代码规范</strong>这事儿一直挺让人头疼的吧。</p>
+<p>不过现在好消息来了！<strong>ESLint</strong>  这工具居然也开始用 <code>AI</code>  了，以后咱们可以让 <code>AI</code>  帮着管代码规范了！</p>
+<h2 id="eslint-为啥要用-ai-？">ESLint 为啥要用 AI ？</h2>
+<p><strong>ESLint</strong>  大家都熟悉吧，就是用来检查 <code>JavaScript</code>  代码问题的工具。</p>
+<img src="./images/116.webp" />
+
+<p>现在它支持  <strong>Model Context Protocol</strong>（MCP）了，简单来说，就是能让 <code>AI</code> 模型跟它配合起来。</p>
+<p>这样 <code>AI</code>  就能在咱们常用的开发工具，比如 <code>IDE</code>  里直接用  <strong>ESLint</strong>，帮咱们更智能地<code>检查代码</code>、<code>分析问题</code>。</p>
+<p>特别是用 <code>GitHub Copilot</code>  这类 AI 编程助手的小伙伴，这功能太实用了！</p>
+<p>以后写代码的时候，<strong>AI</strong>  就能在旁边帮着盯着代码规范，及时提醒哪儿写得不对，减少出错的可能。</p>
+<h2 id="怎么在-vs-code-和-cursor-里用上-eslint-的-ai-功能？">怎么在 VS Code 和 Cursor 里用上 ESLint 的 AI 功能？</h2>
+<h3 id="在-vs-code-里设置">在 VS Code 里设置</h3>
+<p>先得安装个 <strong>Copilot Chat</strong>  扩展。然后跟着这几步走：</p>
+<p><strong>建个配置文件</strong></p>
+<p>在项目根目录下新建个文件，叫 <code>.vscode/mcp.json</code>，内容写成这样：</p>
+<pre><code class="language-json">{
+  &quot;servers&quot;: {
+    &quot;ESLint&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;eslint&quot;, &quot;--mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<p>这配置就是告诉  <strong>VS Code</strong>  怎么启动 <strong>ESLint</strong>  的 <strong>AI</strong> 功能。</p>
+<p><strong>全局启用（可选）</strong></p>
+<p>如果想在所有项目里都能用这个功能，就选 <strong>“用户设置”</strong> ，把上面的配置加到 <code>settings.json</code> 里。</p>
+<p>这样不管在哪个项目里，<strong>AI</strong>  都能帮着管代码规范。</p>
+<h3 id="在-cursor-里设置">在 Cursor 里设置</h3>
+<p>步骤也简单：</p>
+<p><strong>建配置文件</strong></p>
+<p>在项目目录里建个 <code>.cursor/mcp.json</code>，内容是：</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;eslint&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;eslint&quot;, &quot;--mcp&quot;],
+      &quot;env&quot;: {}
+    }
+  }
+}
+</code></pre>
+<p><strong>全局配置（可选）</strong></p>
+<p>要是想在所有 <strong>Cursor</strong>  项目里都用上，就在主目录建个 <code>~/.cursor/mcp.json</code>  文件，内容跟上面一样。</p>
+<p><strong>检查工具是否可用</strong></p>
+<p>配置好了以后，去  <strong>Cursor</strong>  的  <strong>MCP</strong> 设置页看看“可用工具”里有没有  <strong>ESLint MCP</strong>  服务器。</p>
+<p>要是有了，就说明设置成功了，AI 就能帮你检查代码规范了。</p>
+<h2 id="用-ai-管代码规范有什么好处？">用 AI 管代码规范有什么好处？</h2>
+<p>用上  <strong>ESLint</strong>  的 <strong>AI</strong>  功能，好处可不少：</p>
+<ul>
+<li><strong>提高开发效率</strong>：AI 能快速发现代码里的问题，咱们不用花太多时间自己去找，写代码速度自然就上去了。</li>
+<li><strong>提升代码质量</strong>：AI 检查代码比人更细致，能确保代码符合规范，减少潜在问题。</li>
+<li><strong>团队协作更顺畅</strong>：一个团队里大家代码风格不一致很让人头疼。AI 帮着管代码规范，大家写出来的代码风格更统一，协作起来也更轻松。</li>
+</ul>
+<p><strong>ESLint</strong>  接入 <strong>AI</strong>  真的是开发流程里的一大进步。</p>
+<p>以后写代码，有 <strong>AI</strong>  帮着管规范，咱们可以更专注于实现功能。</p>
+<p>还没试过的小伙伴赶紧在自己的项目里试试吧！相信用过之后，你会越来越依赖这个强大的功能，让  <strong>AI</strong>  成为你开发过程中的得力助手！</p>
+<ul>
+<li><strong>ESLint MCP 官方文档</strong>：<code>https://eslint.org/docs/latest/use/mcp</code></li>
+</ul>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
