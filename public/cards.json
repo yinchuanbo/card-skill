@@ -715,5 +715,27 @@
     "summary": "\n使用**性能**面板分析网站的性能。\n\n<iframe frameborder=\"0\" allowfullscreen=\"\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-i...",
     "type": "default",
     "url": "/doc/68.html"
+  },
+  {
+    "id": "69",
+    "title": "分析运行时性能",
+    "tags": [
+      "performance"
+    ],
+    "createdAt": "2025-05-21T11:41:10.000Z",
+    "summary": "\n运行时性能是指网页在运行（而非加载）时的性能。本教程介绍了如何使用 Chrome DevTools 中的“性能”面板分析运行时性能。从 [RAIL](https://web.dev/rail/?hl=zh-cn) 模型的角度来看，您在本教程中学到的技能对于分析网页的响应、动画和空闲阶段非常有用。\n...",
+    "type": "default",
+    "url": "/doc/69.html"
+  },
+  {
+    "id": "70",
+    "title": "添加注释并分享效果数据分析结果",
+    "tags": [
+      "performance"
+    ],
+    "createdAt": "2025-05-21T11:44:27.000Z",
+    "summary": "\n## 概览\n\n[记录](https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#record)并[分析](https://developer.chrome.com/docs/devtools/perform...",
+    "type": "default",
+    "url": "/doc/70.html"
   }
 ]
