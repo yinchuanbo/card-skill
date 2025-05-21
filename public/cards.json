@@ -709,7 +709,7 @@
     "id": "68",
     "title": "“性能”面板：分析网站性能",
     "tags": [
-      "性能面板"
+      "performance"
     ],
     "createdAt": "2025-05-21T11:30:15.000Z",
     "summary": "\n使用**性能**面板分析网站的性能。\n\n<iframe frameborder=\"0\" allowfullscreen=\"\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-i...",
