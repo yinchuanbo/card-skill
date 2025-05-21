@@ -1,0 +1,674 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>前端脚手架</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>前端脚手架</h1>
+                        <div class="meta">
+                            <time datetime="Wed May 21 2025 19:14:11 GMT+0800 (中国标准时间)">2025/5/21</time>
+                            <div class="tags">
+                                <span class="tag">工程化</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="背景">背景</h2>
+<p>在现代前端开发中，脚手架工具（CLI）在团队项目中扮演着重要角色。我们的团队在项目开发中面临以下挑战：</p>
+<ul>
+<li>开发效率低：项目初始化、代码生成和重复性操作耗费了大量时间。</li>
+<li>缺乏统一规范：不同成员的代码风格不一致，提交记录混乱，影响项目质量。</li>
+<li>构建部署复杂：手动构建和部署容易出错，影响交付效率。</li>
+</ul>
+<p>为了提升团队开发效率、规范化流程和减少重复性工作，主人公主导了前端 CLI 脚手架工具的设计与开发。通过这个工具，我们实现了项目初始化、代码生成、规范化操作以及自动化 CI/CD 流程。</p>
+<h3 id="最终效果">最终效果</h3>
+<h3 id="命令行交互工具">命令行交互工具</h3>
+<img src="./images/131.webp" />
+
+<h3 id="ci--cd">CI / CD</h3>
+<img src="./images/132.webp" />
+
+<h3 id="技术要点">技术要点</h3>
+<h4 id="nodejs-开发"><strong>Node.js 开发</strong></h4>
+<p>整个 CLI 工具基于 Node.js 开发。核心功能通过处理命令行参数实现，灵活满足不同开发场景。</p>
+<h4 id="依赖库"><strong>依赖库</strong></h4>
+<ol>
+<li><strong>命令参数解析</strong>：<code>commander</code> 用于处理命令行参数和选项。</li>
+<li><strong>人机交互</strong>：<code>prompts</code> 实现与用户的动态交互，支持多选、确认等操作(inquirer/input / select)。</li>
+<li><strong>控制台高亮</strong>：<code>chalk</code> 和 <code>picocolors</code> 用于美化控制台输出，提高可读性。</li>
+<li><strong>ora:</strong> 终端<code>loading</code>美化工具</li>
+<li><strong>figlet:</strong> 终端生成<code>艺术字</code></li>
+<li><strong>git-clone:</strong> 下载项目<code>模版工具</code></li>
+<li><strong>模板处理</strong>：<code>handlebars</code> 作为模板引擎，用于生成动态代码片段。</li>
+<li><strong>私有 NPM 仓库</strong>：<code>verdaccio</code> / <code>nexus</code> 用于搭建团队的 NPM 私有仓库，实现包管理的自主化。</li>
+<li><strong>fs-etra:</strong> 用来操作<code>文件目录</code> 瑞士军刀</li>
+</ol>
+<h3 id="概念引入">概念引入</h3>
+<p>cli 大家都熟悉，大家熟悉的 vue，在 终端 cv 这个命令，然后 一个项目就 <code>clone</code> 到你的本地了</p>
+<img src="./images/133.webp" />
+
+<p>再比如 vite 提供的 cli</p>
+<img src="./images/134.webp" />
+
+<p>cli，其实也很简单，就两个核心的点</p>
+<ol>
+<li>通过<code>读取本地文件 / clone</code> 的方式 去<code>拉取已经存在的项目base 模版</code></li>
+<li>为了提供<code>可选择/可配置性</code>，需要通过命令行界面（CLI），来实现<code>读取 / clone</code> 已经存在的文件模版</li>
+</ol>
+<h2 id="整体开发流程">整体开发流程</h2>
+<ol>
+<li>项目组 定制好 项目模版，规定存放的目录位置（直接放到 cli 目录 / 存放在单独的私有仓库）</li>
+<li>协定使用方式，采用全局 安装 / npm 安装</li>
+</ol>
+<h3 id="定制开发模版">定制开发模版</h3>
+<p>可以是基本架子，比如代码规范化 / eslint / prettier / / styleLint / commintlint / ci/cd / 基本配置...</p>
+<p>也可以是一个完整的成熟的项目，比如包括基本组件（404/login/layout） / 路由 / store 配置 等等</p>
+<p>根据情况定制即可</p>
+<h3 id="初始化项目">初始化项目</h3>
+<pre><code class="language-bash">mkdir vp-cli-tools
+cd vp-cli-tools
+npm init -y
+</code></pre>
+<h3 id="目录结构">目录结构</h3>
+<pre><code class="language-bash">vp-cli-tools/
+    |- src/ # 项目资源
+        |- command/  # 命令逻辑
+        |- utils/   # 公共方法
+        |- index.ts  # 命令入口文件
+    |- rollup.config.js  # rollip 配置文件
+</code></pre>
+<h3 id="packagejson">package.json</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;vp-cli-tools&quot;,
+  &quot;version&quot;: &quot;0.3.0&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,
+    &quot;build&quot;: &quot;rollup -c rollup.config.js --bundleConfigAsCjs&quot;
+  },
+  &quot;keywords&quot;: [&quot;Vite&quot;, &quot;VUE3&quot;, &quot;Typescript&quot;, &quot;Element-Plus&quot;],
+  &quot;author&quot;: &quot;we&quot;,
+  &quot;bin&quot;: {
+    &quot;vp-cli-tools&quot;: &quot;bin/index.js&quot;
+  },
+  &quot;files&quot;: [&quot;dist&quot;, &quot;bin&quot;, &quot;README&quot;],
+  &quot;license&quot;: &quot;ISC&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;devDependencies&quot;: {
+    &quot;@inquirer/prompts&quot;: &quot;^3.3.0&quot;,
+    &quot;@rollup/plugin-commonjs&quot;: &quot;^25.0.3&quot;,
+    &quot;@rollup/plugin-json&quot;: &quot;^6.0.1&quot;,
+    &quot;@rollup/plugin-node-resolve&quot;: &quot;^15.1.0&quot;,
+    &quot;@rollup/plugin-terser&quot;: &quot;^0.4.3&quot;,
+    &quot;@types/figlet&quot;: &quot;^1.7.0&quot;,
+    &quot;@types/fs-extra&quot;: &quot;^11.0.2&quot;,
+    &quot;@types/lodash&quot;: &quot;^4.14.202&quot;,
+    &quot;@types/node&quot;: &quot;^20.10.4&quot;,
+    &quot;axios&quot;: &quot;^1.6.2&quot;,
+    &quot;chalk&quot;: &quot;^4.1.2&quot;,
+    &quot;commander&quot;: &quot;^11.1.0&quot;,
+    &quot;figlet&quot;: &quot;^1.7.0&quot;,
+    &quot;fs-extra&quot;: &quot;^11.1.1&quot;,
+    &quot;lodash&quot;: &quot;^4.17.21&quot;,
+    &quot;log-symbols&quot;: &quot;4.1.0&quot;,
+    &quot;ora&quot;: &quot;5&quot;,
+    &quot;progress-estimator&quot;: &quot;^0.3.1&quot;,
+    &quot;rollup&quot;: &quot;^4.6.1&quot;,
+    &quot;rollup-plugin-node-externals&quot;: &quot;^5.1.2&quot;,
+    &quot;rollup-plugin-typescript2&quot;: &quot;^0.36.0&quot;,
+    &quot;simple-git&quot;: &quot;^3.21.0&quot;,
+    &quot;tslib&quot;: &quot;^2.6.2&quot;,
+    &quot;typescript&quot;: &quot;^5.3.3&quot;
+  }
+}
+</code></pre>
+<h3 id="packagejson-中-build--bin--files--name--version--配置">package.json 中 build / bin / files / name / version / 配置</h3>
+<pre><code class="language-json">{
+  &quot;build&quot;: &quot;rollup -c rollup.config.js --bundleConfigAsCjs&quot;,
+  &quot;name&quot;: &quot;vp-cli-tools&quot;,
+  &quot;bin&quot;: {
+    &quot;vp-cli-tools&quot;: &quot;bin/index.js&quot;
+  },
+
+  &quot;files&quot;: [&quot;dist&quot;, &quot;bin&quot;, &quot;README&quot;]
+}
+</code></pre>
+<h4 id="输出格式">输出格式</h4>
+<ul>
+<li>使用 rollup 通过 -c 制定打包的 文件<code>rollup.config.js</code>,最后通过<code>bundleConfigAsCjs</code>输出为 commonjs</li>
+</ul>
+<h4 id="bin-配置">bin 配置</h4>
+<ul>
+<li><p>bin 中的配置是一个对象，需要有 &quot;key&quot; 和 &quot;value&quot;。</p>
+<ul>
+<li>key 会被放置在 node_modules 的 .bin 目录中，value 是 key 对应需要执行的文件。</li>
+<li>我们使用 vp-cli-tools 就会调用我们的 bin/index.js。</li>
+<li>当我们全局安装对应包的时候会放在全局的 node_modules 的 .bin 目录中，相当于添加了系统环境变量，这样我们就可以直接在终端中调用。</li>
+</ul>
+</li>
+</ul>
+<p><code>#!/usr/bin/env node</code> 通常称为 <strong>shebang</strong> 机制，有以下优点</p>
+<ul>
+<li>通过  <code>env</code>  查找 Node.js，确保你写的脚本能够在各种环境下运行</li>
+<li>简化脚本的开发和调试工作，让脚本 成为可执行文件，不需要始终使用 <code>node</code> 来执行</li>
+<li>node xxx =&gt; xxx</li>
+</ul>
+<h3 id="rollupconfigjs-入口编写">rollup.config.js 入口编写</h3>
+<pre><code class="language-js">import { defineConfig } from &quot;rollup&quot;;
+import nodeResolve from &quot;@rollup/plugin-node-resolve&quot;;
+import commonjs from &quot;@rollup/plugin-commonjs&quot;;
+import externals from &quot;rollup-plugin-node-externals&quot;;
+import json from &quot;@rollup/plugin-json&quot;;
+import terser from &quot;@rollup/plugin-terser&quot;;
+import typescript from &quot;rollup-plugin-typescript2&quot;;
+
+export default defineConfig([
+  {
+    input: {
+      index: &quot;src/index.ts&quot;, // 打包入口文件
+    },
+    output: [
+      {
+        dir: &quot;dist&quot;, // 输出目标文件夹
+        format: &quot;cjs&quot;, // 输出 commonjs 文件
+      },
+    ],
+    // 这些依赖的作用上文提到过
+    plugins: [
+      nodeResolve(),
+      externals({
+        devDeps: false, // 可以识别我们 package.json 中的依赖当作外部依赖处理 不会直接将其中引用的方法打包出来
+      }),
+      typescript(),
+      json(),
+      commonjs(),
+      terser(),
+    ],
+  },
+]);
+</code></pre>
+<h3 id="实现场景">实现场景</h3>
+<h4 id="实现的命令">实现的命令</h4>
+<p><code>vp-create-tool create</code> 自动初始化项目，提供多种模板选择（如 Vue 2、Vue 3、TypeScript 支持），并通过交互式配置生成项目结构。</p>
+<p><code>vp-create-tool update</code> 更新命令行工具</p>
+<h4 id="create-编写">create 编写</h4>
+<h5 id="commander">commander()</h5>
+<ol>
+<li>首先初始化一个 Command 对象，传入的参数作为我们的指令名称。</li>
+<li>通过 program 可以执行 cli 的一些提示，比如-v,--version, create,description 等</li>
+<li>在 action 可以放要处理的的逻辑</li>
+</ol>
+<pre><code class="language-js">// index.ts
+import { Command } from &quot;commander&quot;;
+import { version } from &quot;../package.json&quot;;
+import create from &quot;./command/create&quot;;
+import update from &quot;./command/update&quot;;
+// 命令行中使用 vp-cli-tools xxx 即可触发
+const program = new Command(&quot;vp-cli-tools&quot;);
+program.version(version, &quot;-v , --version&quot;);
+
+program
+  .command(&quot;create&quot;)
+  .description(&quot;创建一个新项目&quot;)
+  .argument(&quot;[name]&quot;, &quot;项目名称&quot;)
+  .action(async (name?: string) =&gt; {
+    await create(name);
+  });
+
+program
+  .command(&quot;update&quot;)
+  .description(&quot;更新vp-cli-tools&quot;)
+  .action(() =&gt; {
+    update();
+  });
+program.parse();
+</code></pre>
+<p>执行完 npm install vp-cli-tools -g 之后，在任意目录执行 vp-cli-tools，就会输出我们的通过 commander 配置的属性和方法</p>
+<img src="./images/135.webp" />
+
+<h4 id="createname-方法的具体实现">create(name) 方法的具体实现</h4>
+<ol>
+<li>执行 vp-cli-tools create 时，检查是否传入项目名</li>
+</ol>
+<pre><code class="language-js">// command/create.ts
+import { select, input } from &quot;@inquirer/prompts&quot;; // 交互工具库：input 代表直接输入，select 代表选择
+import fs from &quot;fs-extra&quot;; //fs-extra
+import path from &quot;path&quot;;
+import { clone } from &quot;../utils/clone&quot;;
+import { log } from &quot;../utils/log&quot;;
+import axios, { AxiosResponse } from &quot;axios&quot;;
+import lodash from &quot;lodash&quot;;
+import chalk from &quot;chalk&quot;;
+import { name, version } from &quot;../../package.json&quot;;
+
+export default async function create(prjName?: string) {
+  // 文件名称未传入需要输入
+  if (!prjName) {
+    prjName = await input({ message: &quot;请输入项目名称&quot; });
+  }
+</code></pre>
+<img src="./images/136.webp" />
+
+<ol start="2">
+<li>如果文件已存在需要让用户判断是否覆盖原文件</li>
+</ol>
+<pre><code class="language-js">const filePath = path.resolve(process.cwd(), prjName);
+
+if (fs.existsSync(filePath)) {
+  const run = await isOverWrite(prjName);
+  if (run) {
+    await fs.remove(filePath);
+  } else return;
+}
+
+export const isOverWrite = async (fileName: string) =&gt; {
+  log.warning(`${fileName} 文件已存在 !`);
+  return select({
+    message: &quot;是否覆盖原文件: &quot;,
+    choices: [
+      { name: &quot;覆盖&quot;, value: true },
+      { name: &quot;取消&quot;, value: false },
+    ],
+  });
+};
+</code></pre>
+<ol start="3">
+<li>选择模板</li>
+</ol>
+<p>就是预设了一个模版，将模版转为 select 中 choices 需要的格式</p>
+<pre><code class="language-js">// 这里保存了我写好的预设模板
+export const templates: Map&lt;string, TemplateInfo&gt; = new Map([
+  [
+    &quot;Vite5-Vue3-Typescript-template&quot;,
+    {
+      name: &quot;Vue-admin-template&quot;,
+      downloadUrl: &quot;https://github.com/github-learning/vue3-admin&quot;, // 为提高github 访问速度，使用 kk 来加速
+      description: &quot;Vue3技术栈前端开发模板&quot;,
+      branch: &quot;main&quot;,
+    },
+  ],
+  [
+    &quot;React-template&quot;,
+    {
+      name: &quot;React-admin-template&quot;,
+      downloadUrl: &quot;https://github.com/github-learning/vue3-admin&quot;, // 目前还没有开发React 技术栈模版，暂时用Vue 替代
+      description: &quot;React技术栈前端开发模板&quot;,
+      branch: &quot;main&quot;,
+    },
+  ],
+]);
+const templateName = await select({
+  message: &quot;请选择需要初始化的模板:&quot;,
+  choices: templateList,
+});
+</code></pre>
+<ol start="4">
+<li>下载模版（这里主要逻辑封装在 utils 里的 clone 函数中）</li>
+</ol>
+<pre><code class="language-js">//  下载模板
+const gitRepoInfo = templates.get(templateName);
+
+if (gitRepoInfo) {
+  await clone(gitRepoInfo.downloadUrl, prjName, [
+    &quot;-b&quot;,
+    `${gitRepoInfo.branch}`,
+  ]);
+} else {
+  log.error(`${templateName} 模板不存在`);
+}
+</code></pre>
+<ol start="5">
+<li>clone 函数</li>
+</ol>
+<p>主要就是利用 simple-git 去拉取 git 仓库代码</p>
+<p><strong>git.clone(url, prjName, options), &quot;代码下载中: &quot;, { estimate: 8000, // 展示预估时间 })</strong></p>
+<pre><code class="language-js">import simpleGit, { SimpleGit, SimpleGitOptions } from &quot;simple-git&quot;;
+import { log } from &quot;./log&quot;;
+import createLogger from &quot;progress-estimator&quot;;
+import chalk from &quot;chalk&quot;;
+
+const figlet = require(&quot;figlet&quot;);
+
+const logger = createLogger({
+  // 初始化进度条
+  spinner: {
+    interval: 300, // 变换时间 ms
+    frames: [&quot;⠋&quot;, &quot;⠙&quot;, &quot;⠹&quot;, &quot;⠸&quot;, &quot;⠼&quot;, &quot;⠴&quot;, &quot;⠦&quot;, &quot;⠧&quot;, &quot;⠇&quot;, &quot;⠏&quot;].map((item) =&gt;
+      chalk.blue(item)
+    ), // 设置加载动画
+  },
+});
+const goodPrinter = async () =&gt; {
+  const data = await figlet.textSync(&quot;欢迎使用 vp-cli-tools 脚手架&quot;, {
+    font: &quot;Standard&quot;,
+  });
+  console.log(chalk.rgb(40, 156, 193).visible(data));
+};
+
+// 下面就是一些相关的提示
+
+const gitOptions: Partial&lt;SimpleGitOptions&gt; = {
+  baseDir: process.cwd(), // 根目录
+  binary: &quot;git&quot;,
+  maxConcurrentProcesses: 6, // 最大并发进程数
+};
+
+export const clone = async (
+  url: string,
+  prjName: string,
+  options: string[]
+): Promise&lt;any&gt; =&gt; {
+  const git: SimpleGit = simpleGit(gitOptions);
+  try {
+    // 开始下载代码并展示预估时间进度条
+    await logger(git.clone(url, prjName, options), &quot;代码下载中: &quot;, {
+      estimate: 8000, // 展示预估时间
+    });
+
+    // 下面就是一些相关的提示
+    console.log();
+    console.log(chalk.blueBright(`==================================`));
+    console.log(chalk.blueBright(`=== 欢迎使用 vp-cli-tools 脚手架 ===`));
+    console.log(chalk.blueBright(`==================================`));
+    console.log();
+
+    log.success(`项目创建成功 ${chalk.blueBright(prjName)}`);
+    log.success(`执行以下命令启动项目：`);
+    log.info(`cd ${chalk.blueBright(prjName)}`);
+    log.info(`${chalk.yellow(&quot;pnpm&quot;)} install`);
+    log.info(`${chalk.yellow(&quot;pnpm&quot;)} run dev`);
+    goodPrinter();
+  } catch (err: any) {
+    log.error(&quot;下载失败&quot;);
+    log.error(String(err));
+  }
+};
+</code></pre>
+<p>至此 代码就 就 clone 到本地了</p>
+<img src="./images/137.webp" />
+
+<h3 id="npm-发包">npm 发包</h3>
+<ol>
+<li>npm login</li>
+<li>npm publish</li>
+</ol>
+<h3 id="难点疑点">难点疑点</h3>
+<h4 id="1-不同系统的兼容性问题">1. 不同系统的兼容性问题</h4>
+<p>终归到底，实现的是一个 node js 脚本，最后使用 node xxx.js 执行，那有没有一种方案，解决不同系统的兼容性问题，将其转变为可执行的文件， <code>shebang</code> 机制，详见上面</p>
+<h4 id="2-调用方式的选择">2. 调用方式的选择</h4>
+<p>目前使用的 <code>node ./dist/index.js create xxx</code>, 等安装 vp-cli-tools 后，在生产环境就可以使用<code>vp-cli-tools</code> 来替代开发环境中 <code>node ./dist/index.js</code>，比如 <code>vp-cli-tools create xxx</code></p>
+<h5 id="全局调用方式的弊端（更新不及时）">全局调用方式的弊端（更新不及时）</h5>
+<p>当我们使用 vite / vue 的时候，官方的 cli 更新，对我们是无感的，因为他是放在 npm 上，我们使用<code>npm create vite</code> 的时候，会自动拉取最新版本</p>
+<p>但是当我们把 脚手架当成全局 脚本 执行， <code>vp-cli-tools create xxx</code> 就相当于 <code>npm create xxx</code>, 没有 npm 做屏障，需要自己维<code>vp-cli-tools</code> 的版本，做一个 checkVseriosn 的 校验</p>
+<h5 id="npm-create-xxx-怎么实现">npm create xxx 怎么实现</h5>
+<p>当我们尝试通过 npm create vp-cli-tools 来运行 cli</p>
+<p>会报错 <a href="https://registry.npmjs.org/create-vp-cli-tools">registry.npmjs.org/create-vp-c…</a> 但其实我们的名字是 vp-cli-tools，说明对于 npm 上面的 cli ,需要满足他的规范，将名字 以<code>create-</code> 开头， 那么我们修改 package.json 中的 name 即可，然后就可以使用 <code>npm create vp-cli-tools</code> ,</p>
+<img src="./images/138.webp" />
+
+<h5 id="如果使用全局的调用方式，该怎么更新版本-">如果使用全局的调用方式，该怎么更新版本 ?</h5>
+<p>安装依赖时，检测当前本地的版本，和线上版本做一个对比，如果低于线上版本，则 waring 提示用户，cli 升级（npm install vp-cli-tools -g），也可以实现一个 update 函数，内部其实也是执行 <code>npm install vp-cli-tools -g</code></p>
+<h6 id="checkversion">checkVersion</h6>
+<pre><code class="language-js">// 入口指令 index.ts
+program
+  .command(&quot;update&quot;)
+  .description(&quot;更新vp-cli-tools&quot;)
+  .action(() =&gt; {
+    update();
+  });
+</code></pre>
+<pre><code class="language-js">// create 时 version 对比  create.ts
+export const getNpmLatestVersion = async (npmName: string) =&gt; {
+  // data[&#39;dist-tags&#39;].latest 为最新版本号
+  console.log(&quot;name&quot;, npmName);
+  try {
+    const { data } = (await getNpmInfo(npmName)) as AxiosResponse;
+    console.log(
+      &quot;%c [  ]-57&quot;,
+      &quot;font-size:13px; background:pink; color:#bf2c9f;&quot;,
+      data
+    );
+    return data[&quot;dist-tags&quot;].latest;
+  } catch (error) {
+    console.log(&quot;error&quot;, error);
+  }
+};
+// npm 包提供了根据包名称查询包信息的接口// 我们在这里直接使用 axios 请求调用即可
+export const getNpmInfo = async (npmName: string) =&gt; {
+  const npmUrl = &quot;https://registry.npmjs.org/&quot; + npmName;
+  console.log(&quot;npmUrl&quot;, npmUrl);
+  let res = {};
+  try {
+    res = await axios.get(npmUrl);
+  } catch (err) {
+    log.error(err as string);
+  }
+  console.log(&quot;res&quot;, res);
+  return res;
+};
+
+export const checkVersion = async (name: string, curVersion: string) =&gt; {
+  const latestVersion = await getNpmLatestVersion(name);
+  const need = lodash.gt(latestVersion, curVersion);
+  if (need) {
+    log.info(
+      `-----检测到 vp-cli-tools 最新版:${chalk.blueBright(
+        latestVersion
+      )} 当前版本:${chalk.blueBright(curVersion)} ~`
+    );
+    log.info(
+      `可使用 ${chalk.yellow(&quot;pnpm&quot;)} install vp-cli-tools@latest 更新 ~`
+    );
+  }
+  return need;
+};
+// create  主函数 调用
+await checkVersion(name, version); // 检测版本更新
+</code></pre>
+<h6 id="update">update</h6>
+<pre><code class="language-js">import process from &quot;child_process&quot;;
+import chalk from &quot;chalk&quot;;
+import ora from &quot;ora&quot;;
+import os from &quot;os&quot;; // 导入 os 模块
+const spinner = ora({
+  text: &quot;vp-cli-tools 正在更新&quot;,
+  spinner: {
+    interval: 300,
+    frames: [&quot;⠋&quot;, &quot;⠙&quot;, &quot;⠹&quot;, &quot;⠸&quot;, &quot;⠼&quot;, &quot;⠴&quot;, &quot;⠦&quot;, &quot;⠧&quot;, &quot;⠇&quot;, &quot;⠏&quot;].map((item) =&gt;
+      chalk.blue(item)
+    ), // 设置加载动画
+  },
+});
+
+export default function update() {
+  spinner.start();
+
+  process.exec(
+    &quot;npm install vp-cli-tools@latest -g&quot;,
+    (error, stdout, stderr) =&gt; {
+      spinner.stop();
+
+      // 判断操作系统类型
+      const platform = os.platform();
+
+      // 如果安装没有权限
+      if (error &amp;&amp; stderr.includes(&quot;EACCES&quot;)) {
+        console.log(
+          chalk.red(&quot;没有权限进行全局安装。请尝试使用以下命令重试：&quot;)
+        );
+        if (platform === &quot;linux&quot; || platform === &quot;darwin&quot;) {
+          // 针对 Linux/macOS 系统
+          console.log(
+            chalk.yellow(
+              &quot;sudo npm install vp-cli-tools@latest -g  // 对于 Linux/macOS 用户&quot;
+            )
+          );
+        } else if (platform === &quot;win32&quot;) {
+          // 针对 Windows 系统
+          console.log(chalk.yellow(&quot;管理员权限执行命令 // 对于 Windows 用户&quot;));
+        }
+        return;
+      }
+
+      if (!error) {
+        console.log(chalk.green(&quot;更新成功&quot;));
+      } else {
+        console.log(chalk.red(error));
+      }
+    }
+  );
+}
+</code></pre>
+<h3 id="自动安装依赖--启动项目">自动安装依赖 / 启动项目</h3>
+<p>上面我们下载完项目，会返回下载成功的提示，但是我们直<code>接用脚本安装依赖</code>，<code>运行项目</code>，不是更方便</p>
+<pre><code class="language-js">// 在 utils/clone.ts 中，新增 自动安装 依赖和 自动运行项目
+
+// 安装项目依赖
+const installDependencies = (prjName: string): Promise&lt;void&gt; =&gt; {
+  const projectDir = path.join(process.cwd(), prjName);
+
+  return new Promise((resolve, reject) =&gt; {
+    const npmInstall = spawn(&quot;npm&quot;, [&quot;install&quot;, &quot;--verbose&quot;, &quot;--force&quot;], {
+      cwd: projectDir,
+      stdio: &quot;inherit&quot;, // 将子进程的输出直接映射到父进程（当前进程）的输出
+      shell: true, // 使用 shell，确保命令在 Windows 和其他平台上都能运行
+    });
+
+    npmInstall.on(&quot;close&quot;, (code) =&gt; {
+      if (code === 0) {
+        console.log(chalk.green(&quot;依赖安装成功&quot;));
+        resolve();
+      } else {
+        reject(`依赖安装失败，退出代码: ${code}`);
+      }
+    });
+
+    npmInstall.on(&quot;error&quot;, (err) =&gt; {
+      reject(`依赖安装时发生错误: ${err.message}`);
+    });
+  });
+};
+
+// 运行项目
+const runProject = (prjName: string): Promise&lt;void&gt; =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    const projectDir = path.join(process.cwd(), prjName);
+    const spinnerTip = ora(&quot;项目启动中...&quot;).start();
+
+    // 检查项目目录是否存在
+    if (!fs.existsSync(projectDir)) {
+      spinnerTip.fail(&quot;项目目录不存在&quot;);
+      reject(new Error(&quot;项目目录不存在&quot;));
+      return;
+    }
+
+    // 使用 spawn 执行 pnpm run serve
+    const serveProcess = spawn(&quot;pnpm&quot;, [&quot;run&quot;, &quot;serve&quot;], {
+      cwd: projectDir,
+      stdio: &quot;pipe&quot;, // 子进程的输出流式处理
+      shell: true, // 确保在跨平台运行时正常
+    });
+
+    serveProcess.stdout.on(&quot;data&quot;, (data) =&gt; {
+      const output = data.toString();
+      console.log(chalk.green(output)); // 实时打印日志
+
+      // 检测到启动完成的标志
+      if (output.includes(&quot;App running at&quot;)) {
+        spinnerTip.succeed(&quot;项目启动成功！&quot;);
+        resolve(); // 完成 Promise
+      }
+    });
+
+    serveProcess.stderr.on(&quot;data&quot;, (data) =&gt; {
+      console.error(chalk.red(data.toString()));
+    });
+
+    serveProcess.on(&quot;close&quot;, (code) =&gt; {
+      if (code !== 0) {
+        spinnerTip.fail(&quot;项目启动失败&quot;);
+        reject(new Error(`项目启动失败，退出代码: ${code}`));
+      }
+    });
+
+    serveProcess.on(&quot;error&quot;, (err) =&gt; {
+      spinnerTip.fail(&quot;项目启动失败&quot;);
+      reject(new Error(`项目启动失败: ${err.message}`));
+    });
+  });
+};
+
+await installDependencies(prjName);
+await runProject(prjName);
+</code></pre>
+<p>这里遇到一个问题，就是使用 exec 去执行逻辑，无法实时输出流信息，<code>在网络比较卡的时候，卡在哪里，就跟尴尬</code>，了解到 exec 主要是将子进程的输出缓冲到内存中，并在子进程执行完毕后一次性通过回调返回，并不适合 我们实时交互的功能，后来采用 <strong><code>spawn</code></strong> 实时地与子进程进行交互并获取其输出，但是 一般项目的流到 App running at 就终止后续流的输出，我们可以在这个时候 resolve， 等待下次文件变更，再更新流</p>
+<h3 id="内部私有--存放在-npm-上">内部私有 / 存放在 npm 上</h3>
+<p>以上都是 发布到 npm 公共区，但是当我们有自己的服务器，并不想公开，比如我们使用的是 Nexus，那么就可以使用</p>
+<h4 id="步骤-1：将包发布到-nexus">步骤 1：将包发布到 Nexus</h4>
+<p>你可以使用 <code>npm publish</code> 命令将包发布到你在 Nexus 中创建的私有仓库。</p>
+<ol>
+<li>确保你已经在 Nexus 上配置了适当的权限。如果你还没有配置，可以在 Nexus 的用户管理页面中创建用户并为其分配适当的权限。</li>
+<li>登录 Nexus：</li>
+</ol>
+<pre><code class="language-bash">npm login --registry=http://localhost:8081/repository/npm-private-repo/
+</code></pre>
+<p>你需要输入用户名、密码和邮箱（这些信息是你在 Nexus 中配置的）。</p>
+<ol start="3">
+<li>发布 npm 包到 Nexus：</li>
+</ol>
+<pre><code class="language-bash">npm publish --registry=http://localhost:8081/repository/npm-private-repo/
+</code></pre>
+<p>此时，npm 包就会上传到 Nexus 的私有仓库中。</p>
+<h4 id="步骤-2：安装私有仓库中的包">步骤 2：安装私有仓库中的包</h4>
+<p>现在，你可以从你的私有仓库安装包。如果你已经在 <code>.npmrc</code> 中配置了仓库地址，你可以直接通过 <code>npm install</code> 安装私有包：</p>
+<pre><code class="language-bash">npm install &lt;package-name&gt;
+</code></pre>
+<p>源设置</p>
+<ol>
+<li>在 <code>.npmrc</code> 文件中添加以下配置，将 Nexus 的 npm 仓库作为默认仓库：</li>
+</ol>
+<pre><code class="language-bash">registry=http://localhost:8081/repository/npm-private-repo/
+</code></pre>
+<ol start="2">
+<li>或者使用 nrm 工具</li>
+</ol>
+<img src="./images/139.webp" />
+
+<ol start="3">
+<li>通过 配置 package.json</li>
+</ol>
+<p>这样就和发布到 npm 一样了，不需要在制定 publish 的源头</p>
+<pre><code class="language-json">&quot;publishConfig&quot;: {
+    &quot;registry&quot;: &quot;http://192.168.xx.xx:6056/repository/npm-hosted/&quot;,
+    &quot;access&quot;: &quot;public&quot;
+  },
+</code></pre>
+<h3 id="fs--fs-extra-相关">fs / fs-extra 相关</h3>
+<h4 id="2-增强功能（fs-extra）">2. <strong>增强功能（<code>fs-extra</code>）</strong></h4>
+<p><code>fs-extra</code> 是对 <code>fs</code> 模块的增强，它是基于 <code>fs</code> 构建的，但提供了更多的功能和便捷的 API，特别是一些常用的文件操作功能。<code>fs-extra</code> 包含 <code>fs</code> 模块的所有方法，并添加了以下几个有用的扩展功能：</p>
+<h5 id="a-fs-extra--提供的额外功能">a) <strong><code>fs-extra</code>  提供的额外功能</strong></h5>
+<ul>
+<li><strong><code>fs.copy()</code></strong> ：用来复制文件或目录，可以进行深度复制（递归复制目录）。<code>fs</code>  本身没有  <code>copy</code>  方法，需要手动实现。</li>
+<li><strong><code>fs.remove()</code></strong> ：删除文件或目录，包括非空目录。<code>fs.rmdir</code>  只支持删除空目录，而  <code>fs.remove</code>  则可以删除非空目录。</li>
+<li><strong><code>fs.ensureFile()</code></strong> ：确保文件存在，如果文件不存在，则创建文件。等价于  <code>fs.writeFile</code>，但如果目标文件不存在，会先创建空文件，再写入数据。</li>
+<li><strong><code>fs.ensureDir()</code></strong> ：确保目录存在。如果目录不存在，创建目录。类似于  <code>fs.mkdir</code>，但它会自动创建不存在的父目录（递归创建）。</li>
+<li><strong><code>fs.emptyDir()</code></strong> ：清空目录中的所有文件和子目录。</li>
+<li><strong><code>fs.move()</code></strong> ：用来移动文件或目录，类似于  <code>fs.rename</code>，但  <code>fs.rename</code>  在某些文件系统上可能不起作用（例如，跨越不同的文件系统时）。</li>
+<li>如果你只需要简单的文件操作，<code>fs</code>  是足够的。</li>
+<li>如果你需要更多便捷的文件操作，像递归复制、删除非空目录等，或者希望使用更现代的 API（如  <code>async/await</code>），<code>fs-extra</code>  提供了更多功能和更易用的接口。</li>
+</ul>
+<h3 id="源代码地址">源代码地址</h3>
+<p>github <a href="https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2Fgithub-learning%2Fvp-cli-tools" title="https://github.com/github-learning/vp-cli-tools">github.com/github-lear…</a></p>
+<p>npm <a href="https://link.juejin.cn/?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fvp-cli-tools" title="https://www.npmjs.com/package/vp-cli-tools">www.npmjs.com/package/vp-…</a></p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            
