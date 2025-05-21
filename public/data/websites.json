@@ -1,25 +1,11 @@
 {
     "websites": [
         {
-            "name": "GitHub",
-            "url": "https://github.com",
-            "description": "全球最大的开源代码托管平台，为开发者提供Git仓库服务",
-            "category": "工具网站",
-            "icon": "https://github.githubassets.com/favicons/favicon.svg"
-        },
-        {
             "name": "MDN Web Docs",
             "url": "https://developer.mozilla.org",
             "description": "Mozilla的开发者网络，提供Web技术文档和学习资源",
-            "category": "开发文档",
+            "category": "技术文档",
             "icon": "https://developer.mozilla.org/favicon-48x48.png"
-        },
-        {
-            "name": "Dribbble",
-            "url": "https://dribbble.com",
-            "description": "设计师分享作品的平台，展示UI、图标、插画等设计作品",
-            "category": "设计资源",
-            "icon": "https://cdn.dribbble.com/assets/favicon-63b2904a073c89b52b19aa08cebc16a154bcf83fee8ecc6439968b1e6db569c7.ico"
         },
         {
             "name": "Stack Overflow",
@@ -29,66 +15,45 @@
             "icon": "https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196"
         },
         {
-            "name": "Figma",
-            "url": "https://www.figma.com",
-            "description": "基于浏览器的协作式界面设计工具，支持原型设计和交互",
-            "category": "设计资源",
-            "icon": "https://static.figma.com/app/icon/1/favicon.svg"
-        },
-        {
             "name": "CSS-Tricks",
             "url": "https://css-tricks.com",
             "description": "分享CSS技巧和前端开发资源的网站",
-            "category": "技术博客",
+            "category": "资源智选",
             "icon": "https://css-tricks.com/favicon.ico"
         },
         {
             "name": "Coursera",
             "url": "https://www.coursera.org",
             "description": "提供来自顶尖大学和公司的在线课程",
-            "category": "学习平台",
+            "category": "在线课程",
             "icon": "https://d3njjcbhbojbot.cloudfront.net/web/images/favicons/favicon-v2-32x32.png"
-        },
-        {
-            "name": "Unsplash",
-            "url": "https://unsplash.com",
-            "description": "免费高质量图片分享网站，所有图片均可商用",
-            "category": "资源下载",
-            "icon": "https://unsplash.com/favicon.ico"
         },
         {
             "name": "Product Hunt",
             "url": "https://www.producthunt.com",
             "description": "发现新产品和创新科技的平台",
-            "category": "技术博客",
+            "category": "资源智选",
             "icon": "https://ph-static.imgix.net/ph-ios-icon.png"
         },
         {
             "name": "CodePen",
             "url": "https://codepen.io",
             "description": "前端代码分享社区，可在线编辑和预览HTML、CSS和JavaScript",
-            "category": "工具网站",
+            "category": "在线编辑",
             "icon": "https://cpwebassets.codepen.io/assets/favicon/favicon-touch-de50acbf5d634ec6791894eba4ba9cf490f709b3d742597c6fc4b734e6492a5a.png"
-        },
-        {
-            "name": "Behance",
-            "url": "https://www.behance.net",
-            "description": "Adobe旗下的创意作品展示平台",
-            "category": "设计资源",
-            "icon": "https://a5.behance.net/5a5349b1b1a5071eb71fc8ee02976117a5a5b54e/img/site/favicon.ico?cb=264615658"
         },
         {
             "name": "Medium",
             "url": "https://medium.com",
             "description": "高质量文章发布平台，涵盖技术、设计、创业等多个领域",
-            "category": "技术博客",
+            "category": "资源智选",
             "icon": "https://miro.medium.com/v2/resize:fill:500:500/7*GAOKVe--MXbEJmV9230oOQ.png"
         },
         {
             "name": "渐构 Modevol",
             "url": "https://www.modevol.com",
             "description": "生命的遗产是对知识的更新",
-            "category": "学习平台",
+            "category": "在线课程",
             "icon": "https://www.modevol.com/favicon.png"
         },
         {
@@ -116,7 +81,7 @@
             "name": "笔.COOL",
             "url": "https://bi.cool/",
             "description": "在线代码编辑器，助力前端开发与创意展示",
-            "category": "工具网站",
+            "category": "在线编辑",
             "icon": "https://s.bi.cool/logo.svg?t=1"
         },
         {
@@ -125,6 +90,13 @@
             "description": "让 Agent 重塑生产力",
             "category": "AI相关",
             "icon": "https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png"
+        },
+        {
+            "name": "Chrome Devtools Performance",
+            "url": "https://developer.chrome.com/docs/devtools/performance/overview?hl=zh-cn",
+            "description": "分析网站性能",
+            "category": "社区论坛",
+            "icon": "https://www.gstatic.com/devrel-devsite/prod/v6dc4611c4232bd02b2b914c4948f523846f90835f230654af18f87f75fe9f73c/chrome/images/favicon.png"
         }
     ]
 }
