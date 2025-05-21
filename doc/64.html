@@ -1,0 +1,1000 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>整理了ES7到ES14的新特性</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>整理了ES7到ES14的新特性</h1>
+                        <div class="meta">
+                            <time datetime="Wed May 21 2025 18:11:29 GMT+0800 (中国标准时间)">2025/5/21</time>
+                            <div class="tags">
+                                <span class="tag">JavaScript</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <h2 id="es7（ecmascript2016）">ES7（ECMAScript2016）</h2>
+<h2 id="arrayprototypeincludes">Array.prototype.includes()</h2>
+<p>判断一个数组是否包含一个指定的值，根据情况，如果包含则返回 <code>true</code>，否则返回 <code>false</code>。</p>
+<p>该方法有两个参数，第一个参数为要查找的值，第二个参数（可选）是开始搜索的索引（默认从 0 开始）</p>
+<p>第二个参数（下面简称<code>fromIndex</code>）有以下特点</p>
+<ul>
+<li>fromIndex&lt;0 时，相当于从<code>fromIndex + array.length</code>开始搜索，还是从前往后进行搜索</li>
+<li>fromIndex &lt; -array.length 时，相当于从 0 检索整个数组</li>
+<li>fromIndex &gt;= array.length，则不会搜索数组并返回 <code>false</code>。</li>
+</ul>
+<pre><code class="language-js">const arr1 = [1, 2, 3];
+console.log(arr1.includes(1)); // true
+console.log(arr1.includes(1, 1)); // false
+console.log(arr1.includes(2, 1)); // true
+console.log(arr1.includes(2, -1)); // false
+console.log(arr1.includes(2, -2)); // true
+console.log(arr1.includes(2, -100)); // true
+console.log(arr1.includes(2, 3)); // false
+console.log(arr1.includes(2, 100)); // false
+const arr2 = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+console.log(arr2.includes(&quot;a&quot;)); // true
+console.log(arr2.includes(&quot;d&quot;)); // false
+</code></pre>
+<h2 id="幂运算符">幂运算符</h2>
+<p>返回第一个操作数取第二个操作数的幂的结果，即 2 ** 3 表示求 2 的 3 次方，等价于 <code>Math.pow()</code>，不同之处在于，它还接受<code>BigInt</code>作为操作数。</p>
+<pre><code class="language-js">console.log(2 ** 3); // 8
+console.log(BigInt(9007199254740991) ** BigInt(2));
+// 81129638414606663681390495662081n
+</code></pre>
+<h2 id="es8ecmascript2017">ES8(ECMAScript2017)</h2>
+<h2 id="async、await">async、await</h2>
+<p><code>async</code> 和 <code>await</code> 关键字是基于 <code>Generator</code> 函数的语法糖，使得我们可以更简洁地编写基于 promise 的异步代码。</p>
+<p><code>async function</code> 声明创建一个绑定到给定名称的新异步函数。每次调用该异步函数时，都会返回一个新的<code>Promise</code>对象。该函数可以包含零个或者多个<code>await</code>表达式。<code>await</code> 用于等待一个异步方法执行完成，只有当异步完成后才会继续往后执行。</p>
+<pre><code class="language-js">const fn1 = () =&gt;
+  new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(1);
+    }, 500);
+  });
+
+const fn2 = () =&gt;
+  new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(2);
+    }, 500);
+  });
+
+const asyncFn = async () =&gt; {
+  let res1 = await fn1();
+  console.log(res1);
+  let res2 = await fn2();
+  console.log(res2);
+  console.log(3);
+};
+
+asyncFn();
+// 结果会依次输出1，2，3
+</code></pre>
+<p>Async 函数总是返回一个 promise。如果其返回值看起来不是 promise，那么它将会被隐式地包装在一个 promise 中。</p>
+<pre><code class="language-js">async function foo() {
+  return 1;
+}
+
+// 上面的函数类似于下面的函数
+
+function foo() {
+  return Promise.resolve(1);
+}
+</code></pre>
+<h2 id="objectvalues">Object.values()</h2>
+<p>返回一个给定对象的自有可枚举字符串键属性值组成的数组。</p>
+<pre><code class="language-js">const obj = {
+  a: 123,
+  b: &quot;something&quot;,
+  c: true,
+};
+
+console.log(Object.values(obj));
+// [ 123, &#39;something&#39;, true ]
+</code></pre>
+<h2 id="objectentries">Object.entries()</h2>
+<p>返回一个数组，包含给定对象自有的可枚举字符串键属性的键值对。</p>
+<pre><code class="language-js">const obj = {
+  a: 123,
+  b: &quot;something&quot;,
+  c: true,
+};
+
+console.log(Object.entries(obj));
+// [ [ &#39;a&#39;, 123 ], [ &#39;b&#39;, &#39;something&#39; ], [ &#39;c&#39;, true ] ]
+</code></pre>
+<h2 id="objectgetownpropertydescriptors">Object.getOwnPropertyDescriptors()</h2>
+<p>返回给定对象的所有自有属性（包括不可枚举属性）的属性描述符。</p>
+<pre><code class="language-js">const obj = {
+  a: 123,
+};
+
+console.log(Object.getOwnPropertyDescriptors(obj));
+/*
+{
+  a: {
+    value: 123, // 与属性关联的值
+    writable: true, // 值可以更改时，为 true
+    enumerable: true, // 当且仅当此属性在相应对象的属性枚举中出现时，为 true
+    configurable: true, // 当且仅当此属性描述符的类型可以更改且该属性可以从相应对象中删除时，为 true
+  },
+};
+*/
+</code></pre>
+<h2 id="stringprototypepadstart">String.prototype.padStart()</h2>
+<p>用指定字符串从当前字符串的头部填充（如果需要会重复填充），直到达到给定的长度。返回新字符串。</p>
+<p>该方法有两个参数</p>
+<ul>
+<li>第一个参数表示填充后字符串的长度。</li>
+<li>第二个参数为可选（默认为空格），表示用于填充当前 <code>str</code> 的字符串。</li>
+</ul>
+<pre><code class="language-js">const str1 = &quot;abc&quot;;
+const str2 = str1.padStart(5, &quot;-&quot;);
+const str3 = str1.padStart(5);
+const str4 = str1.padStart(2, &quot;-&quot;); // 如果第一个参数小于或等于字符串的长度，则会直接返回当前字符串
+const str5 = str1.padStart(4, &quot;ab&quot;); // 第二个参数过长无法适应给定的长度，则会被截断
+console.log(str1); // &#39;abc&#39;
+console.log(str2); // &#39;--abc&#39;
+console.log(str3); // &#39;  abc&#39;
+console.log(str4); // &#39;abc&#39;
+console.log(str5); // &#39;aabc&#39;
+</code></pre>
+<h2 id="stringprototypepadend">String.prototype.padEnd()</h2>
+<p>与 String.prototype.padStart()类似，用指定字符串从当前字符串的尾部填充（如果需要会重复填充），直到达到给定的长度。返回新字符串。</p>
+<p>该方法有两个参数</p>
+<ul>
+<li>第一个参数表示填充后字符串的长度。</li>
+<li>第二个参数为可选（默认为空格），表示用于填充当前 <code>str</code> 的字符串。</li>
+</ul>
+<pre><code class="language-js">const str1 = &quot;abc&quot;;
+const str2 = str1.padEnd(5, &quot;-&quot;);
+const str3 = str1.padEnd(5);
+const str4 = str1.padEnd(2, &quot;-&quot;); // 如果第一个参数小于或等于字符串的长度，则会直接返回当前字符串
+const str5 = str1.padEnd(4, &quot;ab&quot;); // 第二个参数过长无法适应给定的长度，则会被截断
+console.log(str1); // &#39;abc&#39;
+console.log(str2); // &#39;abc--&#39;
+console.log(str3); // &#39;abc  &#39;
+console.log(str4); // &#39;abc&#39;
+console.log(str5); // &#39;abca&#39;
+</code></pre>
+<h2 id="es9ecmascript2018">ES9(ECMAScript2018)</h2>
+<h2 id="for-awaitof">for await...of</h2>
+<p><strong><code>for await...of</code></strong> 语句创建一个循环，该循环遍历<code>异步可迭代对象</code>以及<code>同步可迭代对象</code>。该语句只能在可以使用 <code>await</code>的上下文中使用。</p>
+<pre><code class="language-js">const fn = (value) =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(value);
+    }, 1000);
+  });
+};
+
+const arr = [fn(1), fn(2), fn(3)];
+
+async function asyncFn() {
+  for await (let item of arr) {
+    console.log(item);
+    console.log(&quot;--&quot;);
+    if (item === 2) {
+      break; // 关闭迭代器，触发返回
+    }
+  }
+}
+
+asyncFn();
+// 控制台打印如下
+// 1
+// --
+// 2
+// --
+</code></pre>
+<pre><code class="language-js">// 同步可迭代也可以
+const arr = [1, 2, 3];
+
+async function asyncFn() {
+  for await (let item of arr) {
+    console.log(item);
+  }
+}
+
+asyncFn();
+</code></pre>
+<pre><code class="language-js">// 由于异步生成器函数的返回值符合异步可迭代协议，因此可以使用 for await...of 来迭代它们。
+async function* asyncGenerator() {
+  let i = 0;
+  while (i &lt; 3) {
+    yield i++;
+  }
+}
+
+(async () =&gt; {
+  for await (const num of asyncGenerator()) {
+    console.log(num);
+  }
+})();
+// 0
+// 1
+// 2
+</code></pre>
+<p><strong><code>Symbol.asyncIterator</code></strong> 符号可以指定一个对象的默认异步迭代器。如果一个对象设置了这个属性，它就是异步可迭代对象，可用于<code>for await...of</code>循环。</p>
+<pre><code class="language-js">const obj = {
+  count: 0,
+  [Symbol.asyncIterator]() {
+    const self = this;
+    return {
+      next() {
+        self.count++;
+        return Promise.resolve({
+          done: self.count &gt; 3,
+          value: self.count,
+        });
+      },
+    };
+  },
+};
+
+(async () =&gt; {
+  for await (const item of obj) {
+    console.log(item);
+  }
+})();
+// 1
+// 2
+// 3
+</code></pre>
+<pre><code class="language-js">const myAsyncIterable = new Object();
+myAsyncIterable[Symbol.asyncIterator] = async function* () {
+  yield &quot;hello&quot;;
+  yield &quot;async&quot;;
+  yield &quot;iteration!&quot;;
+};
+
+(async () =&gt; {
+  for await (const x of myAsyncIterable) {
+    console.log(x);
+  }
+})();
+//  &quot;hello&quot;
+//  &quot;async&quot;
+//  &quot;iteration!&quot;
+</code></pre>
+<h2 id="展开语法-spread-syntax">展开语法 (Spread syntax)</h2>
+<pre><code class="language-js">const obj1 = {
+  a: 1,
+  b: 2,
+};
+
+const obj2 = {
+  ...obj1,
+  c: 3,
+};
+
+console.log(obj2); // { a: 1, b: 2, c: 3 }
+</code></pre>
+<h2 id="剩余语法-rest-syntax">剩余语法 (Rest syntax)</h2>
+<pre><code class="language-js">const fn = (a, ...rest) =&gt; {
+  console.log(a); // 1
+  console.log(rest); // [ 2, 3, 4 ]
+};
+
+fn(1, 2, 3, 4);
+</code></pre>
+<pre><code class="language-js">const obj1 = {
+  a: 1,
+  b: 2,
+  c: 3,
+};
+
+const { a, ...rest } = obj1;
+console.log(a); // 1
+console.log(rest); // { b: 2, c: 3 }
+</code></pre>
+<h2 id="promiseprototypefinally">Promise.prototype.finally()</h2>
+<p>Finally 可以注册一个方法并返回一个<code>Promise</code>，在<code>promise</code>执行结束时，无论结果是<code>fulfilled</code>或者是<code>rejected</code>都会执行<code>finally</code>指定的回调函数。可以避免在 promise 的 <code>then()</code>和<code>catch()</code> 处理器中重复编写代码。</p>
+<pre><code class="language-js">function checkMail() {
+  return new Promise((resolve, reject) =&gt; {
+    if (Math.random() &gt; 0.5) {
+      resolve(&quot;Mail has arrived&quot;);
+    } else {
+      reject(new Error(&quot;Failed to arrive&quot;));
+    }
+  });
+}
+
+checkMail()
+  .then((mail) =&gt; {
+    console.log(mail);
+  })
+  .catch((err) =&gt; {
+    console.error(err);
+  })
+  .finally(() =&gt; {
+    console.log(&quot;Experiment completed&quot;);
+  });
+</code></pre>
+<h2 id="正则表达式具名捕获组">正则表达式具名捕获组</h2>
+<p><code>(?&lt;Name&gt;x)</code>，具名捕获组，匹配&quot;x&quot;并将其存储在返回的匹配项的 groups 属性中，该属性位于<code>&lt;Name&gt;</code>指定的名称下。尖括号 (<code>&lt;</code> 和 <code>&gt;</code>) 用于组名。</p>
+<pre><code class="language-js">const reg = /(?&lt;year&gt;[0-9]{4})-(?&lt;month&gt;[0-9]{2})-(?&lt;day&gt;[0-9]{2})/;
+const match = reg.exec(&quot;2021-02-23&quot;);
+console.log(match.groups[&quot;year&quot;]); // 2021
+console.log(match.groups[&quot;month&quot;]); // 02
+console.log(match.groups[&quot;day&quot;]); // 23
+</code></pre>
+<h2 id="es10ecmascript2019">ES10(ECMAScript2019)</h2>
+<h2 id="stringprototypetrimstart">String.prototype.trimStart()</h2>
+<p><code>String</code> 的 <strong><code>trimStart()</code></strong> 方法会从字符串的开头移除空白字符，并返回一个新的字符串，而不会修改原始字符串。</p>
+<p><code>trimLeft()</code> 是该方法的别名。目前已被标为弃用。</p>
+<pre><code class="language-js">const str = &quot; hello world &quot;;
+console.log(str.trimStart()); // &quot;hello world &quot;
+</code></pre>
+<h2 id="stringprototypetrimend">String.prototype.trimEnd()</h2>
+<p><code>String</code> 的 <strong><code>trimEnd()</code></strong> 方法会从字符串的结尾移除空白字符，并返回一个新的字符串，而不会修改原始字符串。<code>trimRight()</code> 是该方法的别名。目前已被标为弃用。</p>
+<pre><code class="language-js">const str = &quot; hello world &quot;;
+console.log(str.trimEnd()); // &quot; hello world&quot;
+</code></pre>
+<h2 id="arrayprototypeflat">Array.prototype.flat()</h2>
+<p><strong><code>flat()</code></strong> 方法创建一个新的数组，并根据指定深度递归地将所有子数组元素拼接到新的数组中。</p>
+<p>该方法有一个可选参数 depth，指定要提取嵌套数组的结构深度，默认值为 1。</p>
+<pre><code class="language-js">const arr = [1, [2, 3], 4, 5];
+console.log(arr.flat()); // [ 1, 2, 3, 4, 5 ]
+const arr2 = [1, [2, [3, 4]], 5, 6];
+console.log(arr2.flat()); // [ 1, 2, [ 3, 4 ], 5, 6 ]
+console.log(arr2.flat(2)); // [ 1, 2, 3, 4, 5, 6 ]
+const arr3 = [1, [2, [3, 4]], [5, [6, [7, [8, [9]]]]]];
+console.log(arr3.flat(Infinity)); // [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+</code></pre>
+<h2 id="arrayprototypeflatmap">Array.prototype.flatMap()</h2>
+<p><strong><code>flatMap()</code></strong> 方法对数组中的每个元素应用给定的回调函数，然后将结果展开一级，返回一个新数组。</p>
+<p>它等价于在调用<code>map()</code>方法后再调用深度为 1 的 <code>flat()</code>（<code>arr.map(...args).flat()</code>），但比分别调用这两个方法稍微更高效一些。</p>
+<pre><code class="language-js">const arr = [1, [2, 3], 4, 5];
+function flatMapArr(list) {
+  return list.flatMap((e) =&gt; {
+    if (e.length) {
+      return flatMapArr(e);
+    } else {
+      return e * 2;
+    }
+  });
+}
+console.log(flatMapArr(arr)); // [ 2, 4, 6, 8, 10 ]
+
+const arr = [1, 2, 3, 4];
+console.log(
+  arr.flatMap((e) =&gt; {
+    if (e % 2 === 0) {
+      return [e, e * 2];
+    } else {
+      return e;
+    }
+  })
+); // [ 1, 2, 4, 3, 4, 8 ]
+</code></pre>
+<h2 id="functionprototypetostring">Function.prototype.toString()</h2>
+<p>Function 也是对象，对象有 toString() 的方法（Object.prototype.toString()），Function 对象重写了<code>toString()</code> 方法，而没有继承<code>toString</code>。</p>
+<p>对于用户定义的 <code>Function</code> 对象，<code>toString</code> 方法返回一个字符串，其中包含用于定义函数的源文本段。</p>
+<pre><code class="language-js">function fn(a, b) {
+  // 注释文本
+  return a + b;
+}
+
+console.log(fn.toString());
+/**
+function fn(a, b) {
+  // 注释文本
+  return a + b;
+}
+ */
+
+const fn2 = (a, b) =&gt; {
+  // 我是注释
+  return a + b;
+};
+console.log(fn2.toString());
+/**
+(a, b) =&gt; {
+  // 我是注释
+  return a + b;
+}
+ */
+</code></pre>
+<h2 id="objectfromentries">Object.fromEntries()</h2>
+<p>与上面的 Object.entries()相反，**<code>Object.fromEntries()</code>** 静态方法将键值对列表转换为一个对象。</p>
+<pre><code class="language-js">const arr = [
+  [&quot;a&quot;, 1],
+  [&quot;b&quot;, 2],
+  [&quot;c&quot;, 3],
+];
+console.log(Object.fromEntries(arr)); // { a: 1, b: 2, c: 3 }
+
+const set = new Set([
+  [&quot;a&quot;, 1],
+  [&quot;b&quot;, 2],
+  [&quot;c&quot;, 3],
+]);
+console.log(Object.fromEntries(set)); // { a: 1, b: 2, c: 3 }
+
+const map = new Map([
+  [&quot;a&quot;, 1],
+  [&quot;b&quot;, 2],
+  [&quot;c&quot;, 3],
+]);
+console.log(Object.fromEntries(map)); // { a: 1, b: 2, c: 3 }
+</code></pre>
+<pre><code class="language-js">const obj = {
+  a: 1,
+  b: 2,
+  c: 3,
+};
+const obj2 = Object.fromEntries(
+  Object.entries(obj).map(([key, value]) =&gt; [key, value * 2])
+);
+console.log(obj2); // { a: 2, b: 4, c: 6 }
+</code></pre>
+<h2 id="symbolprototypedescription">Symbol.prototype.description</h2>
+<p><strong><code>description</code></strong> 是一个只读属性，它会返回 <code>Symbol</code> 对象的可选描述的字符串。</p>
+<pre><code class="language-js">console.log(Symbol(&quot;test&quot;).description); // test
+console.log(Symbol.iterator.description); // Symbol.iterator
+console.log(Symbol.for(&quot;desc&quot;).description); // desc
+</code></pre>
+<h2 id="可选的-catch-绑定">可选的 Catch 绑定</h2>
+<pre><code class="language-js">try {
+  // try code
+} catch (error) {
+  // catch code
+}
+
+try {
+  // try code
+} catch {
+  // catch code
+}
+// 现在catch中可以不添加参数
+</code></pre>
+<h2 id="es11ecmascript2020">ES11(ECMAScript2020)</h2>
+<h2 id="stringprototypematchall">String.prototype.matchAll()</h2>
+<p><strong><code>matchAll()</code></strong> 方法返回一个迭代器，该迭代器包含了检索字符串与<code>正则表达式</code>进行匹配的所有结果。</p>
+<pre><code class="language-js">const str = &quot;test1 apple test2 orange test3&quot;;
+for (const match of str.matchAll(/test\d/g)) {
+  console.log(
+    `找到了${match[0]}，起始位置为：${match.index}, 结束位置为：${
+      match.index + match[0].length
+    }`
+  );
+}
+// 找到了test1，起始位置为：0, 结束位置为：5
+// 找到了test2，起始位置为：12, 结束位置为：17
+// 找到了test3，起始位置为：25, 结束位置为：30
+</code></pre>
+<h2 id="bigint">BigInt</h2>
+<p>一个内置对象，可以表示任意大的整数。</p>
+<p>Js 中 Number 类型只能安全的表示-(2^53-1)至 2^53-1 范的值，BigInt 可以超出 2 的 53 次方。</p>
+<p>可以用在一个整数字面量后面加 <code>n</code> 的方式定义一个 <code>BigInt</code>，或者调用函数 <code>BigInt()</code></p>
+<pre><code class="language-js">const num1 = 9007199254740991n;
+const num2 = BigInt(9007199254740991);
+const num3 = BigInt(0b1111111111111111111);
+const num4 = BigInt(0xfffffffffffff);
+</code></pre>
+<p>BigInt 在某些方面类似于 <code>Number</code>，但是也有几个关键的不同点：不能用于<code>Math</code>对象中的方法；不能和任何 <code>Number</code>实例混合运算，两者必须转换成同一种类型。在两种类型来回转换时要小心，因为 <code>BigInt</code> 变量在转换成 <code>Number</code>变量时可能会丢失精度。</p>
+<p>BigInt 可以用于这些运算符<code>+</code>、<code>*</code>、<code>-</code>、<code>**</code>、<code>%</code>，以及除 <code>&gt;&gt;&gt;</code> （无符号右移）之外的位运算符，因为 <code>BigInt</code> 都是有符号的， <code>&gt;&gt;&gt;</code> （无符号右移）不能用于 <code>BigInt</code>。<code>BigInt</code> 不支持单目 (<code>+</code>) 运算符。</p>
+<p>当使用 <code>BigInt</code> 时，带小数的运算会被取整。</p>
+<pre><code class="language-js">console.log(BigInt(5) / BigInt(2)); // 2n
+</code></pre>
+<h2 id="promiseallsettled">Promise.allSettled()</h2>
+<p><code>Promise.all()</code>接受一个 Promise 可迭代对象作为输入，并返回一个单独的<code>promise</code>，但是该方法输入的 Promise 中有任何 Promise 被 reject，则返回的 Promise 将进入 reject 状态，并带有第一个被拒绝的原因。</p>
+<p>而**<code>Promise.allSettled()</code>** 则当所有输入的 Promise 都已敲定时（包括传入空的可迭代对象时），返回的 Promise 将被兑现，并带有描述每个 Promise 结果的对象数组。</p>
+<pre><code class="language-js">const p1 = Promise.resolve(1);
+const p2 = 2;
+const p3 = Promise.reject(3);
+
+Promise.all([p1, p2, p3])
+  .then((data) =&gt; {
+    console.log(&quot;Promise.all then:&quot;, data);
+  })
+  .catch((err) =&gt; {
+    console.log(&quot;Promise.all catch:&quot;, err);
+  });
+
+Promise.allSettled([p1, p2, p3])
+  .then((data) =&gt; {
+    console.log(&quot;Promise.allSettled then:&quot;, data);
+  })
+  .catch((err) =&gt; {
+    console.log(&quot;Promise.allSettled catch:&quot;, err);
+  });
+
+// 打印结果如下
+/*
+Promise.allSettled then: [
+  { status: &#39;fulfilled&#39;, value: 1 },
+  { status: &#39;fulfilled&#39;, value: 2 },
+  { status: &#39;rejected&#39;, reason: 3 }
+]
+Promise.all catch: 3
+*/
+</code></pre>
+<h2 id="globalthis">globalThis</h2>
+<p>不同的 JavaScript 环境中获取全局对象需要不同的语句。</p>
+<ul>
+<li>在 Web 中，可以通过 <code>window</code>、<code>self</code> 或者 <code>frames</code> 取到全局对象。</li>
+<li>但是在 Web Workers 中，只有 <code>self</code> 可以。</li>
+<li>在 Node.js 中，必须使用 <code>global</code>。</li>
+</ul>
+<p><code>globalThis</code> 提供了一个标准的方式来获取不同环境下的全局 <code>this</code> 对象（也就是全局对象自身）。</p>
+<h2 id="可选链运算符（）">可选链运算符（?.）</h2>
+<p>通过连接的对象的引用或函数可能是 <code>undefined</code> 或 <code>null</code> 时，可选链运算符提供了一种方法来简化被连接对象的值访问。</p>
+<p>在引用为空(<code>null</code>或者<code>undefined</code>) 的情况下不会引起错误，可选链表达式短路返回值是 <code>undefined</code>。</p>
+<pre><code class="language-js">const obj = {
+  name: &quot;jack&quot;,
+  cat: {
+    name: &quot;mimi&quot;,
+    age: 6,
+  },
+};
+
+console.log(obj.dog?.age); // undefined
+console.log(obj.run?.()); // undefined
+</code></pre>
+<h2 id="空值合并运算符（）">空值合并运算符（??）</h2>
+<p><strong>空值合并运算符</strong>（**<code>??</code>**）是一个逻辑运算符，当左侧的操作数为<code>null</code>或者<code>undefined</code>时，返回其右侧操作数，否则返回左侧操作数。</p>
+<p>与逻辑或运算符不同的是，当左侧的操作数为假值（即在布尔上下文中认定为 false 的值，比如<code>&#39;&#39;</code> 或 <code>0</code>）时，会返回其右侧操作数。</p>
+<pre><code class="language-js">const valA = false ?? 1;
+const valB = 0 ?? 1;
+const valC = null ?? 1;
+const valD = undefined ?? 1;
+
+console.log(valA, valB, valC, valD); // false 0 1 1
+</code></pre>
+<h2 id="dynamic-import">Dynamic Import()</h2>
+<p>ES Module 是一套静态的模块系统，在之前，import/export 声明只能出现在顶层作用域，不支持按需加载、懒加载。但是现在已经支持动态加载模块了。</p>
+<pre><code class="language-js">const btn = document.querySelector(&quot;.button&quot;);
+btn.addEventListener(&quot;click&quot;, () =&gt; {
+  import(&quot;./resources.js&quot;).then((res) =&gt; {
+    console.log(res);
+  });
+});
+</code></pre>
+<h2 id="importmeta">import.meta</h2>
+<p><code>import.meta</code>是一个给 JavaScript 模块暴露特定上下文的元数据属性的对象。它包含了这个模块的信息，比如说这个模块的 URL。</p>
+<pre><code class="language-js">console.log(import.meta.url);
+</code></pre>
+<h2 id="export-as-from">export-as-from</h2>
+<p>聚合模块，导入并导出</p>
+<pre><code class="language-js">export * as module from &quot;module-name&quot;;
+
+// 相当于
+
+import * as module from &quot;module-name&quot;;
+export { module };
+</code></pre>
+<pre><code class="language-js">export * from &quot;module-name&quot;;
+export * as name1 from &quot;module-name&quot;;
+export { name1, /* …, */ nameN } from &quot;module-name&quot;;
+export {
+  import1 as name1,
+  import2 as name2,
+  /* …, */ nameN,
+} from &quot;module-name&quot;;
+export { default /* …, */ } from &quot;module-name&quot;;
+export { default as name1 } from &quot;module-name&quot;;
+</code></pre>
+<h2 id="es12ecmascript2021">ES12(ECMAScript2021)</h2>
+<h2 id="stringprototypereplaceall">String.prototype.replaceAll()</h2>
+<p>与 replace 类似，该方法有两个参数<code>replaceAll(pattern, replacement)</code>，**<code>replaceAll()</code>** 方法返回一个新字符串，其中所有匹配 <code>pattern</code> 的部分都被替换为 <code>replacement</code>。<code>pattern</code> 可以是一个字符串或一个 <code>RegExp</code>，<code>replacement</code> 可以是一个字符串或一个在每次匹配时调用的函数。原始字符串保持不变。</p>
+<pre><code class="language-js">const str = &quot;My dog is bigger than your dog&quot;;
+const newStr = str.replaceAll(&quot;dog&quot;, &quot;cat&quot;);
+console.log(newStr); // My cat is bigger than your cat
+</code></pre>
+<h2 id="promiseany">Promise.any()</h2>
+<p><code>Promise.any()</code>将一个 Promise 可迭代对象作为输入，返回第一个成功的值。与<code>Promise.race()</code>不同的是，<code>Promise.race()</code>是第一个 promise 敲定（resolve 或 reject）时返回。当所有输入 Promise 都被 reject 时，会以一个包含拒绝原因数组的<code>AggregateError</code>拒绝。</p>
+<pre><code class="language-js">const p1 = Promise.reject(1);
+const p2 = Promise.reject(2);
+const p3 = Promise.resolve(3);
+
+Promise.race([p1, p2, p3])
+  .then((data) =&gt; {
+    console.log(data);
+  })
+  .catch((err) =&gt; {
+    console.log(err); // 1
+  });
+
+Promise.any([p1, p2, p3])
+  .then((data) =&gt; {
+    console.log(data); // 3
+  })
+  .catch((err) =&gt; {
+    console.log(err);
+  });
+
+Promise.any([p1, p2])
+  .then((data) =&gt; {
+    console.log(data);
+  })
+  .catch((err) =&gt; {
+    console.log(err); // [AggregateError: All promises were rejected] { [errors]: [ 1, 2 ] }
+  });
+</code></pre>
+<h2 id="逻辑赋值">逻辑赋值</h2>
+<h3 id="">&amp;&amp;=</h3>
+<p><strong>逻辑与赋值</strong>（<code>x &amp;&amp;= y</code>）运算仅在 <code>x</code> 为真值（布尔转换后为 true 的值）时为其赋值。</p>
+<pre><code class="language-js">let a = 0;
+let b = 1;
+
+a &amp;&amp;= b;
+console.log(a); // 0
+b &amp;&amp;= a;
+console.log(b); // 0
+</code></pre>
+<h3 id="-1">||=</h3>
+<p>逻辑或赋值（<code>x ||= y</code>）运算仅在 <code>x</code> 为假值（布尔转换后为 false 的值）时为其赋值。</p>
+<pre><code class="language-js">let a = 0;
+let b = 1;
+
+a ||= b;
+console.log(a); // 1
+b ||= a;
+console.log(b); // 1
+</code></pre>
+<h3 id="-2">??=</h3>
+<p>逻辑空赋值运算符（<code>x ??= y</code>）仅在 <code>x</code> 是空值（<code>null</code> 或 <code>undefined</code>）时对其赋值。</p>
+<pre><code class="language-js">let a = 0;
+let b = undefined;
+let c = 1;
+
+a ??= 2;
+console.log(a); // 0
+b ??= 2;
+console.log(b); // 2
+c ??= 2;
+console.log(c); // 1
+</code></pre>
+<h2 id="数值分隔符">数值分隔符</h2>
+<p>定义 number 数据时，可以使用<code>_</code>分割符，让数据更美观清晰。</p>
+<pre><code class="language-js">const num1 = 10_00_000_000;
+console.log(num1); // 1000000000
+const num2 = 1_1n;
+console.log(num2); // 11n
+const num3 = 0b11011_101;
+console.log(num3); // 221
+</code></pre>
+<h2 id="weakref">WeakRef</h2>
+<p><strong><code>WeakRef</code></strong> 对象允许你保留对另一个对象的弱引用。</p>
+<p>对象的<em>弱引用</em>是指该引用不会阻止 GC 回收这个对象。而与此相反的，一个普通的引用（或者说<em>强引用</em>）会将与之对应的对象保存在内存中。只有当该对象没有任何的强引用时，JavaScript 引擎 GC 才会销毁该对象并且回收该对象所占的内存空间。如果上述情况发生了，那么你就无法通过任何的弱引用来获取该对象。</p>
+<p>使用<code>deref()</code> 可以返回当前实例的 WeakRef 对象所绑定的 target 对象，如果该 target 对象已被 GC 回收则返回<code>undefined</code></p>
+<pre><code class="language-js">let obj = { a: 1 };
+const weakRef = new WeakRef(obj);
+console.log(weakRef.deref()); // { a: 1 }
+</code></pre>
+<h2 id="es13ecmascript2022">ES13(ECMAScript2022)</h2>
+<h2 id="class-声明式的类字段">Class 声明式的类字段</h2>
+<p>在之前，如果要声明类字段，只能在 constructor 中通过向 this 赋值实现</p>
+<p>现在则可以直接在最外层书写声明式的类字段</p>
+<pre><code class="language-js">// old
+class Person {
+  constructor() {
+    this.name = &quot;John&quot;;
+  }
+}
+
+// new
+class Person {
+  name = &quot;John&quot;;
+}
+</code></pre>
+<h2 id="class-私有属性">Class 私有属性</h2>
+<p>我们可以通过添加<code>#</code>前缀来创建私有属性，私有属性在类的外部无法合法地引用。</p>
+<pre><code class="language-js">class Animal {
+  #name = &quot;mimi&quot;;
+
+  #takeName(val) {
+    this.#name = val;
+  }
+
+  get name() {
+    return this.#name;
+  }
+
+  set name(val) {
+    this.#takeName(val);
+  }
+}
+
+const animalOne = new Animal();
+console.log(animalOne.name); // mimi
+animalOne.name = &quot;doudou&quot;;
+console.log(animalOne.name); // doudou
+
+console.log(ClassOne.#name); // 报错
+console.log(ClassOne.#takeName); // 报错
+</code></pre>
+<p>私有静态属性，一样添加<code>#</code> 前缀创建</p>
+<pre><code class="language-js">class Animal {
+  static #name = &quot;mimi&quot;;
+
+  static #takeName(val) {
+    this.#name = val;
+  }
+
+  static get name() {
+    return this.#name;
+  }
+
+  static set name(val) {
+    this.#takeName(val);
+  }
+}
+
+console.log(Animal.name); // mimi
+Animal.name = &quot;doudou&quot;;
+console.log(Animal.name); // doudou
+
+console.log(Animal.#name); // 报错
+console.log(Animal.#takeName); // 报错
+</code></pre>
+<h2 id="扩展了-in-操作符对于私有属性的检查">扩展了 in 操作符对于私有属性的检查</h2>
+<pre><code class="language-js">class Animal {
+  #name = &quot;mimi&quot;;
+
+  hasName() {
+    return #name in this;
+  }
+}
+
+const myAnimal = new Animal();
+console.log(myAnimal.hasName()); // true
+</code></pre>
+<h2 id="static-静态初始化块">static 静态初始化块</h2>
+<p><strong><code>static</code></strong> 关键字除了定义<code>静态方法和字段</code>外，现在还可以定义静态初始化块。</p>
+<p>在类中可以通过<code>static</code>关键字定义一系列静态代码块，这些代码块会在类被创造时<strong>执行一次</strong>。</p>
+<pre><code class="language-js">class Animal {
+  static name = &quot;mimi&quot;;
+
+  static {
+    this.name = &quot;doudou&quot;;
+  }
+}
+
+console.log(Animal.name); // doudou
+</code></pre>
+<h2 id="await-可以在模块最外层使用">await 可以在模块最外层使用</h2>
+<p>await 除了在 async 函数中使用，还可以在模块最外层使用。</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  const fn = () =&gt; Promise.resolve(1);
+  await fn();
+&lt;/script&gt;
+</code></pre>
+<p>尝试上面代码打开页面会发现，页面报错了，报错如下</p>
+<img src="./images/05.awebp" />
+
+<p>这是因为要在模块的最外层（或者叫顶级主体）才有效，注意是 模块。</p>
+<p>修改 script 标签为 module 后，发现代码正常生效了。</p>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+  const fn = () =&gt; Promise.resolve(1);
+  await fn();
+&lt;/script&gt;
+</code></pre>
+<h2 id="arrayprototypeat">Array.prototype.at()</h2>
+<p><strong><code>at()</code></strong> 方法接收一个整数值并返回该索引对应的元素，允许正数和负数。负整数从数组中的最后一个元素开始倒数。</p>
+<pre><code class="language-js">const arr = [1, 2, 3, 4, 5, 6];
+
+console.log(arr.at(2)); // 3
+console.log(arr.at(-2)); // 5
+</code></pre>
+<h2 id="stringprototypeat">String.prototype.at()</h2>
+<p>与上面类似，接收一个整数值并返回一个新的字符串，该字符串由位于指定偏移量处的单个 UTF-16 码元组成。允许正整数和负整数。负整数从数组中的最后一个元素开始倒数。</p>
+<pre><code class="language-js">const str = &quot;abcdefghijk&quot;;
+
+console.log(str.at(2)); // c
+console.log(str.at(-2)); // j
+</code></pre>
+<h2 id="objecthasown">Object.hasOwn()</h2>
+<p>该方法接收两个参数，第一个是 js 对象，第二个是测试的属性，string 或 Symbol。</p>
+<p>如果指定的对象<em>自身</em>有指定的属性，则静态方法 <strong><code>Object.hasOwn()</code></strong> 返回 <code>true</code>。如果属性是继承的或者不存在，该方法返回 <code>false</code>。</p>
+<pre><code class="language-js">let obj = {
+  a: 1,
+};
+console.log(Object.hasOwn(obj, &quot;a&quot;)); // true
+console.log(Object.hasOwn(obj, &quot;toString&quot;)); // false
+
+let arr = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+console.log(Object.hasOwn(arr, 2)); // true
+console.log(Object.hasOwn(arr, 3)); // false
+</code></pre>
+<p><code>Object.hasOwn()</code> 旨在取代 <code>Object.prototype.hasOwnProperty()</code>。在支持 <code>Object.hasOwn</code>的浏览器中，建议使用 <code>Object.hasOwn()</code>，而非 <code>hasOwnProperty()</code>。</p>
+<p>因为<code>Object.prototype.hasOwnProperty()</code>会有以下问题</p>
+<p>1、JavaScript 并不保护属性名称 <code>hasOwnProperty</code>；具有此名称(hasOwnProperty)属性的对象可能会返回不正确的结果：</p>
+<pre><code class="language-js">const obj = {
+  hasOwnProperty() {
+    return false;
+  },
+  a: 1,
+};
+console.log(obj.hasOwnProperty(&quot;a&quot;)); // false
+console.log(Object.hasOwn(obj, &quot;a&quot;)); // true
+</code></pre>
+<p>2、因为<code>hasOwnProperty</code>在<code>Object.Object.prototype</code>中，使用<code>Object.create(null)</code> 创建的对象不从 <code>Object.prototype</code> 继承，使得 <code>hasOwnProperty()</code> 不可访问。</p>
+<pre><code class="language-js">const obj = Object.create(null);
+obj.a = 1;
+console.log(obj.hasOwnProperty(&quot;a&quot;)); // 报错，TypeError: obj.hasOwnProperty is not a function
+console.log(Object.hasOwn(obj, &quot;a&quot;)); // true
+</code></pre>
+<h2 id="error-cause">Error: cause</h2>
+<p><code>Error</code>实例中的 <strong><code>cause</code></strong> 数据属性指示导致该错误的具体原始原因。</p>
+<p>它通过 <code>options.cause</code> 参数被传入<code>Error()</code>构造函数，并且有可能不存在。</p>
+<pre><code class="language-js">function isNumber(val) {
+  if (Object.prototype.toString.call(val) !== &quot;[object Number]&quot;) {
+    throw new Error(&quot;error&quot;, {
+      cause: { message: &quot;该参数类型不是数值&quot;, input: val },
+    });
+  }
+}
+
+try {
+  isNumber(&quot;a&quot;);
+} catch (error) {
+  console.log(error.cause); // { message: &#39;该参数类型不是数值&#39;, input: &#39;a&#39; }
+}
+</code></pre>
+<h2 id="arrayprototypefindlast">Array.prototype.findLast()</h2>
+<p><strong><code>findLast()</code></strong> 方法反向迭代数组，也就是从尾部开始查找并返回满足提供的测试函数的第一个元素的值。如果没有找到对应元素，则返回 <code>undefined</code>。</p>
+<p>与<code>find</code>方法查找方向相反，<code>find</code>是从头部开始查找。</p>
+<pre><code class="language-js">const arr = [1, 2, 3, 4, 5, 6];
+console.log(arr.findLast((e) =&gt; e % 2 === 0)); // 6
+</code></pre>
+<h2 id="arrayprototypefindlastindex">Array.prototype.findLastIndex()</h2>
+<p><strong><code>findLastIndex()</code></strong> 方法反向迭代数组，也就是从尾部开始查找并返回满足所提供的测试函数的第一个元素的索引。若没有找到对应元素，则返回 -1。</p>
+<p>与<code>findIndex</code>方法查找方向相反，<code>findIndex</code>是从头部开始查找。</p>
+<pre><code class="language-js">const arr = [1, 2, 3, 4, 5, 6];
+console.log(arr.findLastIndex((e) =&gt; e % 2 === 0)); // 5
+</code></pre>
+<h2 id="regexp-扩展">RegExp 扩展</h2>
+<p>通过给正则表示式添加 d 标签，<code>RegExp.prototype.exec()</code>，<code>String.prototype.match</code> 等的结果会附加了一个 <code>indices</code> 属性。</p>
+<p><code>indices</code> 属性本身是一个索引数组，其中包含每个捕获的子字符串的一对开始索引和结束索引。</p>
+<pre><code class="language-js">const text = &quot;apple&quot;;
+const reg = /pp/d;
+console.log(reg.exec(text));
+/*
+[
+  &#39;pp&#39;,
+  index: 1,
+  input: &#39;apple&#39;,
+  groups: undefined,
+  indices: [ [ 1, 3 ], groups: undefined ]
+]
+*/
+</code></pre>
+<p>另外，索引数组本身将具有一个 groups 属性，其中包含每个具名捕获组的开始索引和结束索引。</p>
+<pre><code class="language-js">let users = `名单：姓氏：李，名字：雷`;
+let regexpNames = /姓氏：(?&lt;first&gt;.+)，名字：(?&lt;last&gt;.+)/d;
+const res = regexpNames.exec(users);
+console.log(res);
+/*
+[
+  &#39;姓氏：李，名字：雷&#39;,
+  &#39;李&#39;,
+  &#39;雷&#39;,
+  index: 3,
+  input: &#39;名单：姓氏：李，名字：雷&#39;,
+  groups: [Object: null prototype] { first: &#39;李&#39;, last: &#39;雷&#39; },
+  indices: [
+    [ 3, 12 ],
+    [ 6, 7 ],
+    [ 11, 12 ],
+    groups: [Object: null prototype] { first: [Array], last: [Array] }
+  ]
+]
+*/
+console.log(users.slice(res.indices[0][0], res.indices[0][1])); // 姓氏：李，名字：雷
+console.log(users.slice(res.indices[1][0], res.indices[1][1])); // 李
+console.log(users.slice(res.indices[2][0], res.indices[2][1])); // 雷
+console.log(res.indices.groups[&quot;first&quot;]); // [6, 7]
+console.log(res.indices.groups[&quot;last&quot;]); // [11, 12]
+</code></pre>
+<h2 id="es14ecmascript2023">ES14(ECMAScript2023)</h2>
+<h2 id="arrayprototypetosorted">Array.prototype.toSorted()</h2>
+<p><code>Array</code>实例的 <strong><code>toSorted()</code></strong> 方法是<code>sort()</code>方法的复制方法版本。它返回一个新数组，而<code>sort()</code>会修改原数组。</p>
+<p><code>sort()</code>和<code>toSorted()</code>参数一样。</p>
+<pre><code class="language-js">const arr1 = [2, 1, 4, 5, 3];
+const arr2 = arr1.toSorted();
+console.log(&quot;原数组：&quot;, arr1, &quot;\n&quot;, &quot;返回的数组：&quot;, arr2);
+// 原数组： [ 2, 1, 4, 5, 3 ]
+// 返回的数组：[1, 2, 3, 4, 5]
+
+const arr3 = [2, 1, 4, 5, 3];
+const arr4 = arr3.sort();
+console.log(&quot;原数组：&quot;, arr3, &quot;\n&quot;, &quot;返回的数组：&quot;, arr4);
+// 原数组： [ 1, 2, 3, 4, 5 ]
+// 返回的数组： [ 1, 2, 3, 4, 5 ]
+</code></pre>
+<h2 id="arrayprototypetoreversed">Array.prototype.toReversed()</h2>
+<p><code>Array</code> 实例的<code>toReversed()</code>方法是<code>reverse()</code>方法对应的复制版本。它返回一个元素顺序相反的新数组，而<code>reverse()</code>会修改原数组。</p>
+<pre><code class="language-js">const arr1 = [1, 2, 3, 4];
+const arr2 = arr1.toReversed();
+console.log(&quot;原数组：&quot;, arr1, &quot;\n&quot;, &quot;返回的数组：&quot;, arr2);
+// 原数组： [ 1, 2, 3, 4 ]
+// 返回的数组： [ 4, 3, 2, 1 ]
+
+const arr3 = [1, 2, 3, 4];
+const arr4 = arr3.reverse();
+console.log(&quot;原数组：&quot;, arr3, &quot;\n&quot;, &quot;返回的数组：&quot;, arr4);
+// 原数组： [ 4, 3, 2, 1 ]
+// 返回的数组： [ 4, 3, 2, 1 ]
+</code></pre>
+<h2 id="arrayprototypetospliced">Array.prototype.toSpliced()</h2>
+<p><code>Array</code>实例的<code>toSpliced()</code>方法是<code>splice()</code>的复制版本。它返回一个新数组，新数组为删除/添加/替换后的新数组。不会修改原数组。</p>
+<p>而<code>splice()</code>会修改原数组，该方法返回的是包含了删除的元素的数组。</p>
+<pre><code class="language-js">const arr1 = [&quot;jack&quot;, &quot;mike&quot;, &quot;jay&quot;, &quot;lucy&quot;];
+const arr2 = arr1.toSpliced(1, 2, &quot;depp&quot;);
+console.log(&quot;原数组：&quot;, arr1, &quot;\n&quot;, &quot;返回的数组：&quot;, arr2);
+// 原数组： [ &#39;jack&#39;, &#39;mike&#39;, &#39;jay&#39;, &#39;lucy&#39; ]
+// 返回的数组： [ &#39;jack&#39;, &#39;depp&#39;, &#39;lucy&#39; ]
+
+const arr3 = [&quot;jack&quot;, &quot;mike&quot;, &quot;jay&quot;, &quot;lucy&quot;];
+const arr4 = arr3.splice(1, 2, &quot;depp&quot;);
+console.log(&quot;原数组：&quot;, arr3, &quot;\n&quot;, &quot;返回的数组：&quot;, arr4);
+// 原数组： [ &#39;jack&#39;, &#39;depp&#39;, &#39;lucy&#39; ]
+// 返回的数组： [ &#39;mike&#39;, &#39;jay&#39; ]
+</code></pre>
+<h2 id="arrayprototypewith">Array.prototype.with()</h2>
+<p><code>Array</code>实例的 <strong><code>with()</code></strong> 方法是使用方括号表示法修改指定索引值的复制方法版本。它会返回一个新数组，其指定索引处的值会被新值替换。</p>
+<p>该方法接收两个参数，第一个参数为要修改的数组索引（负数索引会从数组末尾开始计数——即当 <code>index &lt; 0</code> 时，会使用 <code>index + array.length</code>），第二个参数为分配给指定索引的值。</p>
+<pre><code class="language-js">const arr1 = [&quot;jack&quot;, &quot;mike&quot;, &quot;jay&quot;, &quot;lucy&quot;];
+const arr2 = arr1.with(1, &quot;depp&quot;);
+console.log(&quot;原数组：&quot;, arr1, &quot;\n&quot;, &quot;返回的数组：&quot;, arr2);
+// 原数组： [ &#39;jack&#39;, &#39;mike&#39;, &#39;jay&#39;, &#39;lucy&#39; ]
+// 返回的数组： [ &#39;jack&#39;, &#39;depp&#39;, &#39;jay&#39;, &#39;lucy&#39; ]
+
+const arr3 = [&quot;jack&quot;, &quot;mike&quot;, &quot;jay&quot;, &quot;lucy&quot;];
+arr3[1] = &quot;depp&quot;;
+console.log(arr3); // [ &#39;jack&#39;, &#39;depp&#39;, &#39;jay&#39;, &#39;lucy&#39; ]
+</code></pre>
+<h2 id="symbol-作为-weakmap-键">Symbol 作为 WeakMap 键</h2>
+<p>WeakMaps 仅允许使用对象作为键，这是 WeakMaps 的一个限制。新功能扩展了 WeakMap API，允许使用唯一的 Symbol 作为键。</p>
+<p>并在<code>WeakRef</code> 和 <code>FinalizationRegistry</code> 中支持 Symbol。</p>
+<pre><code class="language-js">const weakMap = new WeakMap();
+const SymbolKey = Symbol(&quot;a&quot;);
+weakMap.set(SymbolKey, &quot;b&quot;);
+console.log(weakMap.get(SymbolKey)); // b
+</code></pre>
+<p>es14 开始，Symbol 类型的值也可以作为弱引用了。但是并不是所有的 Symbol 类型都可以作为弱引用。例如<code>Symbol.for()</code>创建的 Symbol 是不可以作为弱引用的。</p>
+<p>因为<code>Symbol.for()</code>创建的 symbol 会被放入 symbol 注册表中。<code>Symbol.for(key)</code>根据给定的键 <code>key</code>从运行时的 symbol 注册表中查找对应的 symbol，找到则返回，否则就是返回新创建的 symbol。</p>
+<pre><code class="language-js">const symbolA = Symbol(&quot;aaa&quot;);
+const symbolB = Symbol(&quot;aaa&quot;);
+console.log(symbolA === symbolB); // false
+
+const symbolC = Symbol.for(&quot;bbb&quot;);
+const symbolD = Symbol.for(&quot;bbb&quot;);
+console.log(symbolC === symbolD); // true
+</code></pre>
+<p>因为 Symbol.for()创建的 symbol 随时有可能被找回。所以其不可以作为弱引用。</p>
+<pre><code class="language-js">const weakMap = new WeakMap();
+const SymbolKey = Symbol.for(&quot;a&quot;);
+weakMap.set(SymbolKey, &quot;b&quot;); // 报错，TypeError: Invalid value used as weak map key
+</code></pre>
+<p><code>Symbol.iterator</code>也可以作为 Symbol 创建的键</p>
+<pre><code class="language-js">const weakMap = new WeakMap();
+weakMap.set(Symbol.iterator, &quot;a&quot;);
+console.log(weakMap.get(Symbol.iterator)); // a
+</code></pre>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

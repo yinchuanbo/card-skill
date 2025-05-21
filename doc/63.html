@@ -1,0 +1,1109 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>落地前端监控</title>
+                <link rel="stylesheet" href="/css/styles.css">
+            </head>
+            <body class="card-detail">
+                <article class="card-content">
+                    <header>
+                        <h1>落地前端监控</h1>
+                        <div class="meta">
+                            <time datetime="Wed May 21 2025 18:00:45 GMT+0800 (中国标准时间)">2025/5/21</time>
+                            <div class="tags">
+                                <span class="tag">监控</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="content default">
+                        <p>在大型项目中，<strong>前端监控</strong> 是不可或缺的一部分。它的优势可以体现在以下场景：</p>
+<ol>
+<li><strong>稳定性</strong>：尽早发现程序运行错误并及时修复；</li>
+<li><strong>用户体验</strong>：性能监控分析，持续优化改善网站使用体验；</li>
+<li><strong>业务扩展</strong>：常见的数据埋点，如统计 PV 页面浏览量。</li>
+</ol>
+<p>其中 <strong>稳定性</strong> 和 <strong>用户体验</strong> 是我们完成前端基建必不可少的组成部分。</p>
+<p>而要实现一套完整的前端监控，需要经历以下过程：</p>
+<img src="./images/117.webp" />
+
+<p>其中：</p>
+<ul>
+<li><code>SDK</code>，负责处理客户端（浏览器）程序在运行期间的监控日志收集和上报；</li>
+<li><code>日志服务器</code>，负责接收 <code>SDK</code> 上报的 <code>Log</code> 日志，进行清洗过滤存入数据库；</li>
+<li><code>可视化平台</code>，则是以可视化形式，直观展示上报过来的数据。</li>
+</ul>
+<p>在这里，<code>日志服务器</code> 可以使用 Node.js 技术栈实现 server 端逻辑，<code>可视化平台</code> 可以基于统计数据实现报表展示。</p>
+<p>下面，我们重点从 0 到 1 一步步来构建一个 Web 监控 SDK。文章大纲如下：</p>
+<img src="./images/118.webp" />
+
+<p>PS：监控 SDK 代码仓库：<a href="https://github.com/L-excellence/monitor-sdk">github.com/L-excellenc…</a>。</p>
+<h2 id="一、设计-sdk">一、设计 SDK</h2>
+<p>SDK 承担了<strong>前端监控和数据上报</strong>的工作，通常我们会以 <code>&lt;script&gt; js</code> 脚本文件的形式接入到业务项目中。</p>
+<p>下面，首要工作是建立一个 SDK 项目仓库，利用打包工具（如 <code>Rollup</code>）构建出 JS 脚本文件。</p>
+<h3 id="1、搭建-rollup-构建环境">1、搭建 Rollup 构建环境</h3>
+<p>构建工具我们选用 <code>Rollup</code>，它非常适合构建一些工具库、组件库。我们初始化一个 <code>monitor-sdk</code> 目录，并完成 Rollup 打包配置。</p>
+<pre><code class="language-bash">mkdir monitor-sdk
+cd monitor-sdk
+npm init -y
+npm install rollup rollup-plugin-terser @rollup/plugin-node-resolve @rollup/plugin-commonjs @rollup/plugin-babel typescript @babel/preset-typescript @babel/preset-env @babel/core @babel/cli -D
+tsc --init
+touch index.ts
+touch rollup.config.js
+</code></pre>
+<pre><code class="language-javascript">// rollup.config.js
+import resolve from &quot;@rollup/plugin-node-resolve&quot;;
+import commonjs from &quot;@rollup/plugin-commonjs&quot;;
+import { babel } from &quot;@rollup/plugin-babel&quot;;
+import { terser } from &quot;rollup-plugin-terser&quot;;
+import path from &quot;path&quot;;
+
+const extensions = [&quot;.ts&quot;, &quot;.tsx&quot;, &quot;.js&quot;, &quot;.jsx&quot;];
+
+export default () =&gt; ({
+  input: path.resolve(__dirname, &quot;index.ts&quot;),
+  output: {
+    file: path.resolve(__dirname, &quot;dist/myMonitor.js&quot;),
+    format: &quot;umd&quot;,
+    name: &quot;myMonitor&quot;,
+  },
+  plugins: [
+    resolve({
+      extensions, // 指定 import 模块后缀解析规则
+    }),
+    commonjs(),
+    babel({
+      extensions,
+      presets: [
+        &quot;@babel/preset-env&quot;,
+        [
+          &quot;@babel/preset-typescript&quot;,
+          {
+            isTSX: true,
+            allExtensions: true,
+          },
+        ],
+      ],
+      babelHelpers: &quot;bundled&quot;,
+    }),
+    terser(),
+  ],
+});
+</code></pre>
+<p>最后，我们在 <code>package.json</code> 中加入 <code>build</code> 命令，运行 <code>npm run build</code> 完成 dist/myMonitor.js 构建。</p>
+<pre><code class="language-json">&quot;scripts&quot;: {
+  &quot;build&quot;: &quot;rollup -c rollup.config.js -w&quot;
+}
+</code></pre>
+<p>PS：另外我们可以配置 ESLint、Prettier 等前端规范工具，由于非本文中心主题，跳过详细描述。</p>
+<h3 id="2、异常监控">2、异常监控</h3>
+<p>在前端，程序发生异常的种类有很多，比如：<strong>JS 代码执行错误、Promise 未被处理的错误、React/Vue 组件 render 错误、静态资源加载错误、请求 API 出错等。</strong></p>
+<p>以上这些异常场景，都需要我们进行监控并上报到服务器。</p>
+<h4 id="21、js-代码执行错误">2.1、JS 代码执行错误</h4>
+<p>首先，我们模拟一个代码错误：<code>访问一个未定义的对象的属性</code>。</p>
+<pre><code class="language-html">&lt;!-- examples/jsError.html --&gt;
+&lt;body&gt;
+  &lt;div id=&quot;container&quot;&gt;
+    &lt;input type=&quot;button&quot; value=&quot;点击抛出错误&quot; onclick=&quot;errorClick()&quot; /&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    function errorClick() {
+      // 模拟代码错误：访问一个未定义的对象的属性
+      window.someVal.error = &quot;error&quot;;
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>当点击按钮后，会发生报错：</p>
+<img src="./images/119.webp" />
+
+<p>在 JS 中未被 try/catch 捕获的代码错误，可以通过 <code>window.addEventListener(&#39;error&#39;)</code> 全局监听到。</p>
+<p>在监控到错误以后，我们需要对错误进行 <strong>数据建模</strong>，拿到能够描述和定位此错误的有用信息。</p>
+<p>异常日志数据建模可以遵循以下类型结构：<code>ErrorLog</code></p>
+<pre><code class="language-js">// interface/index.ts
+export interface ErrorLog {
+  // type 监控类型：error（代码错误）
+  type: &quot;error&quot;;
+  // 错误类型：jsError（JS 代码错误）
+  errorType: &quot;jsError&quot; | ...;
+  // 错误信息
+  message: string;
+  // 错误发生的文件
+  filename: string;
+  // 错误发生的行列信息
+  position: string;
+  // 错误堆栈信息
+  stack: string;
+  // 错误发生在 DOM 到顶层元素的链路信息（使用选择器表示，如：body div#container input）
+  selector?: string;
+}
+</code></pre>
+<p>有了上面的铺垫，我们来实现 JS 代码执行错误的监控。</p>
+<p>新建 <code>module/jsError.ts</code> 文件，注册 <code>window.addEventListener(&#39;error&#39;)</code> 监听错误，并对错误信息进行数据建模，得到可以用于上报的 <code>log</code> 数据。</p>
+<blockquote>
+<p>PS：注意是在错误事件传播的 <strong><code>捕获阶段</code></strong> 处理错误，避免错误在冒泡过程中可能被其他代码干扰或覆盖。</p>
+</blockquote>
+<pre><code class="language-javascript">// index.ts
+import injectJSError from &quot;./modules/jsError&quot;;
+injectJSError();
+
+// modules/jsError.ts
+import { ErrorLog } from &quot;../interface&quot;;
+import { formatStack } from &quot;../utils&quot;;
+import getLastEvent from &quot;../utils/getLastEvent&quot;;
+import getSelector from &quot;../utils/getSelector&quot;;
+
+export default function injectJSError() {
+  // 1、监听全局未被 try/catch 捕获的错误
+  window.addEventListener(
+    &quot;error&quot;,
+    (event) =&gt; {
+      console.log(&quot;js error event: &quot;, event);
+      const lastEvent = getLastEvent(); // 监听到错误后，获取到最后一个交互事件
+
+      // 1.1、数据建模存储
+      const errorLog: ErrorLog = {
+        type: &quot;error&quot;,
+        errorType: &quot;jsError&quot;,
+        message: event.message,
+        filename: event.filename,
+        position: `${event.lineno}:${event.colno}`,
+        stack: formatStack(event.error.stack),
+        selector: lastEvent ? getSelector() : &quot;&quot;,
+      };
+      console.log(&quot;js error log: &quot;, errorLog);
+
+      // 1.2、上报数据（TODO...）
+    },
+    // !!! 使用事件捕获进行监听
+    true
+  );
+}
+</code></pre>
+<p>其中 <code>errorType</code> 标识是一个 JS 代码错误，<code>message</code>、<code>filename</code>、<code>position</code> 信息都可以从 <code>event</code> 错误事件对象上获取。</p>
+<p>这里重点介绍一下 <code>stack</code> 和 <code>selector</code> 的信息来源。</p>
+<ol>
+<li><code>stack</code> 统计函数调用错误栈信息：</li>
+</ol>
+<p>首先，访问 <code>event.error.stack</code> 得到的是发生错误的执行调用栈信息（<code>String</code>）：</p>
+<img src="./images/120.webp" />
+
+<p>我们调用 <code>formatStack()</code> 稍做加工一下，得到一个更直观的调用栈的信息，加工后展示如下：</p>
+<img src="./images/121.webp" />
+
+<p><code>formatStack</code> 的实现：</p>
+<pre><code class="language-js">// utils/index.ts
+export function formatStack(stack: string) {
+  return stack
+    .split(&quot;\n&quot;)
+    .slice(1)
+    .map((item) =&gt; item.replace(/^\s+at\s+/g, &quot;&quot;))
+    .join(&quot;\n&quot;);
+}
+</code></pre>
+<hr>
+<ol start="2">
+<li><code>selector</code> 统计 DOM 节点层级树信息：</li>
+</ol>
+<p><code>getLastEvent()</code> 函数用来返回最近一个交互事件，当错误发生来自于用户与页面交互时（如 <code>onclick</code>），<code>lastEvent</code> 将是该事件的 <code>event</code> 对象。记录<code>lastEvent</code> 可以在全局绑定相关交互事件：</p>
+<pre><code class="language-javascript">let lastEvent: Event | null;
+let lastEventPath: any[];
+
+[&quot;click&quot;, &quot;touchstart&quot;, &quot;mousedown&quot;, &quot;keydown&quot;].forEach((eventType) =&gt; {
+  // 埋点方式：无痕埋点 -&gt; 全部埋点
+  document.addEventListener(
+    eventType,
+    (event) =&gt; {
+      lastEvent = event;
+      // 新版浏览器中 event.path 已被废弃，改用 event.composedPath()
+      lastEventPath = event.path || event.composedPath();
+    },
+    {
+      capture: true, // 以捕获形式监听（因为默认元素的事件都是冒泡形式，如果出现阻止默认事件，在这里将监听不到）
+      passive: true,
+    }
+  );
+});
+
+// 获取最近一次的事件调用栈
+export function getLastEventPath() {
+  return lastEventPath;
+}
+
+// 获取最近一次的事件
+export default function getLastEvent() {
+  return lastEvent;
+}
+</code></pre>
+<p>当错误发生时，事件对象 <code>event.composedPath()</code> 可以拿到 DOM 树层级信息：</p>
+<img src="./images/122.webp" />
+
+<p>最后，<code>getSelector()</code> 方法对则是对 DOM 树层级进行进行加工，得到一个包含 DOM 选择器的层级字符串。</p>
+<img src="./images/123.webp" />
+
+<pre><code class="language-javascript">// getSelector.ts 获取当前事件链路上的元素选择器
+import { getLastEventPath } from &quot;./getLastEvent&quot;;
+
+function getSelectorByPath(path: any[]) {
+  return path
+    .reverse() // 翻转 Path 中的元素
+    .filter((element) =&gt; {
+      // 过滤掉 window、document 和 html
+      return (
+        element !== window &amp;&amp;
+        element !== document &amp;&amp;
+        element !== document.documentElement
+      );
+    })
+    .map((element) =&gt; {
+      if (element.id) {
+        return `${element.nodeName.toLowerCase()}#${element.id}`; // 返回 标签名#id
+      } else if (element.className &amp;&amp; typeof element.className === &quot;string&quot;) {
+        return `${element.nodeName.toLowerCase()}#${element.className}`; // 返回 标签名.class
+      } else {
+        return element.nodeName.toLowerCase(); // 返回 标签名
+      }
+    })
+    .join(&quot; &quot;);
+}
+
+export default function getSelector() {
+  const path = getLastEventPath();
+  if (Array.isArray(path)) {
+    return getSelectorByPath(path);
+  }
+}
+</code></pre>
+<p>现在，在上述示例中引入 <code>monitor sdk js</code>，点击按钮模拟 JS 执行错误，就可以监控到 <code>errorLog</code> 日志：</p>
+<img src="./images/124.webp" />
+
+<p>有了错误日志，接下来便是考虑数据上报。</p>
+<h4 id="22、数据上报方式">2.2、数据上报方式</h4>
+<p>在前端，可供数据上报至服务器的方式有三种：</p>
+<ol>
+<li><code>ajax</code> 传统与服务端通信请求；</li>
+<li><code>img GIF</code> 图片 GET 请求方式上报，优点：速度快，没有跨域问题；</li>
+<li><code>navigator.sendBeacon()</code> 方法通过 HTTP 将少量数据异步传输到 Web 服务器。</li>
+</ol>
+<p><code>ajax</code> 方式我们再熟悉不过了，不论是 <code>xhr</code> 对象还是 <code>fetch</code> 函数，都可以将数据传递到服务器。</p>
+<p><code>navigator.sendBeacon()</code> 也是一种不错的方式，它的最大优势在于 <strong>异步</strong>，确保数据在页面卸载过程中仍然能够被发送，而不会被中断。</p>
+<blockquote>
+<p>PS: 有关 <code>navigator.sendBeacon()</code> 的使用可以查阅文档：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/sendBeacon">developer.mozilla.org/zh-CN/docs/…</a></p>
+</blockquote>
+<p>重点介绍一下 <code>img GIF</code> 的上报方式。</p>
+<p>简单来说，我们可以<strong>在服务器上放置一个非常小的 gif 图片（1kb），将日志数据作为图片 <code>url queryString</code> 参数，访问这个图片来达成数据上报至服务器</strong>。</p>
+<p>下面来看看具体实现。</p>
+<p>首先，创建一个 <code>Tracker 类</code>，并提供一个 <code>send</code> 方法，通过 <code>img</code> 标签访问服务器上的图片来完成日志数据的上传。</p>
+<pre><code class="language-js">// utils/tracker.ts
+import { MonitorLog, MonitorTypeLog } from &quot;../interface&quot;;
+import getLogBaseData from &quot;./getLogBaseData&quot;;
+
+class Tracker {
+  url: string;
+
+  constructor() {
+    // 上报日志服务器地址（服务器上的 gif 图片）
+    this.url = &quot;http://localhost:8080/send/monitor.gif&quot;;
+  }
+
+  send(data: MonitorTypeLog) {
+    // 获取基础日志数据
+    const baseData = getLogBaseData();
+    const log: MonitorLog = {
+      baseLog: baseData,
+      ...data,
+    };
+    console.log(&quot;send log&quot;, log);
+
+    // 进行数据上报
+    const img = new window.Image();
+    img.src = `${this.url}?data=${encodeURIComponent(JSON.stringify(log))}`;
+  }
+}
+
+export default new Tracker();
+</code></pre>
+<p>这里 <code>baseData</code> 表示日志上报可以携带一些设备的基础信息，比如浏览器型号、版本等。此外，你还可以加入一些业务信息如 用户身份 进行上报。</p>
+<p>设备信息来自于 <code>navigator.userAgent</code>，可以使用 <code>ua-parser-js</code> 三方库来完成设备参数解析。</p>
+<pre><code class="language-javascript">// utils/getLogBaseData.ts
+import { UAParser } from &quot;ua-parser-js&quot;;
+import { BaseLog } from &quot;../interface&quot;;
+
+// 获取设备信息
+const { browser, device, os } = UAParser(navigator.userAgent);
+
+/**
+ * getLogBaseData 获取日志基本信息
+ */
+export default function getLogBaseData(): BaseLog {
+  return {
+    title: document.title,
+    url: location.href,
+    userAgent: navigator.userAgent,
+    browser: `${browser.name} ${browser.version}`,
+    device: `${device.model} ${device.vendor}`,
+    os: `${os.name} ${os.version}`,
+  };
+}
+</code></pre>
+<p>最后，在监控到报错时，调用 <code>tracker.send()</code> 将错误日志上报到服务器。</p>
+<pre><code class="language-javascript">// jsError.ts
+export default function injectJSError() {
+  // 1、监听全局未被 try/catch 捕获的错误
+  window.addEventListener(
+    &quot;error&quot;,
+    event =&gt; {
+      const lastEvent = getLastEvent(); // 监听到错误后，获取到最后一个交互事件
+
+      // 1.1、数据建模存储
+      const errorLog: ErrorLog = {...}
+
++     // 1.2、上报数据
++     tracker.send(errorLog);
+    },
+    // !!! 使用捕获
+    true,
+  );
+}
+</code></pre>
+<p>接下来，就是在服务端的处理，通过处理图片请求，拿到请求上的 <code>queryString</code> 参数，进行数据清洗和入口，在本文不多做阐述。</p>
+<h4 id="23、promise-未处理的错误">2.3、Promise 未处理的错误</h4>
+<p>Promise 错误一般是指：在 <code>Promise execute、then</code> 方法中代码执行出错，或 <code>Promise execute reject()</code> 变成失败态，且没有被 <code>.catch</code> 函数进行捕获处理。</p>
+<p>如下，是 Promise 抛出错误的代码示例：</p>
+<pre><code class="language-html">&lt;!-- examples/promiseError.html --&gt;
+&lt;body&gt;
+  &lt;div id=&quot;container&quot;&gt;
+    &lt;input
+      type=&quot;button&quot;
+      value=&quot;点击抛出 Promise 错误&quot;
+      onclick=&quot;promiseErrorClick()&quot;
+    /&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    function promiseErrorClick() {
+      new Promise(function (resolve, reject) {
+        // 抛出错误方式 1：
+        window.someVal.error = &quot;error&quot;;
+        // 抛出错误方式 2：
+        reject(&quot;错误原因：模拟一个 Promise 错误。&quot;);
+      });
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>然而，Promise 未处理的错误不会被 <code>window.addEventListener(&#39;error&#39;)</code> 所监听，需要使用另一个监听事件 <code>unhandledrejection</code> 来完成。</p>
+<p>同时，<code>unhandledrejection</code> 的事件对象 <code>event.reason</code> 在这两个错误场景下表现有所不同：</p>
+<ol>
+<li><strong>代码执行错误</strong>：<code>event.reason</code> 是一个对象，<code>reason.stack</code> 包含调用栈信息，可以从中拿到错误文件、行和列等信息；</li>
+<li><strong>reject() 变更 Promise 为失败状态</strong>：<code>event.reason</code> 是一个字符串，值为传递给 <code>reason()</code> 函数的失败原因参数。</li>
+</ol>
+<p>因此，在数据建模时，需要依据 <code>event.reason</code> 进行区分：</p>
+<pre><code class="language-javascript">// modules/jsError.ts
+// ...
+
+export default function injectJSError() {
+  // 1、监听全局未被 try/catch 捕获的错误
+  window.addEventListener(&quot;error&quot;, ...);
+
+  // 2、监听未被捕获的 Promise 错误
+  window.addEventListener(
+    &quot;unhandledrejection&quot;,
+    event =&gt; {
+      console.log(&quot;Promise error event: &quot;, event);
+      const lastEvent = getLastEvent(); // 监听到错误后，获取到最后一个交互事件
+
+      let message;
+      const reason = event.reason; // Promise 失败的原因
+      let filename;
+      let line = 0;
+      let column = 0;
+      let stack = &quot;&quot;;
+      if (typeof event.reason === &quot;string&quot;) {
+        // 情况 1、是 Promise reject 抛出的错误（没有办法获取 stack 等信息）
+        message = reason;
+      } else if (typeof reason === &quot;object&quot;) {
+        // 情况 2、是 Promise 中 JS 代码执行出错
+        message = reason.message;
+        if (reason.stack) {
+          // 从错误信息中匹配到关键信息。stack 示例：at http://localhost:8080/examples/promiseError.html:29:32
+          const matchResult = reason.stack.match(/at\s+(.+):(\d+):(\d+)/);
+          filename = matchResult[1];
+          line = matchResult[2];
+          column = matchResult[3];
+          stack = formatStack(reason.stack);
+        }
+      }
+
+      // 2.1、数据建模存储
+      const errorLog: ErrorLog = {
+        type: &quot;error&quot;,
+        errorType: &quot;promiseError&quot;, // 错误类型 - Promise 代码错误
+        message,
+        filename,
+        position: `${line}:${column}`,
+        stack,
+        selector: lastEvent ? getSelector() : &quot;&quot;,
+      };
+
+      // 2.2、上报数据
+      tracker.send(errorLog);
+    },
+    true,
+  );
+}
+</code></pre>
+<p>对于 <code>Promise 中的代码执行错误</code>，收集到的错误日志信息和「JS 代码执行错误」基本一致：</p>
+<img src="./images/125.webp" />
+
+<p>而对于 <code>Promise reject 变更为失败态</code>，收集到的错误日志信息如下：</p>
+<img src="./images/126.webp" />
+
+<h4 id="24、资源加载错误">2.4、资源加载错误</h4>
+<p>资源一般是指 <code>JS、CSS、图片</code>，当访问这些资源出错或 404 找不到时，我们可以监控进行上报。</p>
+<p>如下，我们随意访问一个不存在的资源 <code>/someError.js</code>，模拟资源加载 404。</p>
+<pre><code class="language-html">&lt;!-- examples/loadResourceError.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;资源加载出错.&lt;/title&gt;
+    &lt;script src=&quot;../dist/myMonitor.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- &lt;img src=&quot;/someError.png&quot; /&gt; --&gt;
+    &lt;!-- &lt;link rel=&quot;stylesheet&quot; href=&quot;/someError.css&quot; /&gt; --&gt;
+    &lt;script src=&quot;/someError.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>加载资源需要使用特定的 HTML 标签元素（<code>script、link、img</code>），比如加载 JS 文件需要使用 <code>script</code> 标签。</p>
+<p>除了通过 <code>标签 onerror</code> 事件监听错误外，还可以通过 <code>window.addEventListener(&#39;error&#39;)</code> 在全局统一监听资源加载错误。</p>
+<p>我们在 <code>jsError.ts</code> 中的 <code>error</code> 事件监听处理函数中，加入监控资源加载出错逻辑。</p>
+<pre><code class="language-javascript">// modules/jsError.ts
+export default function injectJSError() {
+  window.addEventListener(
+    &quot;error&quot;,
+    event =&gt; {
+      // 监听 JS/CSS 资源文件加载错误
+      const target = event.target as HTMLScriptElement | HTMLImageElement | HTMLLinkElement | null;
+      let filename;
+      if (target &amp;&amp; (filename = (target as HTMLScriptElement | HTMLImageElement).src || (target as HTMLLinkElement).href)) {
+        // 1、数据建模存储
+        const log: ErrorLog = {
+          type: &quot;error&quot;,
+          errorType: &quot;loadResourceError&quot;, // 错误类型 - JS/CSS 资源加载错误
+          message: `${filename} resource loading fail.`,
+          filename, // 报错的文件
+          tagName: target.tagName, // 资源标签名称
+          selector: getSelector(event.target as HTMLElement), // body script
+        };
+        // 2、上报数据
+        tracker.send(log);
+      }
+
+      // 监听 JS 代码执行出错
+      else { ... }
+    },
+    true,
+  );
+}
+</code></pre>
+<p>对于 <code>script 和 img</code> 元素，可通过 <code>src</code> 属性来识别，而 <code>link</code> 则可以用 <code>href</code> 属性来识别。</p>
+<p>最后在数据建模获取 <code>selector</code> 时，传递 <code>target</code> 元素来获取节点树上的层级信息。</p>
+<pre><code class="language-javascript">export default function getSelector(ele?: HTMLElement) {
+  const path = getLastEventPath();
+  if (Array.isArray(path)) {
+    return getSelectorByPath(path);
++ } else if (ele) {
++   return getSelectorByEle(ele);
++ }
+}
+
++ function getSelectorByEle(ele: HTMLElement) {
++   let node: HTMLElement | null = ele;
++   const path: string[] = [];
++   while (node &amp;&amp; filterTopLevelNode(node)) {
++     path.unshift(getEleSelector(node));
++     node = node.parentElement;
++   }
++   return path.join(&quot; &quot;);
++ }
+
++ function filterTopLevelNode(element: Window | Document | HTMLElement) {
++   // 过滤掉 window、document 和 html
++   return element !== window &amp;&amp; element !== document &amp;&amp; element !== + document.documentElement;
++ }
+
++ function getEleSelector(element: HTMLElement) {
++   if (element.id) {
++     return `${element.nodeName.toLowerCase()}#${element.id}`; // 返回 标签名#id
++   } else if (element.className &amp;&amp; typeof element.className === &quot;string&quot;) {
++     return `${element.nodeName.toLowerCase()}#${element.className}`; // 返回 标签名.class
++   } else {
++     return element.nodeName.toLowerCase(); // 返回 标签名
++   }
++ }
+</code></pre>
+<h4 id="25、api-请求报错">2.5、API 请求报错</h4>
+<p>在客户端（浏览器），可以通过 <code>xhr/fetch</code> 请求服务端接口。为了保证前后端交互的稳定性，双方都可以去做 <strong>API 请求监控</strong>。</p>
+<p>以 <code>xhr ajax</code> 为例，要监控 API 请求的状态，推荐的做法是采用 <strong>「重写 <code>XMLHttpRequest</code> 构造函数原型上的方法」</strong> 来实现。</p>
+<p>以下是一个简单的模拟 xhr 请求服务器 API 出现 500 错误的示例，对应前后端代码如下：</p>
+<pre><code class="language-javascript">// 前端：
+window.onload = () =&gt; {
+  // 访问一个报错的 api，模拟 500 错误
+  const xhr = new XMLHttpRequest();
+  xhr.open(&quot;get&quot;, &quot;http://localhost:3000/error?name=test&quot;, true);
+  xhr.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
+  xhr.onload = function () {
+    // 在 onload 事件中检查 xhr.status 是否在 200-299 的范围内。如 404 或 500 错误，都会在这里进行监控上报。
+    console.log(&quot;onload: &quot;, xhr);
+  };
+  xhr.onerror = function (error) {
+    // onerror 事件主要用于处理 跨域问题、网络错误 等无法正常连接到服务器的情况，例如本地无网络。
+    console.log(&quot;error: &quot;, error, xhr);
+  };
+  xhr.send();
+};
+
+// 服务端：
+const http = require(&quot;http&quot;);
+const server = http.createServer((req, res) =&gt; {
+  // 允许跨域
+  res.setHeader(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;);
+  res.setHeader(
+    &quot;Access-Control-Allow-Methods&quot;,
+    &quot;GET, POST, PUT, DELETE, OPTIONS&quot;
+  );
+  res.setHeader(&quot;Access-Control-Allow-Headers&quot;, &quot;Content-Type, Authorization&quot;);
+
+  if (req.method === &quot;OPTIONS&quot;) {
+    // 处理预检请求
+    res.writeHead(204);
+    res.end();
+  } else {
+    if (req.url.startsWith(&quot;/error&quot;)) {
+      res.writeHead(500, { &quot;Content-Type&quot;: &quot;text/plain&quot; });
+      res.end(&quot;Server Error, code is 500.&quot;);
+    } else {
+      // 处理正常请求
+      res.writeHead(200, { &quot;Content-Type&quot;: &quot;text/plain&quot; });
+      res.end(&quot;Hello, world!&quot;);
+    }
+  }
+});
+server.listen(3000, () =&gt; console.log(&quot;Server running on port 3000&quot;));
+</code></pre>
+<p>重写 <code>XMLHttpRequest</code> 原型方法来完成 API 请求监控，分以下步骤：</p>
+<ol>
+<li>重写 <code>XMLHttpRequest.prototype.setRequestHeader</code> 方法，保存设置的请求头信息；</li>
+<li>重写 <code>XMLHttpRequest.prototype.open</code> 方法，保存 API 请求的 <code>method</code> 和 <code>url</code>；</li>
+<li>重点！重写 <code>XMLHttpRequest.prototype.send</code> 方法，当判定请求出错时（如：<strong>跨域、404、500</strong>），收集请求信息进行数据上报。</li>
+</ol>
+<p>另外，我们还需要配置一个白名单 <code>whiteList</code>，可跳过无需监控的请求，比如「上报方式为 ajax」。</p>
+<p>核心功能实现如下：</p>
+<pre><code class="language-javascript">// modules/xhr.ts
+import { ErrorLog } from &quot;../interface&quot;;
+import { parseQueryString } from &quot;../utils&quot;;
+import tracker from &quot;../utils/tracker&quot;;
+
+// 不需要监控的接口白名单
+const whiteList = [
+  &quot;http://localhost:8080/send/monitor&quot;, // 日志服务接口
+];
+
+// 增强 XHR：通过重写 XHR 主要方法，实现拦截和增强 XHR
+export default function injectXHR() {
+  const XMLHttpRequest = window.XMLHttpRequest;
+
+  // 1、重写 setRequestHeader 方法增强功能 - 记录 request headers 数据
+  const oldSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
+  XMLHttpRequest.prototype.setRequestHeader = function (key, value) {
+    if (!this.requestHeaders) this.requestHeaders = {};
+    this.requestHeaders[key] = value;
+    return oldSetRequestHeader.apply(this, arguments);
+  };
+
+  // 2、重写 open 方法增强功能 - 记录请求方式和 url
+  const oldOpen = XMLHttpRequest.prototype.open; // 记录老的 open 方法
+  XMLHttpRequest.prototype.open = function (method, url, async) {
+    // 跳过 白名单接口 防止出现死循环。
+    if (whiteList.indexOf(url) === -1) {
+      this.logData = { method: method.toUpperCase(), url }; // 存储数据
+    }
+    return oldOpen.apply(this, arguments);
+  };
+
+  // 3、重写 send 方法增强功能 - 监控上报数据
+  const oldSend = XMLHttpRequest.prototype.send; // 记录老的 send 方法
+  XMLHttpRequest.prototype.send = function (body) {
+    if (this.logData) {
+      // 在 send 发送之前，记录请求开始时间
+      const startTime = Date.now();
+      const handler = (type: &quot;load&quot; | &quot;error&quot;) =&gt; {
+        return () =&gt; {
+          const duration = Date.now() - startTime; // 持续的时间
+          const status = this.status; // 200 | 400 | 500
+          const statusText = this.statusText; // OK | Server Error
+          const { url, method } = this.logData;
+          const params =
+            [&quot;GET&quot;, &quot;DELETE&quot;].indexOf(method) &gt; -1
+              ? parseQueryString(url)
+              : body;
+
+          // 当请求发生错误时，上报数据（忽略无网络的错误，处理像 跨域错误、404、500 等错误）
+          if (
+            (type === &quot;error&quot; &amp;&amp; window.navigator.onLine) ||
+            (type === &quot;load&quot; &amp;&amp; status &gt;= 400)
+          ) {
+            const log: ErrorLog = {
+              type: &quot;error&quot;,
+              errorType: &quot;xhrError&quot;, // 错误类型是 xhr
+              message: statusText, // 错误信息
+              xhrData: {
+                eventType: type, // load | error
+                url, // api 路径
+                method, // 请求方式
+                header: this.requestHeaders, // 请求头
+                params, // 请求参数
+                duration, // 请求时长
+                status,
+                response: this.response ? JSON.stringify(this.response) : &quot;&quot;, // 请求结果
+              },
+            };
+            console.log(&quot;XHR log: &quot;, log);
+            tracker.send(log);
+          }
+        };
+      };
+      // 服务端返回 status 为 500 也会进入 load，需要进一步判断 status
+      this.addEventListener(&quot;load&quot;, handler(&quot;load&quot;), false);
+      this.addEventListener(&quot;error&quot;, handler(&quot;error&quot;), false);
+    }
+    return oldSend.apply(this, arguments);
+  };
+}
+</code></pre>
+<h3 id="3、白屏监控">3、白屏监控</h3>
+<p>白屏通常是由 <code>代码执行错误</code> 引起，导致框架（如 React）渲染流程中断。所以白屏可以结合【异常监控】一起上报，可以关联到导致白屏的错误原因。</p>
+<p>我们思考一下：如何判定当前页面是白屏呢？</p>
+<p>可以采用【页面采样识别检测】：通过在页面上确定多个采样点，使用 <code>elementFromPoint</code> 方法获取采样点的元素，判断采样点元素是否为有效元素（比如非 <code>body、#root</code> 等根节点）。</p>
+<p>关于采样点的定义，以页面为中心的 水平 和 垂直线上，来定义多个采样点。</p>
+<img src="./images/127.webp" />
+
+<p>白屏检测的实现如下：</p>
+<pre><code class="language-javascript">// modules/xhr.ts
+export default function checkWhiteScreen() {
+  // 最顶层的空白元素（判断是白屏的依据）
+  const wrapperElements = [&quot;html&quot;, &quot;body&quot;, &quot;#root&quot;];
+  let emptyPoints = 0; // 记录空白的点的个数
+
+  function getSelector(element: Element) {
+    let selector;
+    if (element.id) {
+      selector = `#${element.id}`;
+    } else if (element.className &amp;&amp; typeof element.className === &quot;string&quot;) {
+      // prettier-ignore
+      selector = &quot;.&quot; + element.className.split(&quot; &quot;).filter(item =&gt; !!item).join(&quot;.&quot;);
+    } else {
+      selector = element.nodeName.toLowerCase();
+    }
+    return selector;
+  }
+
+  function isWrapper(element: Element) {
+    const selector = getSelector(element);
+    if (wrapperElements.indexOf(selector) &gt; -1) {
+      emptyPoints++; // 是空白点
+    }
+  }
+
+  for (let i = 1; i &lt;= 9; i++) {
+    // 在高度一半的位置，横坐标均分取 9 个点，查看这 9 个点上的元素
+    const xElements = document.elementFromPoint(
+      (window.innerWidth / 10) * i,
+      window.innerHeight / 2,
+    );
+    // 在宽度一半的位置，纵坐标均分取 9 个点，查看这 9 个点上的元素
+    const yElements = document.elementFromPoint(
+      window.innerWidth / 2,
+      (window.innerHeight / 10) * i,
+    );
+
+    // 判断点的位置，是否是空白元素
+    isWrapper(xElements!);
+    isWrapper(yElements!);
+  }
+
+  // 定义阈值，比如 当所有的点（18个）都是空白点，那么就认为是空白页面，有一个点上有元素，就认为不是空白页面。
+  if (emptyPoints === 18) {
+    return true;
+  }
+  return false;
+}
+</code></pre>
+<p>当发生 JS 执行错误后，进行白屏检测并一起上报数据。</p>
+<pre><code class="language-javascript">// modules/jsError.ts
+...
++ import checkWhiteScreen from &quot;../utils/checkWhiteScreen&quot;;
+
+export default function injectJSError() {
+  window.addEventListener(
+    &quot;error&quot;,
+    event =&gt; {
+      ...
+
++     const isWhiteScreen = checkWhiteScreen(); // 检查是否白屏
+      // 1.1、数据建模存储
+      const errorLog: ErrorLog = {
+        // kind: &quot;stability&quot;, // 监控指标的大类
+        type: &quot;error&quot;,
+        errorType: &quot;jsError&quot;,
+        message: event.message,
+        filename: event.filename,
+        position: `${event.lineno}:${event.colno}`,
+        stack: formatStack(event.error.stack),
+        selector: lastEvent ? getSelector() : &quot;&quot;,
++       isWhiteScreen,
+      };
+      console.log(&quot;js error log: &quot;, errorLog);
+
+      // 1.2、上报数据
+      tracker.send(errorLog);
+    },
+    // !!! 使用捕获
+    true,
+  );
+  ...
+}
+</code></pre>
+<h3 id="4、统计页面加载时间">4、统计页面加载时间</h3>
+<p>页面加载时间的指标信息有很多，一般会重点分析  <strong>DOM 树构建完成的时间（<code>DOMContentLoaded</code>） 和 页面完整的加载时间（<code>load</code>）</strong> 。</p>
+<p>浏览器 <code>PerformanceNavigationTiming</code> 对象提供了关于页面加载性能的详细信息。（<code>对应旧版本的 performance.timing 对象</code>）</p>
+<p>在统计加载时间前，我们先了解两个 JS 事件的执行时机：</p>
+<ul>
+<li><code>DOMContentLoaded</code>，是一个 DOM 事件，当浏览器完成 HTML 文档的解析，构建完成 DOM 树后触发，但不包含图片、CSS、JavaScript 等外部资源的加载。</li>
+<li><code>onLoad</code>，是一个 JS 事件，它在页面的所有资源（包括 HTML、CSS、图片、JavaScript 等）完全加载完成后触发。</li>
+</ul>
+<p>如何统计这两个加载时间呢？需要用到以下信息：</p>
+<ul>
+<li><code>fetchStart</code>：浏览器开始发起 HTTP 请求文档的时间；</li>
+<li><code>domContentLoadedEventStart</code>：DOM 树构建完成后触发 DOMContentLoaded 事件的时间；</li>
+<li><code>loadEventStart</code>：页面所有资源（包括图片）加载完成后触发 window.onload 事件发生的时间。</li>
+</ul>
+<p>如下示例，在 DOM 树构建完成后，请求一个图片资源：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;img src=&quot;https://picsum.photos/200/300&quot; alt=&quot;&quot; /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>对应的先得到 <code>DOMContentLoaded</code> 时间，等待图片加载完成后，得到 <code>onLoad</code> 时间。</p>
+<p>监听统计加载时间实现如下：</p>
+<pre><code class="language-javascript">// modules/timing.ts
+import { TimingLog } from &quot;../interface&quot;;
+import tracker from &quot;../utils/tracker&quot;;
+
+export default function injectTiming() {
+  window.addEventListener(&quot;load&quot;, () =&gt; {
+    let DOMContentLoadedTime = 0,
+      loadTime = 0;
+
+    // 新版浏览器 API：PerformanceNavigationTiming 提供了关于页面加载性能的详细信息，替代旧的 performance.timing
+    if (performance.getEntriesByType) {
+      const perfEntries = performance.getEntriesByType(&quot;navigation&quot;);
+      if (perfEntries.length &gt; 0) {
+        const navigationEntry = perfEntries[0];
+        const { fetchStart, domContentLoadedEventStart, loadEventStart } =
+          navigationEntry as PerformanceNavigationTiming;
+
+        // DOM 树构建完成后触发 DOMContentLoaded 事件
+        DOMContentLoadedTime = domContentLoadedEventStart - fetchStart;
+
+        // 页面完整的加载时间
+        loadTime = loadEventStart - fetchStart;
+      }
+    }
+    // 旧版浏览器降级使用 performance.timing
+    else {
+      const { fetchStart, domContentLoadedEventStart, loadEventStart } = performance.timing;
+      DOMContentLoadedTime = domContentLoadedEventStart - fetchStart;
+      loadTime = loadEventStart - fetchStart;
+    }
+
+    // 1、数据建模存储
+    const log: TimingLog = {
+      type: &quot;timing&quot;,
+      DOMContentLoadedTime,
+      loadTime,
+    };
+
+    // 2、上报数据
+    tracker.send(log);
+  });
+}
+</code></pre>
+<p>加载时间统计结果大致如下：</p>
+<img src="./images/128.webp" />
+
+<p>PS：页面加载性能详细信息参考资料：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/PerformanceNavigationTiming">PerformanceNavigationTiming</a></p>
+<h3 id="5、性能指标">5、性能指标</h3>
+<p>性能指标，类似算法里面的【时间复杂度】，可用来衡量一个网站的响应速度。通过监控和分析性能指标，来改善页面性能，提升用户体验。</p>
+<p>常见的性能指标有：</p>
+<ol>
+<li><code>FP, First Paint(首次绘制 - 首次像素绘制)</code>：包括了任何用户自定义的背景绘制，它是首次将像素绘制到屏幕的时刻；</li>
+<li><code>FCP, First Content Paint(首次内容绘制)</code>：<strong>是浏览器将第一个有内容的 DOM 渲染到屏幕的时间，内容可以是 文本、图像、SVG 等,这其实就是白屏时间</strong>；</li>
+<li><code>FMP, First Meaningful Paint(首次有意义内容绘制)</code>：页面有意义的内容（由我们指定）渲染的时间；</li>
+<li><code>LCP, (Largest Contentful Paint)(最大内容渲染)</code>：LCP 指标代表的是视窗最大可见<code>图片或者文本块</code>的渲染时间。（以百度首页为例，LCP 对应的元素是百度 Logo）；</li>
+</ol>
+<h4 id="51、fp-和-fcp">5.1、FP 和 FCP</h4>
+<p>如下示例，我们在 0.5s 后给 div 设置背景色进行首次像素绘制（FP），1s 后在页面呈现有效内容（FCP）。</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+  &lt;script&gt;
+    // 0.5s 后进行首次像素绘制
+    setTimeout(() =&gt; {
+      root.style.backgroundColor = &quot;gray&quot;;
+      root.style.height = &quot;100px&quot;;
+    }, 500);
+
+    // 1s 后在页面呈现有效内容
+    setTimeout(() =&gt; {
+      root.innerHTML = &quot;content&quot;;
+    }, 1000);
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>FP 和 FCP 指标都可以通过 <code>PerformanceObserver API</code> 观察 <code>type: paint</code> 来计算。</p>
+<pre><code class="language-javascript">// modules/paint.ts
+export default function injectPaint() {
+  if (PerformanceObserver) {
+    let FP, FCP;
+
+    // 1、监控性能指标 FP（First Paint） 和 FCP（First Contentful Paint）
+    const observerFPAndFCP = new PerformanceObserver(function (entryList) {
+      const perfEntries = entryList.getEntries();
+      for (const perfEntry of perfEntries) {
+        if (perfEntry.name === &quot;first-paint&quot;) {
+          FP = perfEntry;
+          console.log(&quot;首次像素绘制 时间：&quot;, FP?.startTime);
+        } else if (perfEntry.name === &quot;first-contentful-paint&quot;) {
+          FCP = perfEntry;
+          console.log(&quot;首次内容绘制 时间：&quot;, FCP?.startTime);
+          observerFPAndFCP.disconnect(); // 得到 FCP 后，断开观察，不再观察了
+        }
+      }
+    });
+    // 观察 paint 相关性能指标
+    observerFPAndFCP.observe({ entryTypes: [&quot;paint&quot;] });
+  }
+}
+</code></pre>
+<h4 id="52、fmp">5.2、FMP</h4>
+<p>这里我们先认识一个 HTML 属性：</p>
+<p><code>elementtiming</code> 属性用于标记页面中特定元素（如图片、视频、文本块等），以便通过 <code>PerformanceObserver</code> 的 <code>element</code> 类型监控这些元素的加载和渲染时间。</p>
+<blockquote>
+<p><code>PerformanceObserver</code> 的 <code>element</code> 类型主要支持监控以下元素类型：</p>
+<ul>
+<li><strong>图片（<code>&lt;img&gt;</code>）</strong> ：结合设置 <code>elementtiming</code> 属性来监控其渲染时间；</li>
+<li><strong>文本块（<code>&lt;p&gt;</code>、<code>&lt;div&gt;</code>（验证发现 <code>&lt;span&gt;</code> 不行））</strong> ：这类元素内容是纯文本，结合设置 <code>elementtiming</code> 属性来监控其渲染时间；</li>
+</ul>
+</blockquote>
+<p>如下示例，我们在 1.5s 后向页面添加 <code>有意义（属性标识）</code> 的元素。</p>
+<pre><code class="language-html">&lt;script&gt;
+  // 1.5s 后向页面添加 有意义（属性标识） 的元素
+  setTimeout(() =&gt; {
+    const ele = document.createElement(&quot;div&quot;);
+    ele.innerHTML = &quot;meaningful ele.&quot;;
+    ele.setAttribute(&quot;elementtiming&quot;, &quot;meaningful ele&quot;); // 设置 root 元素为「最有意义的元素」
+    document.body.appendChild(ele);
+  }, 1500);
+&lt;/script&gt;
+</code></pre>
+<p>我们使用 <code>PerformanceObserver API</code> 观察 <code>type: element</code> 来计算 FMP。</p>
+<pre><code class="language-javascript">// modules/paint.ts
+export default function injectPaint() {
+  if (PerformanceObserver) {
+    let FP, FCP, FMP;
+
+    ...
+
+    // 2、监控性能指标：FMP（First Meaningful Paint）
+    const observerFMP = new PerformanceObserver(entryList =&gt; {
+      const perfEntries = entryList.getEntries();
+      FMP = perfEntries[0];
+      console.log(&quot;首次有意义元素绘制 时间：&quot;, FMP?.startTime);
+      observerFMP.disconnect(); // 断开观察，不再观察了
+    });
+    observerFMP.observe({ entryTypes: [&quot;element&quot;] });
+  }
+}
+</code></pre>
+<h4 id="53、lcp">5.3、LCP</h4>
+<p>LCP 可通过 <code>PerformanceObserver API</code> 观察 <code>type: largest-contentful-paint</code> 来监听统计。</p>
+<p>需要注意的是，LCP 可能会在页面加载过程中多次触发，当最大内容元素发生变化时。</p>
+<p>如下示例，由于 div2 的内容大于之前的 div1 内容，LCP 的统计会触发两次：</p>
+<pre><code class="language-javascript">const div1 = document.createElement(&quot;div&quot;);
+div1.innerHTML = &quot;这是一段很长的文本&quot;;
+document.body.appendChild(div1);
+
+setTimeout(() =&gt; {
+  const div2 = document.createElement(&quot;div&quot;);
+  div2.innerHTML = &quot;这是一段很长很长很长的文本&quot;;
+  document.body.appendChild(div2);
+}, 500);
+</code></pre>
+<p>那么什么时候停止 LCP 监控呢？我们可以在需要上报性能指标时（比如 <code>load</code> 事件），停止对 LCP 的监控，这时收集到的 LCP 就是此刻页面中最大的内容。</p>
+<pre><code class="language-javascript">// modules/paint.ts
+export default function injectPaint() {
+  if (PerformanceObserver) {
+    let FP, FCP, FMP, LCP;
+
+    ...
+
+    // 3、创建性能观察者，观察 LCP
+    const observerLCP = new PerformanceObserver(entryList =&gt; {
+      const perfEntries = entryList.getEntries();
+      LCP = perfEntries[0];
+      console.log(&quot;最大内容绘制 时间：&quot;, LCP?.startTime, perfEntries);
+    });
+    // 观察页面中最大内容的绘制
+    observerLCP.observe({ entryTypes: [&quot;largest-contentful-paint&quot;] });
+
+    // TODO... 在上报性能指标数据的时候，停止观察。
+    observerLCP.disconnect();
+  }
+}
+</code></pre>
+<h4 id="54、上报性能指标">5.4、上报性能指标</h4>
+<p>收集到 FP、FCP、FMP、LCP 性能指标以后，便可以上报数据。上报时机这里选择在页面 load 以后等待 3s 进行上报。</p>
+<pre><code class="language-javascript">// modules/paint.ts
+export default function injectPaint() {
+  if (PerformanceObserver) {
+    let FP: PerformanceEntry | null = null;
+    let FCP: PerformanceEntry | null = null;
+    let FMP: PerformanceEntry | null = null;
+    let LCP: PerformanceEntry | null = null;
+
+    ...
+
+    // 上送性能指标
+    window.addEventListener(&quot;load&quot;, () =&gt; {
+      setTimeout(() =&gt; {
+        // 在上报性能指标数据的时候，停止 LCP 的观察。
+        observerLCP.disconnect();
+        const log: PaintLog = {
+          type: &quot;paint&quot;,
+          FP: FP?.startTime, // FP
+          FCP: FCP?.startTime, // FCP
+          FMP: FMP?.startTime, // FMP
+          LCP: LCP?.startTime, // LCP
+        };
+        console.log(&quot;paint log: &quot;, log);
+        tracker.send(log);
+      }, 3000);
+    });
+  }
+}
+</code></pre>
+<h3 id="6、卡顿监控">6、卡顿监控</h3>
+<p>在 JS 同步执行复杂的计算、大量的 DOM 操作等工作的时候，主线程会被占用，其他操作（比如用户交互、动画渲染）都会被阻塞。</p>
+<p><strong>PerformanceObserver</strong> 是一个强大的 API，可以用来监听各种性能事件，包括 **<code>长任务（longtask）</code>**。当主线程上的任务执行时间超过 100 毫秒时（设定一个阈值），可以认为这是一个长任务，可能会导致页面卡顿。</p>
+<p>下面我们使用 while 循环模拟一个 200ms 长任务：</p>
+<pre><code class="language-html">&lt;!-- examples/longTask.html --&gt;
+&lt;body&gt;
+  &lt;button id=&quot;longTaskBtn&quot;&gt;长任务&lt;/button&gt;
+  &lt;script&gt;
+    function longTask() {
+      const start = Date.now();
+      while (Date.now() &lt; 200 + start) {}
+    }
+    longTaskBtn.addEventListener(&quot;click&quot;, longTask);
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>新建 <code>module/longTask.ts</code> 文件，监听 <strong>长任务（longtask）</strong> 作为卡顿现象进行数据上报。</p>
+<pre><code class="language-javascript">// module/longTask.ts
+import { PerformanceLog } from &quot;../interface&quot;;
+import getLastEvent from &quot;../utils/getLastEvent&quot;;
+import getSelector from &quot;../utils/getSelector&quot;;
+import tracker from &quot;../utils/tracker&quot;;
+
+export default function injectLongTask() {
+  if (PerformanceObserver) {
+    const observerLongTask = new PerformanceObserver((list) =&gt; {
+      list.getEntries().forEach((entry) =&gt; {
+        // 执行时长大于 100 ms
+        if (entry.duration &gt; 100) {
+          const lastEvent = getLastEvent();
+
+          const log: LongTaskLog = {
+            type: &quot;longTask&quot;,
+            startTime: entry.startTime, // 开始时间
+            duration: entry.duration, // 持续时间
+            selector: lastEvent ? getSelector() : &quot;&quot;,
+            eventType: lastEvent?.type,
+          };
+
+          tracker.send(log);
+        }
+      });
+    });
+
+    observerLongTask.observe({ entryTypes: [&quot;longtask&quot;] });
+  }
+}
+</code></pre>
+<h2 id="二、重难点实现">二、重难点实现</h2>
+<h3 id="1、source-map-源代码定位">1、Source Map 源代码定位</h3>
+<p>在前端项目中，为了节省构建资源体积，不暴露业务逻辑，都会选择将代码进行混淆和压缩。但在优化性能 和 提升用户体验的同时，也为异常的处理带来了麻烦。</p>
+<p><code>Source Map</code> 是一个源代码信息文件，里面存储着代码压缩混淆前后的对应关系。我们<strong>输入混淆后的行列号，就能够获得对应的原始代码的行列号，结合源代码文件便可定位到真实的报错位置</strong>。</p>
+<p>但在生产环境下，我们不建议将 Source Map 放到网站上，对于具有一定规模和保密性的项目，这样等于将页面逻辑直接暴露给了网站使用者。</p>
+<p>在这种情况下，监控 SDK 收集和上传的错误信息也是混淆和压缩后的，并不利于我们定位异常。那有没有其他办法来定位错误呢？</p>
+<p>一般来说 Source Map 的应用都是在监控系统中，开发者<strong>构建完应用后，通过插件（例如自定义 webpack plugin）将 Source Map 文件（含源代码）上传至监控平台中</strong>。（例如 <code>Sentry</code> 监控平台也是这样做的）</p>
+<p>一旦客户端上报错误后，我们就可以通过 <a href="https://github.com/mozilla/source-map">source-map</a> 这个库来还原错误信息在源代码中的位置，方便开发者快速定位线上问题。</p>
+<h3 id="2、错误信息聚合">2、错误信息聚合</h3>
+<p>为了避免异常错误列表被大量的重复上报给占满，需要将具有相同特征的错误上报，归类为同一种异常，并且在统计平台只对用户暴露这种聚合后的异常。</p>
+<p>一个错误信息的结构如下：</p>
+<img src="./images/129.webp" />
+
+<ul>
+<li><code>name</code>： 异常的 Type，例如 <code>TypeError, SyntaxError, DOMError</code>；</li>
+<li><code>Message</code>：异常的相关信息，通常是异常原因，例如 <code>a is not defined.</code>；</li>
+<li><code>Stack</code> 异常的上下文堆栈信息，通常为字符串，例如 <code>errirClick、HTMLInputElement.onclick</code>；</li>
+</ul>
+<p>经过监控 SDK 收集到的 error log 如下：</p>
+<img src="./images/130.webp" />
+
+<p><strong>错误信息聚合的思路 - 为每个错误生成唯一的标识符（uid）</strong>：</p>
+<p>比如我们可以使用 <code>name + message + stack</code> 作为聚合依据，生成一个 <code>hash 值</code> 来作为这个错误的<code>唯一性的 ID</code>。</p>
+<p>如果后续捕获到的错误生成的 <code>hash 值</code> 与之前某个错误的 <code>hash 值</code> 相同，则认为是重复错误，不再进行数据入库或者是统计错误发生次数 + 1。</p>
+<h3 id="3、数据加工和清洗">3、数据加工和清洗</h3>
+<p>数据加工和清洗发生在服务端。在对数据进行入库前，进行数据加工和清洗的意义在于：</p>
+<ul>
+<li><code>数据加工</code> 可以对数据提取出关键指标和有价值的信息，以及扩展一些额外信息（如：在服务端才能获取的 <code>IP地址</code>）；</li>
+<li><code>数据清洗</code> 可以剔除无效、重复或冗余的数据，减少存储空间的浪费，同时提高数据处理的效率。</li>
+</ul>
+<h3 id="4、异常报警">4、异常报警</h3>
+<p>在出现程序执行出错异常后，需要及时反馈通知到开发人员，并及早跟进和处理问题。</p>
+<p>错误报警可以从两个维度进行：<strong>对新增异常的报警 和 对错误指标的数量（达到某个阈值）的报警</strong>。</p>
+<p>常见的报警的方式：邮件报警、接入办公即时通信应用（自研产品、企业钉钉）等。</p>
+<h2 id="文末">文末</h2>
+<p>以上内容是作者结合当前所掌握的知识，整理出来的一套前端监控 SDK 实现思路，后续也会继续根据工作场景，对本文内容进行扩充和完善。</p>
+<p><a href="https://juejin.cn/post/7195496297150709821">字节前端监控实践</a></p>
+
+                    </div>
+                </article>
+                <script src="/js/main.js"></script>
+            </body>
+            </html>
+            

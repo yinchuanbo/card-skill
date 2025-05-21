@@ -649,5 +649,27 @@
     "summary": "\n在之前的文章中有分享过  [🔗Vite 是首个接入 AI 能力的构建工具](https://mp.weixin.qq.com/s?__biz=MzUzNTk3MjE2Ng==&mid=2247516697&idx=1&sn=1a5ad4899624ef87a290ecc07ff18093&sce...",
     "type": "default",
     "url": "/doc/62.html"
+  },
+  {
+    "id": "63",
+    "title": "落地前端监控",
+    "tags": [
+      "监控"
+    ],
+    "createdAt": "2025-05-21T10:00:45.000Z",
+    "summary": "\n在大型项目中，**前端监控** 是不可或缺的一部分。它的优势可以体现在以下场景：\n\n1.  **稳定性**：尽早发现程序运行错误并及时修复；\n2.  **用户体验**：性能监控分析，持续优化改善网站使用体验；\n3.  **业务扩展**：常见的数据埋点，如统计 PV 页面浏览量。\n\n其中 **稳定性...",
+    "type": "default",
+    "url": "/doc/63.html"
+  },
+  {
+    "id": "64",
+    "title": "整理了ES7到ES14的新特性",
+    "tags": [
+      "JavaScript"
+    ],
+    "createdAt": "2025-05-21T10:11:29.000Z",
+    "summary": "\n## ES7（ECMAScript2016）\n\n## Array.prototype.includes()\n\n判断一个数组是否包含一个指定的值，根据情况，如果包含则返回 `true`，否则返回 `false`。\n\n该方法有两个参数，第一个参数为要查找的值，第二个参数（可选）是开始搜索的索引（默认从...",
+    "type": "default",
+    "url": "/doc/64.html"
   }
 ]
