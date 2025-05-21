@@ -693,5 +693,27 @@
     "summary": "\n## 背景\n\n在现代前端开发中，脚手架工具（CLI）在团队项目中扮演着重要角色。我们的团队在项目开发中面临以下挑战：\n\n- 开发效率低：项目初始化、代码生成和重复性操作耗费了大量时间。\n- 缺乏统一规范：不同成员的代码风格不一致，提交记录混乱，影响项目质量。\n- 构建部署复杂：手动构建和部署容易出...",
     "type": "default",
     "url": "/doc/66.html"
+  },
+  {
+    "id": "67",
+    "title": "前端工程师必知的 MCP 秘籍：从渲染优化到性能飞跃",
+    "tags": [
+      "性能优化"
+    ],
+    "createdAt": "2025-05-21T11:23:01.000Z",
+    "summary": "\n## 🔍 什么是 MCP？为什么前端要关注？\n\n**MCP（Main-Thread Computing Performance）** 指的是浏览器主线程的计算性能，它直接影响页面的**流畅度**、**响应速度**和**用户体验**。\n\n作为前端工程师，你可能经常遇到这些问题：\n\n- **页面卡顿...",
+    "type": "default",
+    "url": "/doc/67.html"
+  },
+  {
+    "id": "68",
+    "title": "“性能”面板：分析网站性能",
+    "tags": [
+      "性能面板"
+    ],
+    "createdAt": "2025-05-21T11:30:15.000Z",
+    "summary": "\n使用**性能**面板分析网站的性能。\n\n<iframe frameborder=\"0\" allowfullscreen=\"\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-i...",
+    "type": "default",
+    "url": "/doc/68.html"
   }
 ]
