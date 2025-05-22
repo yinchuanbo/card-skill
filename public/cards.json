@@ -707,34 +707,34 @@
   },
   {
     "id": "68",
-    "title": "“性能”面板：分析网站性能",
+    "title": "10 个现代 CSS 技巧",
     "tags": [
-      "performance"
+      "CSS"
     ],
-    "createdAt": "2025-05-21T11:30:15.000Z",
-    "summary": "\n使用**性能**面板分析网站的性能。\n\n<iframe frameborder=\"0\" allowfullscreen=\"\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-i...",
+    "createdAt": "2025-05-22T10:27:34.000Z",
+    "summary": "\n## 1. **使用  `clamp()`  实现响应式字体大小**\n\n`clamp()`  函数可以让你轻松实现响应式字体大小，避免手动编写复杂的媒体查询。\n\n```css\nh1 {\n  font-size: clamp(1.5rem, 5vw, 3rem);\n}\n```\n\n**解释**：`cl...",
     "type": "default",
     "url": "/doc/68.html"
   },
   {
     "id": "69",
-    "title": "分析运行时性能",
+    "title": "vite 详细打包配置，包含性能优化、资源处理...",
     "tags": [
-      "performance"
+      "工程化"
     ],
-    "createdAt": "2025-05-21T11:41:10.000Z",
-    "summary": "\n运行时性能是指网页在运行（而非加载）时的性能。本教程介绍了如何使用 Chrome DevTools 中的“性能”面板分析运行时性能。从 [RAIL](https://web.dev/rail/?hl=zh-cn) 模型的角度来看，您在本教程中学到的技能对于分析网页的响应、动画和空闲阶段非常有用。\n...",
+    "createdAt": "2025-05-22T10:30:15.000Z",
+    "summary": "\n## 一、以下是针对 Vite 项目的详细打包配置补充，包含性能优化、资源处理和特殊需求配置：\n\n---\n\n### vite.config.ts 完整打包配置示例\n\n```javascript\nimport { defineConfig, loadEnv } from \"vite\";\nimport...",
     "type": "default",
     "url": "/doc/69.html"
   },
   {
     "id": "70",
-    "title": "添加注释并分享效果数据分析结果",
+    "title": "前端内存泄漏：你的JS代码在偷偷“吃”内存",
     "tags": [
-      "performance"
+      "性能优化"
     ],
-    "createdAt": "2025-05-21T11:44:27.000Z",
-    "summary": "\n## 概览\n\n[记录](https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#record)并[分析](https://developer.chrome.com/docs/devtools/perform...",
+    "createdAt": "2025-05-22T10:41:50.000Z",
+    "summary": "\n> “内存泄漏？我的浏览器那么多内存，管他呢！”  \n> “哥，等你页面打开半小时，Chrome 开始吃掉你所有的 RAM，你就知道怕了……”\n\n你有没有遇到过这样的问题：你的 Web 应用在刚启动时运行流畅，但使用一段时间后，变得越来越卡？任务管理器一打开，浏览器占用的内存高得离谱，就像一头无底...",
     "type": "default",
     "url": "/doc/70.html"
   }

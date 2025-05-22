@@ -4,154 +4,122 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>“性能”面板：分析网站性能</title>
+                <title>10 个现代 CSS 技巧</title>
                 <link rel="stylesheet" href="/css/styles.css">
             </head>
             <body class="card-detail">
                 <article class="card-content">
                     <header>
-                        <h1>“性能”面板：分析网站性能</h1>
+                        <h1>10 个现代 CSS 技巧</h1>
                         <div class="meta">
-                            <time datetime="Wed May 21 2025 19:30:15 GMT+0800 (中国标准时间)">2025/5/21</time>
+                            <time datetime="Thu May 22 2025 18:27:34 GMT+0800 (中国标准时间)">2025/5/22</time>
                             <div class="tags">
-                                <span class="tag">performance</span>
+                                <span class="tag">CSS</span>
                             </div>
                         </div>
                     </header>
                     <div class="content default">
-                        <p>使用<strong>性能</strong>面板分析网站的性能。</p>
-<iframe frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" width="640" height="360" src="https://www.youtube.com/embed/M5oe010pYbA?origin=https%3A%2F%2Fdeveloper.chrome.com&amp;autoplay&amp;controls&amp;embed_domain&amp;enablejsapi=1&amp;end&amp;hl&amp;showinfo&amp;start&amp;video-id=M5oe010pYbA&amp;widgetid=5&amp;forigin=https%3A%2F%2Fdeveloper.chrome.com%2Fdocs%2Fdevtools%2Fperformance%2Foverview%3Fhl%3Dzh-cn&amp;aoriginsup=1&amp;gporigin=https%3A%2F%2Flink.juejin.cn%2F&amp;vf=1" id="widget6" data-title="YouTube video player" title="Monitor live Core Web Vitals in Chrome DevTools #DevToolsTips"></iframe>
+                        <h2 id="1-使用--clamp--实现响应式字体大小">1. <strong>使用  <code>clamp()</code>  实现响应式字体大小</strong></h2>
+<p><code>clamp()</code>  函数可以让你轻松实现响应式字体大小，避免手动编写复杂的媒体查询。</p>
+<pre><code class="language-css">h1 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+</code></pre>
+<p><strong>解释</strong>：<code>clamp(最小值, 理想值, 最大值)</code>，字体大小会根据视口宽度自动调整，但不会超出设定的范围。</p>
+<hr>
+<h2 id="2-利用--aspect-ratio--控制元素宽高比">2. <strong>利用  <code>aspect-ratio</code>  控制元素宽高比</strong></h2>
+<p><code>aspect-ratio</code>  属性可以轻松控制元素的宽高比，特别适合处理图片、视频等媒体内容。</p>
+<pre><code class="language-css">img {
+  aspect-ratio: 16 / 9;
+}
+</code></pre>
+<p><strong>使用场景</strong>：确保图片或视频在不同设备上保持一致的宽高比。</p>
+<hr>
+<h2 id="3-使用--gap--简化网格和弹性布局的间距">3. <strong>使用  <code>gap</code>  简化网格和弹性布局的间距</strong></h2>
+<p><code>gap</code>  属性可以快速为网格（Grid）和弹性盒子（Flexbox）布局设置间距，无需使用繁琐的  <code>margin</code>。</p>
+<pre><code class="language-css">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+</code></pre>
+<p><strong>优势</strong>：代码更简洁，间距控制更直观。</p>
+<hr>
+<h2 id="4-利用--backdrop-filter--实现毛玻璃效果">4. <strong>利用  <code>backdrop-filter</code>  实现毛玻璃效果</strong></h2>
+<p><code>backdrop-filter</code>  可以为元素的背景添加滤镜效果，轻松实现毛玻璃效果。</p>
+<pre><code class="language-css">.modal {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+</code></pre>
+<p><strong>使用场景</strong>：弹窗、卡片等需要突出显示的元素。</p>
+<hr>
+<h2 id="5-使用--scroll-snap--实现平滑滚动定位">5. <strong>使用  <code>scroll-snap</code>  实现平滑滚动定位</strong></h2>
+<p><code>scroll-snap</code>  可以让页面滚动时自动吸附到指定位置，适合轮播图、全屏滚动等场景。</p>
+<pre><code class="language-css">.container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
 
-<h2 id="概览">概览</h2>
-<p>借助<strong>性能</strong>面板，您可以记录 Web 应用的 CPU 性能配置文件。分析配置文件，找出潜在的性能瓶颈以及优化资源使用方式。</p>
-<p>您可以使用<strong>效果</strong>面板执行以下操作：</p>
-<ul>
-<li>记录性能配置文件。</li>
-<li>更改截取设置。</li>
-<li>分析效果报告。</li>
-</ul>
-<p>如需有关提升网站性能的全面指南，请参阅<a href="https://developer.chrome.com/docs/devtools/performance?hl=zh-cn">分析运行时性能</a>。</p>
-<h2 id="打开效果面板">打开“效果”面板</h2>
-<p>如需打开<strong>性能</strong>面板，请<a href="https://developer.chrome.com/docs/devtools/open?hl=zh-cn">打开开发者工具</a>，然后从顶部的一系列标签页中选择<strong>性能</strong>。</p>
-<p>或者，您也可以按照以下步骤使用<strong>命令菜单</strong>打开<strong>效果</strong>面板：</p>
-<ol>
-<li><a href="https://developer.chrome.com/docs/devtools/open?hl=zh-cn">打开开发者工具</a>。</li>
-<li>按以下任一键打开<strong>命令菜单</strong>：</li>
-<li>macOS：Command+Shift+P</li>
-<li>Windows、Linux、ChromeOS：Ctrl+Shift+P <img src="https://developer.chrome.com/static/docs/devtools/performance/overview/image/cmdm-Performance-panel.png?hl=zh-cn" alt="包含 "></li>
-<li>开始输入 <code>Performance panel</code>，选择<strong>显示“效果”面板</strong>，然后按 Enter 键。</li>
-</ol>
-<h2 id="实时观察-core-web-vitals">实时观察 Core Web Vitals</h2>
-<p>当您打开<strong>效果</strong>面板时，该面板会立即捕获并显示您的本地 <a href="https://web.dev/articles/lcp?hl=zh-cn">Largest Contentful Paint (LCP)</a> 和 <a href="https://web.dev/articles/cls?hl=zh-cn">Cumulative Layout Shift (CLS)</a> 指标，并告知您其得分（良好、需要改进或欠佳）。</p>
-<p>如果您与网页互动，<strong>效果</strong>面板还会捕获本地 <a href="https://web.dev/articles/inp?hl=zh-cn">Interaction to Next Paint (INP)</a> 及其得分。除了 LCP 和 CLS 之外，您还可以通过该得分全面了解网页在您的网络连接和设备上的 <a href="https://web.dev/articles/vitals?hl=zh-cn">Core Web Vitals</a>。</p>
-<p>在<strong>互动</strong>和<strong>布局偏移</strong>标签页中的三个指标卡片下，您可以找到包含捕获的互动和布局偏移信息的表格，包括元素、时间、阶段（对于互动）和得分（对于布局偏移）。如要清除这两个列表，请依次点击 <strong>清除</strong>。</p>
-<p>如需查看指标得分的细分数据，请将鼠标悬停在指标值上，以查看提示。</p>
-<h3 id="将您的体验与用户的体验进行比较">将您的体验与用户的体验进行比较</h3>
-<p>您还可以从 <a href="https://developer.chrome.com/docs/crux?hl=zh-cn">Chrome 用户体验报告</a>中提取现场数据，并将您网站用户的体验与本地指标进行比较。</p>
-<p>如需添加字段数据，请执行以下操作：</p>
-<ol>
-<li><p>依次点击<strong>效果</strong> &gt; <strong>后续措施</strong> &gt; <strong>现场数据</strong>，然后点击<strong>设置</strong>。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/overview/image/field-data-setup.png?hl=zh-cn" alt="“后续步骤”部分中的“设置”按钮。"></p>
-</li>
-<li><p>在<strong>配置字段数据提取</strong>对话框中，记下<strong>隐私权披露声明</strong>，然后点击<strong>确定</strong>。</p>
-<h4 id="高级：在开发环境和生产环境之间设置映射">高级：在开发环境和生产环境之间设置映射...</h4>
-<p>设置好现场数据提取后，<strong>效果</strong>面板现在会显示您的本地指标得分与用户体验的指标得分之间的对比情况。您可以在右侧的<strong>字段数据</strong>部分中查看收集期。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/overview/image/field-data-fetched.png?hl=zh-cn" alt="字段数据提取后的收集周期。"></p>
-<p>如需查看指标得分的细分数据，请将鼠标悬停在指标值上，以查看提示。</p>
-</li>
-</ol>
-<h3 id="配置您的环境，使其更符合用户的环境">配置您的环境，使其更符合用户的环境</h3>
-<p>按照上一部分所述设置字段数据提取后，<strong>效果</strong>面板会为您提供有关如何配置环境以更好地契合用户体验的建议。</p>
-<p>如需配置您的环境，请执行以下操作：</p>
-<ol>
-<li><p>在每个指标卡片中，展开<strong>考虑本地测试条件</strong>部分（如果有），然后阅读建议。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/overview/image/env-recs.png?hl=zh-cn" alt="每个指标卡片中展开的“考虑本地测试条件”部分。"></p>
-<p>在本例中，为了更好地匹配用户体验，您可能需要使用常见的桌面屏幕尺寸，并降低 CPU 和网络速度。</p>
-</li>
-<li><p>如需与此示例的环境配置保持一致，请执行以下操作：</p>
-<ol>
-<li>将视口设置为常见的屏幕尺寸之一（例如 720p 或 1080p）。如需模拟特定设备和屏幕尺寸，您可以使用<strong>元素</strong>面板中的<a href="https://developer.chrome.com/docs/devtools/device-mode?hl=zh-cn">设备模式</a>。</li>
-<li>在本例中，该网站的 82% 用户使用桌面设备进行浏览。为确保您将本地指标得分与正确的现场数据进行比较，您可以依次选择<strong>现场数据</strong> &gt; <strong>设备</strong>下拉列表中的<strong>桌面设备</strong>。</li>
-<li>在<strong>环境设置</strong>部分，将<strong>网络</strong>下拉列表设置为“快速 4G”，将<strong>CPU</strong> 设置为“20 倍降速”。您还可以在同一部分 <strong>停用网络缓存</strong>。</li>
-</ol>
-</li>
-<li><p>配置好环境后，请重新加载页面，与其互动以捕获本地 INP，然后再次比较指标得分。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/overview/image/env-config.png?hl=zh-cn" alt="环境配置为与真实用户体验相匹配。"></p>
-<p>现在，指标得分似乎更接近用户的实际体验。因此，<strong>考虑本地测试条件</strong>部分已从指标卡片中移除。</p>
-</li>
-</ol>
-<p>现在，您可以开始改进网站的<a href="https://web.dev/articles/vitals?hl=zh-cn">核心 Web 指标</a>了：</p>
-<ul>
-<li><a href="https://web.dev/articles/optimize-lcp?hl=zh-cn">优化 LCP</a></li>
-<li><a href="https://web.dev/articles/optimize-inp?hl=zh-cn">优化 INP</a></li>
-<li><a href="https://web.dev/articles/optimize-cls?hl=zh-cn">优化 CLS</a></li>
-</ul>
-<h2 id="获取和分析效果报告">获取和分析效果报告</h2>
-<p>在接下来的部分中，请按照相关指南了解如何记录配置文件、更改捕获设置和分析报告。</p>
-<iframe frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" width="640" height="360" src="https://www.youtube.com/embed/7A70hBrPL4I?origin=https%3A%2F%2Fdeveloper.chrome.com&amp;autoplay&amp;controls&amp;embed_domain&amp;enablejsapi=1&amp;end&amp;hl&amp;showinfo&amp;start&amp;video-id=7A70hBrPL4I&amp;widgetid=7&amp;forigin=https%3A%2F%2Fdeveloper.chrome.com%2Fdocs%2Fdevtools%2Fperformance%2Foverview%3Fhl%3Dzh-cn&amp;aoriginsup=1&amp;gporigin=https%3A%2F%2Flink.juejin.cn%2F&amp;vf=1" id="widget8" data-title="YouTube video player" title="Record and analyze a performance trace #DevToolsTips"></iframe>
+.section {
+  scroll-snap-align: start;
+}
+</code></pre>
+<p><strong>优势</strong>：提升用户体验，滚动效果更流畅。</p>
+<hr>
+<h2 id="6-利用--supports--实现渐进增强">6. <strong>利用  <code>@supports</code>  实现渐进增强</strong></h2>
+<p><code>@supports</code>  规则可以检测浏览器是否支持某个 CSS 特性，从而实现渐进增强。</p>
+<pre><code class="language-css">@supports (display: grid) {
+  .container {
+    display: grid;
+  }
+}
+</code></pre>
+<p><strong>使用场景</strong>：兼容性处理，确保在不支持某些特性的浏览器中提供备用方案。</p>
+<hr>
+<h2 id="7-使用--conic-gradient--创建锥形渐变">7. <strong>使用  <code>conic-gradient</code>  创建锥形渐变</strong></h2>
+<p><code>conic-gradient</code>  可以创建围绕中心点的渐变效果，适合制作饼图、色轮等。</p>
+<pre><code class="language-css">.pie-chart {
+  background: conic-gradient(red 0% 25%, green 25% 50%, blue 50% 100%);
+  border-radius: 50%;
+}
+</code></pre>
+<p><strong>优势</strong>：无需使用 SVG 或 JavaScript，纯 CSS 实现复杂图形。</p>
+<hr>
+<h2 id="8-利用--is--和--where--简化选择器">8. <strong>利用  <code>:is()</code>  和  <code>:where()</code>  简化选择器</strong></h2>
+<p><code>:is()</code>  和  <code>:where()</code>  可以简化复杂的选择器，减少代码冗余。</p>
+<pre><code class="language-css">:is(h1, h2, h3) {
+  color: #333;
+}
 
-<h3 id="记录性能配置文件">记录性能配置文件</h3>
-<p>准备好录制后，<strong>效果</strong>面板会显示以下选项：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#record-runtime">记录运行时性能</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#record-load">记录加载性能</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#screenshots">在录制过程中截取屏幕截图</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#garbage">在录制时强制执行垃圾回收</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#save">保存录音</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#load">加载录音</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#clear">清除录音</a></li>
-</ul>
-<h3 id="更改截取设置">更改截取设置</h3>
-<p>借助<strong>捕获设置</strong>，您可以更改 DevTools 捕获性能录制内容的方式，并在报告中提供更多信息。点击<strong>拍摄设置</strong> ，以访问<strong>拍摄设置</strong>菜单。</p>
-<p>从<strong>拍摄设置</strong>菜单中选择以下选项：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#disable-js-samples"><strong>停用 JavaScript 示例</strong></a>：停用在录制期间调用并显示在<strong>主要</strong>轨道中的 JavaScript 调用堆栈的录制。会降低性能开销。</li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#paint"><strong>启用高级绘制插桩（慢速）</strong></a>：捕获高级绘制插桩。严重影响性能。</li>
-<li><a href="https://developer.chrome.com/blog/new-in-devtools-125?hl=zh-cn#perf"><strong>启用 CSS 选择器统计信息（较慢）</strong></a>：捕获 CSS 选择器统计信息。严重影响性能。</li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#cpu-throttle"><strong>CPU 节流</strong></a>：模拟较慢的 CPU 速度。</li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#network-throttle"><strong>网络节流</strong></a>：模拟较慢的网络速度。</li>
-</ul>
-<h3 id="分析效果报告">分析效果报告</h3>
-<p>如需有关如何使用<strong>性能</strong>面板的完整指南，请参阅<a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#analyze">分析性能记录</a>。</p>
-<p>以下是本指南中主题的分组，以及其他实用文档：</p>
-<p><strong>如需了解如何浏览报告，请执行以下操作</strong>：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#navigate">浏览录音</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#search">搜索活动</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#event-initiators">跟踪事件发起者</a></li>
-</ul>
-<p><strong>如需了解如何专注于对您的工作流程至关重要的事项，请执行以下操作</strong>：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#track-config">更改轨道的顺序并隐藏轨道</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#hide-func">在火焰图中隐藏函数及其子项</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#breadcrumbs">创建面包屑导航并在缩放级别之间跳转</a></li>
-</ul>
-<p><strong>如需了解“自下而上”“调用树”和“事件日志”标签页，请执行以下操作</strong>：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#activities">在表格中查看活动</a></li>
-</ul>
-<p><strong>如需了解如何分析报告，请执行以下操作</strong>：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#main">查看主线程活动</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#flame-chart">解读火焰图</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#view-screenshot">查看屏幕截图</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#memory">查看内存指标</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#duration">查看录音的某个部分的时长</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/selector-stats?hl=zh-cn">分析“重新计算样式”事件期间 CSS 选择器的性能</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/nodejs?hl=zh-cn">使用“性能”面板分析 Node.js 性能</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn#fps">分析每秒帧数 (FPS)</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/timeline-reference?hl=zh-cn">时间轴事件参考文档</a></li>
-</ul>
-<h2 id="利用这些面板提升效果">利用这些面板提升效果</h2>
-<p>探索其他有助于提升网站性能的面板：</p>
-<ul>
-<li><a href="https://developer.chrome.com/docs/devtools/lighthouse?hl=zh-cn">Lighthouse：优化网站速度</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/memory?hl=zh-cn">内存：内存面板概览</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance-insights?hl=zh-cn">效果数据分析：获取有关网站性能的富有实用价值的分析洞见</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/rendering/performance?hl=zh-cn">渲染：发现渲染性能问题</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/issues?hl=zh-cn">问题：查找和解决问题</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/performance/reference?hl=zh-cn">效果：查看图层信息</a></li>
-</ul>
+:where(.card, .modal) {
+  padding: 20px;
+}
+</code></pre>
+<p><strong>区别</strong>：<code>:is()</code>  会影响优先级，而  <code>:where()</code>  的优先级始终为 0。</p>
+<hr>
+<h2 id="9-使用--will-change--优化动画性能">9. <strong>使用  <code>will-change</code>  优化动画性能</strong></h2>
+<p><code>will-change</code>  可以提前告知浏览器哪些属性即将发生变化，从而优化动画性能。</p>
+<pre><code class="language-css">.element {
+  will-change: transform, opacity;
+}
+</code></pre>
+<p><strong>注意</strong>：不要滥用，仅在需要时使用。</p>
+<hr>
+<h2 id="10-利用--property--自定义-css-变量">10. <strong>利用  <code>@property</code>  自定义 CSS 变量</strong></h2>
+<p><code>@property</code>  可以定义带有类型和初始值的 CSS 变量，增强变量的可控性。</p>
+<pre><code class="language-css">@property --primary-color {
+  syntax: &quot;&lt;color&gt;&quot;;
+  inherits: false;
+  initial-value: #ff0000;
+}
+
+.element {
+  --primary-color: #00ff00;
+  background: var(--primary-color);
+}
+</code></pre>
+<p><strong>使用场景</strong>：动态主题切换、复杂动画控制。</p>
 
                     </div>
                 </article>

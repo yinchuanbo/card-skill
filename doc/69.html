@@ -4,138 +4,265 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>分析运行时性能</title>
+                <title>vite 详细打包配置，包含性能优化、资源处理...</title>
                 <link rel="stylesheet" href="/css/styles.css">
             </head>
             <body class="card-detail">
                 <article class="card-content">
                     <header>
-                        <h1>分析运行时性能</h1>
+                        <h1>vite 详细打包配置，包含性能优化、资源处理...</h1>
                         <div class="meta">
-                            <time datetime="Wed May 21 2025 19:41:10 GMT+0800 (中国标准时间)">2025/5/21</time>
+                            <time datetime="Thu May 22 2025 18:30:15 GMT+0800 (中国标准时间)">2025/5/22</time>
                             <div class="tags">
-                                <span class="tag">performance</span>
+                                <span class="tag">工程化</span>
                             </div>
                         </div>
                     </header>
                     <div class="content default">
-                        <p>运行时性能是指网页在运行（而非加载）时的性能。本教程介绍了如何使用 Chrome DevTools 中的“性能”面板分析运行时性能。从 <a href="https://web.dev/rail/?hl=zh-cn">RAIL</a> 模型的角度来看，您在本教程中学到的技能对于分析网页的响应、动画和空闲阶段非常有用。</p>
-<h2 id="开始使用">开始使用</h2>
-<p>在本教程中，我们将使用<strong>性能</strong>面板查找正式版网页上的性能瓶颈。具体操作步骤如下：</p>
+                        <h2 id="一、以下是针对-vite-项目的详细打包配置补充，包含性能优化、资源处理和特殊需求配置：">一、以下是针对 Vite 项目的详细打包配置补充，包含性能优化、资源处理和特殊需求配置：</h2>
+<hr>
+<h3 id="viteconfigts-完整打包配置示例">vite.config.ts 完整打包配置示例</h3>
+<pre><code class="language-javascript">import { defineConfig, loadEnv } from &quot;vite&quot;;
+import vue from &quot;@vitejs/plugin-vue&quot;;
+import { ElementPlusResolver } from &quot;unplugin-vue-components/resolvers&quot;;
+import AutoImport from &quot;unplugin-auto-import/vite&quot;;
+import Components from &quot;unplugin-vue-components/vite&quot;;
+import { visualizer } from &quot;rollup-plugin-visualizer&quot;;
+import legacy from &quot;@vitejs/plugin-legacy&quot;;
+import { terser } from &quot;rollup-plugin-terser&quot;;
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) =&gt; {
+  // 环境变量加载
+  const env = loadEnv(mode, process.cwd());
+
+  return {
+    plugins: [
+      vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        dts: &quot;src/types/auto-imports.d.ts&quot;, // 自动导入类型声明
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+        dts: &quot;src/types/components.d.ts&quot;, // 组件类型声明
+      }),
+      // 打包分析插件（仅生产环境）
+      mode === &quot;production&quot; &amp;&amp;
+        visualizer({
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+        }),
+      // 浏览器兼容插件
+      legacy({
+        targets: [&quot;defaults&quot;, &quot;not IE 11&quot;],
+      }),
+    ],
+
+    // 构建配置
+    build: {
+      target: &quot;es2015&quot;, // 编译目标
+      outDir: &quot;dist&quot;, // 输出目录
+      assetsDir: &quot;assets&quot;, // 静态资源目录
+      sourcemap: env.VITE_SOURCEMAP === &quot;true&quot;, // 按需开启
+      minify: &quot;terser&quot;, // 压缩方式
+      cssCodeSplit: true, // CSS代码分割
+
+      // Rollup配置
+      rollupOptions: {
+        output: {
+          // 代码分割策略
+          manualChunks(id) {
+            if (id.includes(&quot;node_modules&quot;)) {
+              return &quot;vendor&quot;;
+            }
+            if (id.includes(&quot;src/router&quot;)) {
+              return &quot;router&quot;;
+            }
+          },
+          // 文件命名规则
+          chunkFileNames: &quot;js/[name]-[hash].js&quot;,
+          entryFileNames: &quot;js/[name]-[hash].js&quot;,
+          assetFileNames: &quot;assets/[ext]/[name]-[hash][extname]&quot;,
+        },
+        // 外部依赖排除（如有需要）
+        external: [&quot;some-cdn-library&quot;],
+      },
+
+      // Terser压缩配置
+      terserOptions: {
+        compress: {
+          drop_console: true, // 移除console
+          drop_debugger: true, // 移除debugger
+        },
+        format: {
+          comments: false, // 移除注释
+        },
+      },
+    },
+
+    // 开发服务器配置
+    server: {
+      port: 5173, // 开发端口
+      open: true, // 自动打开浏览器
+    },
+
+    // 路径别名配置
+    resolve: {
+      alias: {
+        &quot;@&quot;: &quot;/src&quot;,
+        &quot;#&quot;: &quot;/types&quot;,
+      },
+    },
+
+    // CSS预处理器配置
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use &quot;@/styles/variables.scss&quot; as *;`,
+        },
+      },
+    },
+  };
+});
+</code></pre>
+<hr>
+<h3 id="关键配置说明">关键配置说明</h3>
+<p><strong>1. 代码分割优化</strong></p>
+<pre><code class="language-js">rollupOptions: {
+  output: {
+    manualChunks(id) {
+      if (id.includes(&#39;node_modules&#39;)) {
+        // 将node_modules代码单独打包
+        if (id.includes(&#39;element-plus&#39;)) return &#39;element-plus&#39;
+        if (id.includes(&#39;lodash&#39;)) return &#39;lodash&#39;
+        return &#39;vendor&#39;
+      }
+    }
+  }
+}
+</code></pre>
+<p><strong>2. 静态资源处理</strong></p>
+<pre><code class="language-js">build: {
+  assetsInlineLimit: 4096, // 小于4KB的资源转为base64
+  // 复制公共资源到dist目录
+  assetsInclude: [&#39;public/**/*.pdf&#39;]
+}
+</code></pre>
+<p><strong>3. 兼容性处理</strong></p>
+<pre><code class="language-js">// 安装旧浏览器支持插件
+// npm install @vitejs/plugin-legacy -D
+
+// 配置
+legacy({
+  targets: [&quot;&gt; 0.5%&quot;, &quot;last 2 versions&quot;],
+  modernPolyfills: true,
+});
+</code></pre>
+<hr>
+<h3 id="自定义打包命令">自定义打包命令</h3>
+<pre><code class="language-json">// package.json
+{
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;vite build&quot;,
+    &quot;build:stage&quot;: &quot;vite build --mode staging&quot;,
+    &quot;build:analyze&quot;: &quot;vite build --mode production &amp;&amp; vite preview --port 4173&quot;,
+    &quot;preview&quot;: &quot;vite preview --port 4173&quot;
+  }
+}
+</code></pre>
+<hr>
+<h3 id="环境变量配置">环境变量配置</h3>
+<pre><code class="language-bash"># .env.production
+VITE_API_BASE_URL = /api/
+VITE_SOURCEMAP = false
+
+# .env.staging
+VITE_API_BASE_URL = http://stage-api.example.com
+</code></pre>
+<hr>
+<h2 id="优化建议">优化建议</h2>
 <ol>
-<li><p>在<a href="https://support.google.com/chrome/answer/95464?hl=zh-cn">无痕模式</a>下打开 Google Chrome。无痕模式可确保 Chrome 在干净状态下运行。例如，如果您安装了许多扩展程序，这些扩展程序可能会在性能衡量中产生噪声。</p>
-</li>
-<li><p>在无痕式窗口中加载以下网页。这是您要分析的演示版。 页面上显示了一堆上下移动的小蓝色方块。</p>
-<p><code>https://googlechrome.github.io/devtools-samples/jank/</code></p>
-</li>
-<li><p>按 Command+Option+I (Mac) 或 Control+Shift+I (Windows、Linux) 打开 DevTools。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/demo-and-devtools.png?hl=zh-cn" alt="左侧是演示，右侧是 DevTools。"></p>
-</li>
+<li><strong>图片压缩</strong>：</li>
 </ol>
-<h3 id="模拟移动-cpu">模拟移动 CPU</h3>
-<p>与桌面设备和笔记本电脑相比，移动设备的 CPU 性能要低得多。每当您分析网页时，请使用 CPU 节流功能来模拟网页在移动设备上的性能。</p>
+<pre><code class="language-bash">npm install vite-plugin-imagemin -D
+</code></pre>
+<pre><code class="language-js">import imagemin from &quot;vite-plugin-imagemin&quot;;
+// 添加到plugins数组
+imagemin({
+  gifsicle: { optimizationLevel: 7 },
+  optipng: { optimizationLevel: 7 },
+});
+</code></pre>
+<ol start="2">
+<li><strong>Gzip 压缩</strong>：</li>
+</ol>
+<pre><code class="language-bash">npm install vite-plugin-compression -D
+</code></pre>
+<pre><code class="language-js">import compression from &quot;vite-plugin-compression&quot;;
+// 添加到plugins数组
+compression({
+  algorithm: &quot;gzip&quot;,
+  ext: &quot;.gz&quot;,
+});
+</code></pre>
+<ol start="3">
+<li><strong>CDN 加速</strong>：</li>
+</ol>
+<pre><code class="language-js">// vite.config.ts
+build: {
+  rollupOptions: {
+    external: [&#39;vue&#39;, &#39;element-plus&#39;],
+    output: {
+      globals: {
+        &#39;vue&#39;: &#39;Vue&#39;,
+        &#39;element-plus&#39;: &#39;ElementPlus&#39;
+      }
+    }
+  }
+}
+</code></pre>
+<hr>
+<h3 id="常见打包问题解决">常见打包问题解决</h3>
 <ol>
-<li><p>在开发者工具中，点击<strong>性能</strong>标签页。</p>
-</li>
-<li><p>确保已启用<strong>屏幕截图</strong> 复选框。</p>
-</li>
-<li><p>点击<strong>拍摄设置</strong> 。 开发者工具会显示与其捕获性能指标的方式相关的设置。</p>
-</li>
-<li><p>在 <strong>CPU</strong> 下，选择 <strong>4 倍降速</strong>。开发者工具会节流 CPU，使其速度比平时慢 4 倍。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/cpu-throttling.png?hl=zh-cn" alt="CPU 节流设置为 4 倍降速。"></p>
-</li>
+<li><strong>文件体积过大</strong>：</li>
 </ol>
-<h3 id="设置演示">设置演示</h3>
-<p>很难制作出适用于本网站所有读者的一致运行时性能演示。在本部分中，您可以自定义演示，以确保无论您的具体设置如何，您的体验都与本教程中显示的屏幕截图和说明大致一致。</p>
-<ol>
-<li>不断点击<strong>添加 10</strong>，直到蓝色方块的移动速度明显比之前慢。在高端机器上，可能需要大约 20 次点击。</li>
-<li>点击<strong>优化</strong>。蓝色方块应该会更快、更流畅地移动。</li>
-<li>点击<strong>取消优化</strong>。蓝色方块的移动速度再次变慢，并且出现更多卡顿。</li>
-</ol>
-<h3 id="记录运行时性能">记录运行时性能</h3>
-<p>运行经过优化的网页版本后，蓝色方块的移动速度会更快。Why is that? 这两个版本都应在相同的时间内将每个方块移动相同的距离。在<strong>性能</strong>面板中进行录制，了解如何检测未优化版本中的性能瓶颈。</p>
-<ol>
-<li><p>在 DevTools 中，点击<strong>录制</strong> 。开发者工具会在网页运行时捕获性能指标。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/profiling-page.png?hl=zh-cn" alt="对演示页面进行性能分析。"></p>
-</li>
-<li><p>等待几秒钟。</p>
-</li>
-<li><p>点击<strong>停止</strong> (Stop)。 开发者工具会停止记录、处理数据，然后在<strong>性能</strong>面板中显示结果。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/profiling-results.png?hl=zh-cn" alt="性能分析报告页面。"></p>
-</li>
-</ol>
-<p>哇，这真是海量数据。别担心，很快就会明白。</p>
-<h2 id="分析结果">分析结果</h2>
-<p>记录性能数据后，您可以分析网页的性能有多差，并找出原因。</p>
-<h3 id="分析每秒帧数">分析每秒帧数</h3>
-<p>衡量任何动画性能的主要指标是每秒帧数 (FPS)。动画以 60 FPS 的帧速率运行时，用户会感到满意。</p>
-<ol>
-<li><p>查看 <strong>FPS</strong> 图表。每当您在 <strong>FPS</strong> 上方看到红色条时，就表示帧速率下降得太低，可能会影响用户体验。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/the-fps-chart.png?hl=zh-cn" alt="突出显示的 FPS 图表。"></p>
-</li>
-<li><p>在 <strong>FPS</strong> 图表下方，您会看到 <strong>CPU</strong> 图表。<strong>CPU</strong> 图表中的颜色与<strong>性能</strong>面板底部的<strong>摘要</strong>标签页中的颜色相对应。如果 <strong>CPU</strong> 图表呈现全彩，则表示 CPU 在记录期间已达到上限。每当您发现 CPU 长时间处于满载状态时，就应寻找减少工作量的方法。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/the-cpu-chart-summary.png?hl=zh-cn" alt="CPU 图表和“摘要”标签页。"></p>
-</li>
-<li><p>将鼠标悬停在 <strong>FPS</strong>、<strong>CPU</strong> 或 <strong>NET</strong> 图表上。开发者工具会显示相应时间点的网页屏幕截图。左右移动鼠标即可重放录音。这称为“快进”，对于手动分析动画的进度非常有用。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/viewing-screenshot.png?hl=zh-cn" alt="查看性能录制中的屏幕截图。"></p>
-</li>
-<li><p>在<strong>帧</strong>部分，将鼠标悬停在其中一个绿色方块上。开发者工具会显示该特定帧的 FPS。每帧的帧速率可能远低于 60 FPS 的目标值。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/hovering-a-frame.png?hl=zh-cn" alt="将鼠标悬停在某个帧上。"></p>
-</li>
-</ol>
-<p>当然，从这个演示中，很明显可以看到该网页的性能不佳。但在实际场景中，情况可能并不那么明确，因此拥有所有这些衡量工具会很有用。</p>
-<h4 id="附加内容：打开-fps-计数器">附加内容：打开 FPS 计数器</h4>
-<p>另一个实用工具是 <strong>FPS 计量器</strong>，它会在网页运行时提供 FPS 的实时估算值。</p>
-<ol>
-<li><p>按 Command+Shift+P（Mac）或 Control+Shift+P（Windows、Linux）打开“命令”菜单。</p>
-</li>
-<li><p>在命令菜单中开始输入 <code>Rendering</code>，然后选择<strong>显示渲染</strong>。</p>
-</li>
-<li><p>在<strong>渲染</strong>面板中，启用<strong>显示渲染统计信息</strong>。视口的右上角会显示一个新的叠加层。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/the-fps-meter.png?hl=zh-cn" alt="FPS 计量器。"></p>
-</li>
-<li><p>停用 <strong>FPS 计量器</strong>，然后按 Escape 键关闭<strong>渲染</strong>面板。您不会在本教程中使用它。</p>
-</li>
-</ol>
-<h3 id="找出瓶颈">找出瓶颈</h3>
-<p>现在，您已衡量并验证动画的效果不佳，接下来要回答的问题是：原因是什么？</p>
-<ol>
-<li><p>请注意<strong>摘要</strong>标签页。如果未选择任何事件，此标签页会显示活动明细。 网页花费大部分时间在呈现。由于性能是减少工作量的艺术，因此您的目标是减少渲染工作所花的时间。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/the-summary-tab.png?hl=zh-cn" alt="“摘要”标签页（以蓝色勾勒）。"></p>
-</li>
-<li><p>展开<strong>主要</strong>部分。开发者工具会显示主线程上活动随时间推移的火焰图。x 轴表示一段时间内的录音。每个柱形都代表一个事件。条形越宽，表示事件耗时越长。y 轴表示调用堆栈。如果您看到事件堆叠在一起，则表示上方事件导致了下方事件。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/the-main-section.png?hl=zh-cn" alt="“主要”部分。"></p>
-</li>
-<li><p>录音中的数据量很大。如需放大单个 <strong>Animation Frame Fired</strong> 事件，请点击并按住鼠标，然后将其拖动到<strong>概览</strong>（包含 <strong>FPS</strong>、<strong>CPU</strong> 和 <strong>NET</strong> 图表）部分。<strong>主要</strong>部分和<strong>摘要</strong>标签页仅显示所选录制内容的相关信息。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/zoomed-frame.png?hl=zh-cn" alt="放大了单个“Animation Frame Fired”事件。"></p>
-</li>
-<li><p>请注意 <strong>Task</strong> 和布局事件右上角的红色三角形。每当您看到红色三角形时，都表示此活动可能存在问题。<strong>任务</strong>上显示红色三角形表示该任务耗时较长。<a href="https://web.dev/articles/optimize-long-tasks?utm_source=devtools&hl=zh-cn"></a></p>
-</li>
-<li><p>点击 <strong>Animation Frame Fired</strong> 事件。<strong>摘要</strong>标签页现在会显示与该事件相关的信息。点击<strong>由</strong>旁边的链接会导致 DevTools 突出显示触发 <strong>Animation Frame Fired</strong> 事件的事件。另请注意 <strong>app.update @</strong> 链接。点击该链接即可跳转到源代码中的相关行。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/more-information.png?hl=zh-cn" alt="有关“Animation Frame Fired”事件的更多信息。"></p>
-</li>
-<li><p>在 <strong>app.update</strong> 事件下，有一系列紫色事件。如果它们更宽，则看起来每个图标上都可能有一个红色三角形。现在，点击其中一个紫色的<strong>布局</strong>事件。在 <strong>Summary</strong>（摘要）标签页中，DevTools 会提供有关该事件的更多信息。确实，有一个警告提及了强制重新流布局（布局的另一种说法）。</p>
-</li>
-<li><p>在<strong>摘要</strong>标签页中，点击“请求的动画帧数”下方 <strong>app.update @</strong> 旁边的链接。开发者工具会将您带到强制执行布局的行代码。</p>
-<p><img src="https://developer.chrome.com/static/docs/devtools/performance/image/source-code-caused.png?hl=zh-cn" alt="导致强制布局的代码行。"></p>
-</li>
-</ol>
-<p>大功告成！内容很多，但现在，您已经掌握了分析运行时性能的基本工作流程，打下了坚实的基础。干得好！</p>
-<h3 id="奖励：分析经过优化的版本">奖励：分析经过优化的版本</h3>
-<p>使用您刚刚学到的工作流和工具，点击演示中的<strong>优化</strong>以启用经过优化的代码，再进行一次性能记录，然后分析结果。从帧速率的提升到<strong>主要</strong>部分火焰图中事件数量的减少，您可以看到经过优化的应用版本执行的工作量要少得多，从而获得更好的性能。</p>
-<h2 id="后续步骤">后续步骤</h2>
-<p>了解效果的基础是 RAIL 模型。此模型会向您介绍对用户最重要的效果指标。如需了解详情，请参阅<a href="https://web.dev/rail/?hl=zh-cn">使用 RAIL 模型衡量效果</a>。</p>
-<p>要想更熟悉“效果”面板，您需要多加练习。尝试分析您自己的网页并分析结果。如果您对结果有任何疑问，请<a href="http://stackoverflow.com/questions/ask?tags=google-chrome-devtools">创建一个标记了 <code>google-chrome-devtools</code> 的 Stack Overflow 问题</a>。如果可以，请附上屏幕截图或可重现问题的网页的链接。</p>
-<p>若要成为运行时性能方面的专家，您必须了解浏览器如何将 HTML、CSS 和 JS 转换为屏幕上的像素。建议您先从<a href="https://web.dev/rendering-performance/?hl=zh-cn">渲染性能概览</a>入手。<a href="https://aerotwist.com/blog/the-anatomy-of-a-frame/">帧剖析</a>中更详细地介绍了这一点。</p>
-<p>最后，您可以通过多种方式来提高运行时性能。本教程重点介绍了一种特定的动画瓶颈，以便您重点浏览“性能”面板，但它只是您可能会遇到的众多瓶颈之一。“渲染性能”系列的其余部分提供了许多有关如何改进运行时性能各个方面的实用技巧，例如：</p>
 <ul>
-<li><a href="https://web.dev/optimize-javascript-execution/?hl=zh-cn">优化 JS 执行</a></li>
-<li><a href="https://web.dev/reduce-the-scope-and-complexity-of-style-calculations/?hl=zh-cn">缩小样式计算的范围和复杂性</a></li>
-<li><a href="https://web.dev/avoid-large-complex-layouts-and-layout-thrashing/?hl=zh-cn">避免使用大型复杂布局和布局抖动</a></li>
-<li><a href="https://web.dev/simplify-paint-complexity-and-reduce-paint-areas/?hl=zh-cn">简化绘制复杂性并减少绘制区域</a></li>
-<li><a href="https://web.dev/stick-to-compositor-only-properties-and-manage-layer-count/?hl=zh-cn">仅使用合成器属性并管理图层数量</a></li>
-<li><a href="https://web.dev/debounce-your-input-handlers/?hl=zh-cn">对输入处理脚本进行去抖</a></li>
+<li>使用<code>rollup-plugin-visualizer</code>分析包组成</li>
+<li>按需加载第三方库（如 Element Plus）</li>
+<li>开启 Gzip/Brotli 压缩</li>
 </ul>
+<ol start="2">
+<li><strong>路由懒加载失效</strong>：</li>
+</ol>
+<pre><code class="language-javascript">// 确保使用动态导入语法
+component: () =&gt; import(/* webpackChunkName: &quot;about&quot; */ &quot;../views/About.vue&quot;);
+</code></pre>
+<ol start="3">
+<li><strong>静态资源 404</strong>：</li>
+</ol>
+<pre><code class="language-js">// 使用绝对路径
+new URL(`/src/assets/image.png`, import.meta.url).href;
+</code></pre>
+<ol start="4">
+<li><strong>样式丢失</strong>：</li>
+</ol>
+<pre><code class="language-js">// 强制CSS注入
+build: {
+  cssTarget: &quot;chrome61&quot;; // 兼容低版本浏览器
+}
+</code></pre>
+<hr>
+<p>通过以上配置，可以实现：</p>
+<ul>
+<li>代码体积优化（减少 30%-50%）</li>
+<li>首屏加载速度提升</li>
+<li>更好的浏览器兼容性</li>
+<li>清晰的构建产物结构</li>
+<li>便捷的多环境打包支持</li>
+</ul>
+<p>实际配置时需根据项目具体需求调整参数，建议结合<code>vite build --mode yourmode</code>实现多环境差异化打包。</p>
 
                     </div>
                 </article>
