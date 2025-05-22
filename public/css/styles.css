@@ -2696,14 +2696,6 @@ body.modal-open {
   margin-bottom: 0.8rem;
 }
 
-/* 调整模态窗口内代码块的字号 */
-#modalContent pre[class*="language-"] {
-  font-size: 0.975rem; /* 保持代码块字体稍小一点，便于阅读 */
-  margin: 2rem 0;
-}
-
-/* 调整模态窗口内内联代码的字号 */
-
 /* 模态窗口导航按钮样式 */
 .modal-nav {
   position: fixed;
